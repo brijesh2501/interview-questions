@@ -70,6 +70,7 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 JavaScript
+- ES6 + features
 - Closure
 - Hoisting
 - Rest vs Spread operator
@@ -137,6 +138,69 @@ a[[‘Fname’] = ‘B’; // this will work
 - Memory leak identification
 - Multithreading (e.g., concurrency, synchronization, thread pools)
 - Data structures (e.g., List, Map, Set implementations and their complexities)
+### Core Java
+- What are the differences between JDK, JRE, and JVM?
+- How does Java achieve platform independence?
+- Explain OOP principles (Encapsulation, Abstraction, Inheritance, Polymorphism) with examples.
+- Difference between abstract class vs interface?
+- How does Java handle memory management (Heap, Stack, Garbage Collection)?
+- What is the difference between String, StringBuilder, and StringBuffer?
+- What are checked vs unchecked exceptions?
+- How does Java’s class loading mechanism work?
+- Explain the concept of immutable classes in Java. How do you create one?
+- What are functional interfaces and lambdas introduced in Java 8?
+
+### Multithreading & Concurrency
+- Difference between process vs thread?
+- What are the states of a Thread lifecycle?
+- Explain synchronized vs ReentrantLock.
+- What are volatile and atomic variables?
+- Difference between ConcurrentHashMap vs HashMap.
+- How does ExecutorService work?
+- What is the difference between parallel stream vs sequential stream in Java 8?
+- Deadlock – how to detect and prevent it?
+
+### Java Collections Framework
+- Difference between HashMap, LinkedHashMap, and TreeMap.
+- How does HashMap work internally (hashing, collision, resizing)?
+- Difference between ArrayList vs LinkedList.
+- What is the difference between fail-fast and fail-safe iterators?
+- When to use Set vs List vs Map?
+- How does ConcurrentHashMap handle concurrency?
+
+### Java 8+ Features
+- Explain Streams API and its advantages.
+- Difference between map() vs flatMap() in Streams.
+- What are Optional and its best practices?
+- Explain default and static methods in interfaces.
+- What is the difference between Functional Interface vs Abstract Class?
+- How does method reference (::) work?
+
+### JVM & Performance
+- What are the components of the JVM architecture?
+- Difference between heap vs stack memory.
+- What are class loaders in Java?
+- Explain Just-In-Time (JIT) compiler.
+- Different types of Garbage Collectors (Serial, Parallel, G1, ZGC).
+- How do you analyze memory leaks in a Java application?
+
+### Spring Boot & Microservices (Java Ecosystem)
+- Difference between Spring vs Spring Boot.
+- How does Dependency Injection (DI) work in Spring?
+- What is the role of @Component, @Service, @Repository, @Controller?
+- Explain Spring Boot Auto-Configuration.
+- How do you secure REST APIs in Spring Boot (Spring Security / JWT)?
+- How does Spring handle transactions?
+- How do you implement circuit breaker, rate limiting, or service discovery in microservices?
+- How do you design a scalable microservice architecture in Java?
+
+### Scenario-Based / Problem-Solving
+- You have a Java app facing high CPU usage – how would you debug it?
+- Your Java service is facing memory leaks – what tools and steps will you use?
+- How do you handle large data processing efficiently in Java?
+- You need to implement a real-time notification system – which Java concurrency/async features will you use?
+- How do you design a thread-safe singleton in Java?
+- Given a large JSON payload, how would you efficiently parse it in Java?
 
 ---
 
