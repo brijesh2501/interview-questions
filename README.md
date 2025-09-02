@@ -65,17 +65,19 @@ This repository contains a **curated list of interview questions** collected fro
 - Find non-repeating char in string
 - Count characters in string
 - Question based on javascript
-    console.log([]==[]); // false
-    let {length} = 'lyakat';//6
-    console.log(length);
-    let arr = [];
-    console.log(arr.push(6));
-    const  a = "brijesh";
-    console.log(a++);
-    let a = 5;
-    let b = a++;
-    console.log(a+b);
-    console.log(3+"2"+5);
+```javascript
+console.log([]==[]); // false
+let {length} = 'lyakat';//6
+console.log(length);
+let arr = [];
+console.log(arr.push(6));
+const  a = "brijesh";
+console.log(a++);
+let a = 5;
+let b = a++;
+console.log(a+b);
+console.log(3+"2"+5);
+```
 
 ---
 
