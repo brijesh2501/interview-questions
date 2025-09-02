@@ -59,9 +59,12 @@ This repository contains a **curated list of interview questions** collected fro
 - How do you handle concurrency in reactJs like using useTransion
 - React fibre Algorithim
 - Create a functionality in reactjs using react function component ON / OFF button , when click on ON button its text changes to OFF and Vice a versa
-- What is higher order functions
+- What is higher order functions ? why and when use HOC ?
 - React Reconcillation algo ?
 - Throttling VS Debouncing ?
+- Redux Thunk Vs Redux Saga middleware ? 
+- React Hydration ?
+
 
 
 ---
@@ -95,8 +98,15 @@ let b = a++;
 console.log(a+b);
 console.log(3+"2"+5);
 ```
-- Event bubbling ? 
-
+- Event bubbling Or Event Delegation ? 
+- Write a javascript Program , Input : [20, 30 , 40] and output [70, 60, 50]
+- Find  non repeating char in string Input “Sdbfsbd”   Output :  f
+- Find count of characters in string Input : “aaddbbcf” : output : {a : 2, b: 2 , f: 1, d:2, c:1} and sort keys in object and out  {a : 2, b: 2 , c: 1, d:2, f:1}
+```javascript
+Const a = [‘Fname’: ‘A’]
+a =  [‘Fname’: ‘B’] // this will throw error
+a[[‘Fname’] = ‘B’; // this will work
+```
 ---
 
 ## 🔹 SQL
@@ -179,7 +189,7 @@ console.log(3+"2"+5);
 - ACID Properties ?
 - SOLID Priciple Understanding ?
 - Data Structure , how and why use different types of data Strucure ?
-
+- SQS , SNS , alternatives of Kafka ?
 
 
 ## 📌 Usage
