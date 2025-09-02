@@ -6,105 +6,136 @@ This repository contains a **curated list of interview questions** collected fro
 
 ## 🔹 Node.js
 - Callstack, Event Loop, Thread pool
-- Handling 1M concurrent requests
-- Streams & Buffers
-- Middleware (custom & built-in)
-- CPU intensive tasks handling
-- MongoDB schema design & indexing
-- CAP theorem
-- Kafka use cases
-- Docker image creation
-- Sharding vs Partitioning
-- Horizontal vs Vertical scaling
+- How to handle 1 million concurrent requests using Node.js?
+- What are streams / buffers in Node.js?
+- How to create custom middleware in Node.js?
+- Have you created custom middleware in Node.js and how?
+- How do you handle CPU intensive tasks in Node.js?
+- How do you handle concurrent requests in Node.js?
+- How do you manage a high CPU on a server?
+- How do you create indexing in MongoDB?
+- How do you design a scalable schema using MongoDB?
+- CAP Theorem
+- Kafka – why use it instead of SQL?
+- How to build Docker image (dependencies)?
+- Sharding and partitioning
+- Horizontal vs vertical scaling
 
 ---
 
 ## 🔹 React.js
 - Controlled vs Uncontrolled components
-- State management (Context API vs Redux)
-- useEffect vs useLayoutEffect
+- Static site vs server-side rendering
+- How do you manage state in React?
+- How to avoid prop drilling in React?
+- Context API vs Redux (re-renders)
 - React.memo vs useMemo
-- useReducer, useCallback, useMemo
-- React Portals
-- Redux connect() & mapStateToProps
-- React Virtualization (react-window)
-- Component unmounting in functional React
-- Secure React apps & Debugging
-- Jest unit tests for components
+- useEffect vs useLayoutEffect
+- useReducer vs useCallback vs useMemo
+- useRefs in React vs DOM manipulation in JavaScript
+- React portals
+- mapStateToProps
+- Redux connect() arguments
+- React virtualization (react-window, react-virtualized)
+- How to unmount a component in functional React?
+- How many virtual DOMs does React use?
+- Filter elements from array in React (search example)
+- Jest unit test for button render and API response
+- How do you secure React applications?
+- How do you make code more maintainable and readable in React?
+- How do you debug React apps (e.g. login failure)?
 
 ---
 
 ## 🔹 JavaScript
-- Closures & Hoisting
-- Rest vs Spread
+- Closure
+- Hoisting
+- Rest vs Spread operator
 - call(), bind(), apply()
 - forEach vs map()
-- Currying & Memoization
-- Normal vs Arrow functions
-- Array & String tricks
-- Longest Continuous Increasing Subsequence
-- Removing adjacent duplicates from string
-- Rearranging array (evens/odds)
-- Count characters, Find non-repeating char
+- Currying (with and without nested functions)
+- Currying using closures
+- Memoization
+- Normal function vs Arrow function
+- const object mutation example (a = ['Fname':'B'])
+- console.log([]==[]); → false
+- let {length} = 'lyakat'; → 6
+- Array push() returns new length
+- a++ with string (NaN)
+- Post-increment example (let a=5; let b=a++)
+- String concatenation: 3+"2"+5
+- Longest continuous increasing subsequence
+- Remove adjacent duplicates from string
+- Rearrange array evens/odds
+- Find non-repeating char in string
+- Count characters in string
 
 ---
 
 ## 🔹 SQL
 - ACID properties
-- CTE
-- Normalization vs Denormalization (1NF, 2NF, 3NF)
+- CTE (Common Table Expressions)
+- Normalization vs Denormalization
+- 1NF, 2NF, 3NF
+- Database table partitioning
 - Views, Indexes, Stored Procedures
 - Joins (INNER, OUTER, LEFT, RIGHT, CROSS)
-- Clustered vs Non-clustered indexes
-- Delete vs Drop
-- Debugging slow queries
+- Clustered vs Non-clustered index
+- Delete vs Drop table
+- Debugging slow queries (EXPLAIN, indexes)
 - InnoDB vs MyISAM
+- Constraints in SQL
 - CHAR vs VARCHAR
-- Nth highest salary
+- Nth highest salary query
 - SQL vs NoSQL
-- Identity column
+- Can identity column be DOUBLE?
 - Magic tables
 - RANK vs DENSE_RANK
 
 ---
 
 ## 🔹 Java
-- Boxing & Unboxing
-- Stack vs Heap memory
-- Function interface Vs Interface
+- Boxing and Unboxing
+- Java memory (Stack vs Heap)
 - Memory leak identification
 - Multithreading (e.g., concurrency, synchronization, thread pools)
 - Data structures (e.g., List, Map, Set implementations and their complexities)
 
 ---
 
-## 🔹 .NET / C#
-- Collections
+## 🔹 .NET (C#, .NET Core, .NET Framework)
+- Collections and types of collections
 - LINQ
-- Generic vs Non-generic
+- Generic vs Non-generic classes
 - Class vs Structure
-- Value vs Reference types
+- Value types vs Reference types
 - == vs .Equals()
 - Abstract class vs Interface
 - const vs readonly vs static
-- async/await
-- Middleware & Filters
-- Design patterns (Factory, etc.)
+- async / await in C#
+- Filters vs Middleware
+- Middleware vs custom middleware
+- What are the challenges faced during .NET development?
+- Latest version of .NET used?
+- .NET Framework vs .NET Core
+- Design patterns in .NET
+- Factory design pattern return type
 - IActionResult vs ActionResult
-- API Authentication
-- Token storage alternatives
+- API authentication
+- Is there a way to avoid storing token in local storage and sending it again and again?
 - IEnumerable vs IEnumerator
-- CLR, GAC, AppDomain
+- Difference between .NET, Java, and Python apps
+- What is Kestrel in .NET Core?
+- What is CLR, GAC, AppDomain?
 - WebForms vs MVC vs Web API
-- Kestrel server
 
 ---
 
 ## 🔹 ADO.NET
 - Connected vs Disconnected architecture
 - SqlDataReader vs SqlDataAdapter
-- Preventing SQL Injection
-- Transactions
+- Preventing SQL Injection in ADO.NET
+- Transactions in ADO.NET
 
 ---
 
