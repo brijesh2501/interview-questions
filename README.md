@@ -108,6 +108,7 @@ Const a = [‘Fname’: ‘A’]
 a =  [‘Fname’: ‘B’] // this will throw error
 a[[‘Fname’] = ‘B’; // this will work
 ```
+- Deep copy vs shallow copy?
 ---
 
 ## 🔹 SQL
@@ -201,6 +202,95 @@ a[[‘Fname’] = ‘B’; // this will work
 - You need to implement a real-time notification system – which Java concurrency/async features will you use?
 - How do you design a thread-safe singleton in Java?
 - Given a large JSON payload, how would you efficiently parse it in Java?
+
+---
+
+## 🔹 Python
+
+### Core Python
+- Difference between list, tuple, set, dictionary?
+- Explain Python’s GIL (Global Interpreter Lock).
+- Shallow copy vs deep copy?
+- Explain Python decorators with an example.
+- Difference between @classmethod, @staticmethod, and instance method?
+- What is a generator? How does yield work?
+- Explain Python’s memory management.
+- Difference between is and ==?
+- What are Python data classes?
+- How do you handle concurrency in Python? (threading vs multiprocessing vs asyncio)
+
+### Coding style Qs:
+- Reverse a string in Python in 3 ways.
+- Flatten a nested list.
+- Implement LRU cache in Python.
+
+### AI / ML
+- What is bias-variance tradeoff?
+- Difference between supervised, unsupervised, reinforcement learning?
+- What is overfitting? How to prevent it?
+- Difference between bagging and boosting?
+- Explain precision, recall, F1-score.
+- What is PCA? Why is it used?
+- Explain gradient descent.
+- What is regularization (L1, L2)?
+- What is transfer learning?
+- Difference between CNN, RNN, Transformer?
+
+### Coding style Qs:
+- Implement linear regression using gradient descent (without sklearn).
+- Train/test split and accuracy calculation in Python.
+- Use scikit-learn to train a logistic regression on sample data.
+
+### Agents (GenAI / LangChain / AI Ops)
+- What are AI Agents?
+- Difference between an LLM and an Agent?
+- What is LangChain?
+- How does a ReAct Agent work?
+- How do Agents use tools (APIs, databases, search)?
+- What is vector embedding? Why is it important for Agents?
+- Explain RAG (Retrieval Augmented Generation).
+- What is chain-of-thought reasoning?
+- How do autonomous Agents (like AutoGPT, BabyAGI) work?
+- What are limitations of Agents (hallucination, cost, latency)?
+
+### Coding style Qs:
+- Create a simple LangChain agent to call a weather API.
+- Use OpenAI + vector DB to answer from PDFs.
+- Build a task-planning agent (multi-step reasoning).
+
+### Django
+- What is Django ORM? How does it compare to raw SQL?
+- Difference between @login_required vs middleware authentication?
+- What is Django Rest Framework (DRF)?
+- How do signals work in Django?
+- What are Django middleware and their use cases?
+- How do you handle migrations in Django?
+- Explain difference between select_related and prefetch_related.
+- How does Django handle CSRF?
+- What is Django’s class-based view vs function-based view?
+- How do you scale a Django app?
+
+### Coding style Qs:
+- Write a Django model for Order with ForeignKey to Customer.
+- Write a DRF view to return JSON list of products.
+- Implement a custom Django middleware.
+
+### FastAPI
+- Difference between Django REST Framework and FastAPI?
+- How does FastAPI handle async vs sync?
+- Explain dependency injection in FastAPI.
+- How does FastAPI handle validation (Pydantic models)?
+- What is the role of BackgroundTasks?
+- How do you implement authentication/authorization in FastAPI?
+- How does FastAPI handle WebSockets?
+- How do you integrate Celery with FastAPI for background jobs?
+- Explain caching strategies in FastAPI (Redis, in-memory).
+- How do you scale FastAPI with Gunicorn + Uvicorn workers?
+
+### Coding style Qs:
+- Create a FastAPI endpoint for CRUD operations on Book.
+- Implement JWT auth in FastAPI.
+- Implement rate-limiting middleware in FastAPI.
 
 ---
 
