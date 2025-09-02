@@ -71,6 +71,10 @@ This repository contains a **curated list of interview questions** collected fro
 ## 🔹 Java
 - Boxing & Unboxing
 - Stack vs Heap memory
+- Function interface Vs Interface
+- Memory leak identification
+- Multithreading (e.g., concurrency, synchronization, thread pools)
+- Data structures (e.g., List, Map, Set implementations and their complexities)
 
 ---
 
