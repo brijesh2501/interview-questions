@@ -5,7 +5,7 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 Node.js
-- Callstack, Event Loop, Thread pool
+- Callstack, Event Loop, Thread pool , Task / Callback Queue , Microtask Queue , Web API ?
 - How to handle 1 million concurrent requests using Node.js?
 - What are streams / buffers in Node.js?
 - How to create custom middleware in Node.js?
@@ -20,6 +20,7 @@ This repository contains a **curated list of interview questions** collected fro
 - How to build Docker image (dependencies)?
 - Sharding and partitioning
 - Horizontal vs vertical scaling
+- What is child process in nodejs
 
 ---
 
@@ -44,6 +45,7 @@ This repository contains a **curated list of interview questions** collected fro
 - How do you secure React applications?
 - How do you make code more maintainable and readable in React?
 - How do you debug React apps (e.g. login failure)?
+- Difference Between Axios Vs Fetch API ?
 
 ---
 
@@ -57,18 +59,23 @@ This repository contains a **curated list of interview questions** collected fro
 - Currying using closures
 - Memoization
 - Normal function vs Arrow function
-- const object mutation example (a = ['Fname':'B'])
-- console.log([]==[]); → false
-- let {length} = 'lyakat'; → 6
-- Array push() returns new length
-- a++ with string (NaN)
-- Post-increment example (let a=5; let b=a++)
-- String concatenation: 3+"2"+5
 - Longest continuous increasing subsequence
 - Remove adjacent duplicates from string
 - Rearrange array evens/odds
 - Find non-repeating char in string
 - Count characters in string
+- Question based on javascript
+    console.log([]==[]); // false
+    let {length} = 'lyakat';//6
+    console.log(length);
+    let arr = [];
+    console.log(arr.push(6));
+    const  a = "brijesh";
+    console.log(a++);
+    let a = 5;
+    let b = a++;
+    console.log(a+b);
+    console.log(3+"2"+5);
 
 ---
 
