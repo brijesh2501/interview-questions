@@ -175,6 +175,10 @@ console.log(3+"2"+5);
 - Micro service vs Monolithik architecture ?
 - Micro Frontend Architecture ?
 - Major challenges faced during your last project ?
+- CAP Theoram ?
+- ACID Properties ?
+- SOLID Priciple Understanding ?
+- Data Structure , how and why use different types of data Strucure ?
 
 
 
