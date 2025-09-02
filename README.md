@@ -166,6 +166,18 @@ console.log(3+"2"+5);
 
 ---
 
+## 🔹 Solution Architecture / System Design  / Solution Architect
+- When we use kafka - lots of cross questions on why we use kafka and not use SQL , more use cases of kafka
+- How to build docker image - is the dependency automatically added or we need to add manually.
+- Scenario based questions : How to create a Movie booking app with block and unblock seat.
+- When to use mongodb over sql.
+- Horizontal scaling and vertical scaling.
+- Micro service vs Monolithik architecture ?
+- Micro Frontend Architecture ?
+- Major challenges faced during your last project ?
+
+
+
 ## 📌 Usage
 Use this repository as a **quick reference** when preparing for **Fullstack, Backend, or .NET interviews**.
 
