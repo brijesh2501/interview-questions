@@ -46,6 +46,23 @@ This repository contains a **curated list of interview questions** collected fro
 - How do you make code more maintainable and readable in React?
 - How do you debug React apps (e.g. login failure)?
 - Difference Between Axios Vs Fetch API ?
+- Create search feature in reactJs for below given array
+[
+    "Banana",
+    "Apple",
+    "Orange",
+    "Mango",
+    "Pineapple",
+    "Watermelon"
+  ]
+- Create todo application in reactJs
+- How do you handle concurrency in reactJs like using useTransion
+- React fibre Algorithim
+- Create a functionality in reactjs using react function component ON / OFF button , when click on ON button its text changes to OFF and Vice a versa
+- What is higher order functions
+- React Reconcillation algo ?
+- Throttling VS Debouncing ?
+
 
 ---
 
@@ -78,6 +95,7 @@ let b = a++;
 console.log(a+b);
 console.log(3+"2"+5);
 ```
+- Event bubbling ? 
 
 ---
 
