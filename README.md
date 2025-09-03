@@ -70,12 +70,14 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 JavaScript
-- ES6 + features
+- ES6 + features (Spread operator, Rest , arrow functions , destructuring , promises , import , class
+)
 - Closure
 - Hoisting
 - Rest vs Spread operator
 - call(), bind(), apply()
 - forEach vs map()
+- map vs filter vs reducer function
 - Currying (with and without nested functions)
 - Currying using closures
 - Memoization
@@ -108,6 +110,10 @@ Const a = [‘Fname’: ‘A’]
 a =  [‘Fname’: ‘B’] // this will throw error
 a[[‘Fname’] = ‘B’; // this will work
 ```
+```javascript
+console.log([1]+[2])//12
+console.log([1,3]+[2,4])//1,32,4
+```
 - Deep copy vs shallow copy?
 ---
 
@@ -135,6 +141,7 @@ a[[‘Fname’] = ‘B’; // this will work
 
 ## 🔹 Java
 - Boxing and Unboxing
+- Hibernate
 - Java memory (Stack vs Heap)
 - Memory leak identification
 - Multithreading (e.g., concurrency, synchronization, thread pools)
