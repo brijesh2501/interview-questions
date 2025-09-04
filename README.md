@@ -134,6 +134,7 @@ type User = { id: number };
 // ❌ Error: Duplicate identifier 'User'
 type User = { name: string };
 ```
+- Gerneric type VS Specific type
 
 ## 🔹 SQL
 - ACID properties
