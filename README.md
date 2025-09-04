@@ -64,8 +64,8 @@ This repository contains a **curated list of interview questions** collected fro
 - Throttling VS Debouncing ?
 - Redux Thunk Vs Redux Saga middleware ? 
 - React Hydration ?
-
-
+- What is webpack , how to configure ?
+- useEffect(() => {},[]) VS useEffect(() => {}) VS useEffect(() => {},[dependency])
 
 ---
 
@@ -116,6 +116,24 @@ console.log([1,3]+[2,4])//1,32,4
 ```
 - Deep copy vs shallow copy?
 ---
+
+## 🔹 Typescript
+- Latest version - 5.9.0
+- Difference between type vs interface
+```javascript
+interface User {
+  id: number;
+}
+interface User {
+  name: string;
+}
+
+const u: User = { id: 1, name: "Alice" }; // merged
+
+type User = { id: number };
+// ❌ Error: Duplicate identifier 'User'
+type User = { name: string };
+```
 
 ## 🔹 SQL
 - ACID properties
