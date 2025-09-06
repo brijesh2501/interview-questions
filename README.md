@@ -21,6 +21,8 @@ This repository contains a **curated list of interview questions** collected fro
 - Sharding and partitioning
 - Horizontal vs vertical scaling
 - What is child process in nodejs
+- Design patterns Singleton , Factory , Obeserer pattern ?
+- How do you handle if request route is not found using nodejs
 
 ---
 
@@ -100,6 +102,32 @@ let a = 5;
 let b = a++;
 console.log(a+b);
 console.log(3+"2"+5);
+console.log(1+true);//2
+
+function outer() {
+    var a = 10;
+    function inner(){
+        console.log(a);
+        var a = 20;
+    }
+    inner();
+}
+
+var fun = outer;
+
+fun();
+
+let str = "Write, Edit and Run your Javascript code using JS Online Compiler";
+
+let strArr = str.split(" ");
+console.log(strArr);
+
+let newArr = strArr.map((element , index) => {
+    return index % 2 !== 0 ? element.split("").reverse().join("") : element;
+})
+
+console.log(newArr.join(" "));
+
 ```
 - Event bubbling Or Event Delegation ? 
 - Write a javascript Program , Input : [20, 30 , 40] and output [70, 60, 50]
@@ -228,7 +256,8 @@ type User = { name: string };
 - You need to implement a real-time notification system – which Java concurrency/async features will you use?
 - How do you design a thread-safe singleton in Java?
 - Given a large JSON payload, how would you efficiently parse it in Java?
-
+- What are the annotations in JUnit ?
+- Lambda function parameters are public or not ? // In Java, when you write a lambda expression, the parameters of the lambda do not have an access modifier like public, private, or protected.
 ---
 
 ## 🔹 Python
