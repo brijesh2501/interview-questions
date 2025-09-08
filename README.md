@@ -162,7 +162,19 @@ type User = { id: number };
 // ❌ Error: Duplicate identifier 'User'
 type User = { name: string };
 ```
-- Gerneric type VS Specific type
+- Gerneric type VS Specific type?
+- finding sum of digits of a number until sum becomes single digit. given a number n, we need to find the sum of its digits such that: if n < 10 digsum(n) = n else digsum(n) = sum(digsum(n)) examples : input : 1234 output : 1 explanation : the sum of 1+2+3+4 = 10, digsum(x) == 10 hence ans will be 1+0 = 1 input : 5674 output : 4
+```javascript
+function  getSumOfDigits(num) {
+if(num<10) return num;
+let numArr = num.toString().split("");
+let newArr = numArr.map(n => parseInt(n));
+let sumOfDigits = newArr.reduce((a,b) => a+b,0);
+return getSumOfDigits(sumOfDigits);
+}
+
+console.log(getSumOfDigits(5674));
+```
 
 ## 🔹 SQL
 - ACID properties
