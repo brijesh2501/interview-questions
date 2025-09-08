@@ -283,6 +283,8 @@ public class UserController {
     }
 }
 ```
+- How do you handle security in Spring boot application ?
+- How so you handle migration ?
 
 ### Scenario-Based / Problem-Solving
 - You have a Java app facing high CPU usage – how would you debug it?
