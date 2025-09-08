@@ -248,6 +248,29 @@ type User = { name: string };
 - How does Spring handle transactions?
 - How do you implement circuit breaker, rate limiting, or service discovery in microservices?
 - How do you design a scalable microservice architecture in Java?
+- Spring WebFlux ?
+- What is the problem in this code?
+```javascript 
+public List<User> findAllUsers() {
+    List<User> users = userRepository.findAll();
+    for(User user : users) {
+        user.setOrders(orderRepository.findByUserId(user.getId()));
+    }
+    return users;
+}
+```
+- What is the problem in this code?
+```javascript 
+-@RestController
+public class UserController {
+    @Autowired
+    private UserService userService;
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id).get();
+    }
+}
+```
 
 ### Scenario-Based / Problem-Solving
 - You have a Java app facing high CPU usage – how would you debug it?
