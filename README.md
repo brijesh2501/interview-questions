@@ -143,6 +143,49 @@ console.log([1]+[2])//12
 console.log([1,3]+[2,4])//1,32,4
 ```
 - Deep copy vs shallow copy?
+- Flatten nested array in JavaScript (recursive and iterative)?
+```javascript
+function flattenArray(input) {
+    const result = [];
+
+    for (const value of input) {
+        if (Array.isArray(value)) {
+            result.push(...flattenArray(value));
+        } else {
+            result.push(value);
+        }
+    }
+
+    return result;
+}
+
+function flattenArrayIterative(input) {
+    const stack = [...input];
+    const result = [];
+
+    while (stack.length > 0) {
+        const value = stack.pop();
+
+        if (Array.isArray(value)) {
+            stack.push(...value);
+        } else {
+            result.push(value);
+        }
+    }
+
+    return result.reverse();
+}
+
+const sample = [1, [2, [3, [4]], 5]];
+
+console.log('Recursive:', flattenArray(sample));
+console.log('Iterative:', flattenArrayIterative(sample));
+
+module.exports = {
+    flattenArray,
+    flattenArrayIterative
+};
+```
 ---
 
 ## 🔹 Typescript
@@ -443,6 +486,6 @@ Use this repository as a **quick reference** when preparing for **Fullstack, Bac
 
 ✅ Covers **Node.js, React.js, SQL, JavaScript, Java, .NET, and ADO.NET**.  
 ✅ Includes both **theory & coding questions**.  
-✅ Based on **real interviews from 2025**.  
+✅ Based on **real interviews from 2026**.  
 
 ---
