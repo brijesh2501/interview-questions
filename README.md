@@ -1,6 +1,6 @@
 # 📚 Fullstack Interview Questions (Node.js, React.js, SQL, JavaScript, Java, .NET, ADO.NET)
 
-This repository contains a **curated list of interview questions** collected from real interviews in **2025** for Fullstack developers (React.js + Node.js + SQL + .NET + JavaScript + Java).
+This repository contains a **curated list of interview questions** collected from real interviews in **2026** for Fullstack developers (React.js + Node.js + SQL + .NET + JavaScript + Java).
 
 ---
 
