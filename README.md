@@ -5,6 +5,7 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 Node.js
+
 - Callstack, Event Loop, Thread pool , Task / Callback Queue , Microtask Queue , Web API ?
 - How to handle 1 million concurrent requests using Node.js?
 - What are streams / buffers in Node.js?
@@ -27,6 +28,7 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 React.js
+
 - Controlled vs Uncontrolled components
 - Static site vs server-side rendering
 - How do you manage state in React?
@@ -49,13 +51,13 @@ This repository contains a **curated list of interview questions** collected fro
 - How do you debug React apps (e.g. login failure)?
 - Difference Between Axios Vs Fetch API ?
 - Create search feature in reactJs for below given array
-[
-    "Banana",
-    "Apple",
-    "Orange",
-    "Mango",
-    "Pineapple",
-    "Watermelon"
+  [
+  "Banana",
+  "Apple",
+  "Orange",
+  "Mango",
+  "Pineapple",
+  "Watermelon"
   ]
 - Create todo application in reactJs
 - How do you handle concurrency in reactJs like using useTransion
@@ -64,7 +66,7 @@ This repository contains a **curated list of interview questions** collected fro
 - What is higher order functions ? why and when use HOC ?
 - React Reconcillation algo ?
 - Throttling VS Debouncing ?
-- Redux Thunk Vs Redux Saga middleware ? 
+- Redux Thunk Vs Redux Saga middleware ?
 - React Hydration ?
 - What is webpack , how to configure ?
 - useEffect(() => {},[]) VS useEffect(() => {}) VS useEffect(() => {},[dependency])
@@ -72,8 +74,9 @@ This repository contains a **curated list of interview questions** collected fro
 ---
 
 ## 🔹 JavaScript
+
 - ES6 + features (Spread operator, Rest , arrow functions , destructuring , promises , import , class
-)
+  )
 - Closure
 - Hoisting
 - Rest vs Spread operator
@@ -90,27 +93,28 @@ This repository contains a **curated list of interview questions** collected fro
 - Find non-repeating char in string
 - Count characters in string
 - Question based on javascript
+
 ```javascript
-console.log([]==[]); // false
-let {length} = 'lyakat';//6
+console.log([] == []); // false
+let { length } = "lyakat"; //6
 console.log(length);
 let arr = [];
 console.log(arr.push(6));
-const  a = "brijesh";
+const a = "brijesh";
 console.log(a++);
 let a = 5;
 let b = a++;
-console.log(a+b);
-console.log(3+"2"+5);
-console.log(1+true);//2
+console.log(a + b);
+console.log(3 + "2" + 5);
+console.log(1 + true); //2
 
 function outer() {
-    var a = 10;
-    function inner(){
-        console.log(a);
-        var a = 20;
-    }
-    inner();
+  var a = 10;
+  function inner() {
+    console.log(a);
+    var a = 20;
+  }
+  inner();
 }
 
 var fun = outer;
@@ -122,75 +126,82 @@ let str = "Write, Edit and Run your Javascript code using JS Online Compiler";
 let strArr = str.split(" ");
 console.log(strArr);
 
-let newArr = strArr.map((element , index) => {
-    return index % 2 !== 0 ? element.split("").reverse().join("") : element;
-})
+let newArr = strArr.map((element, index) => {
+  return index % 2 !== 0 ? element.split("").reverse().join("") : element;
+});
 
 console.log(newArr.join(" "));
-
 ```
-- Event bubbling Or Event Delegation ? 
+
+- Event bubbling Or Event Delegation ?
 - Write a javascript Program , Input : [20, 30 , 40] and output [70, 60, 50]
-- Find  non repeating char in string Input “Sdbfsbd”   Output :  f
-- Find count of characters in string Input : “aaddbbcf” : output : {a : 2, b: 2 , f: 1, d:2, c:1} and sort keys in object and out  {a : 2, b: 2 , c: 1, d:2, f:1}
+- Find non repeating char in string Input “Sdbfsbd” Output : f
+- Find count of characters in string Input : “aaddbbcf” : output : {a : 2, b: 2 , f: 1, d:2, c:1} and sort keys in object and out {a : 2, b: 2 , c: 1, d:2, f:1}
+
 ```javascript
 Const a = [‘Fname’: ‘A’]
 a =  [‘Fname’: ‘B’] // this will throw error
 a[[‘Fname’] = ‘B’; // this will work
 ```
+
 ```javascript
-console.log([1]+[2])//12
-console.log([1,3]+[2,4])//1,32,4
+console.log([1] + [2]); //12
+console.log([1, 3] + [2, 4]); //1,32,4
 ```
+
 - Deep copy vs shallow copy?
 - Flatten nested array in JavaScript (recursive and iterative)?
+
 ```javascript
 function flattenArray(input) {
-    const result = [];
+  const result = [];
 
-    for (const value of input) {
-        if (Array.isArray(value)) {
-            result.push(...flattenArray(value));
-        } else {
-            result.push(value);
-        }
+  for (const value of input) {
+    if (Array.isArray(value)) {
+      result.push(...flattenArray(value));
+    } else {
+      result.push(value);
     }
+  }
 
-    return result;
+  return result;
 }
 
 function flattenArrayIterative(input) {
-    const stack = [...input];
-    const result = [];
+  const stack = [...input];
+  const result = [];
 
-    while (stack.length > 0) {
-        const value = stack.pop();
+  while (stack.length > 0) {
+    const value = stack.pop();
 
-        if (Array.isArray(value)) {
-            stack.push(...value);
-        } else {
-            result.push(value);
-        }
+    if (Array.isArray(value)) {
+      stack.push(...value);
+    } else {
+      result.push(value);
     }
+  }
 
-    return result.reverse();
+  return result.reverse();
 }
 
 const sample = [1, [2, [3, [4]], 5]];
 
-console.log('Recursive:', flattenArray(sample));
-console.log('Iterative:', flattenArrayIterative(sample));
+console.log("Recursive:", flattenArray(sample));
+console.log("Iterative:", flattenArrayIterative(sample));
 
 module.exports = {
-    flattenArray,
-    flattenArrayIterative
+  flattenArray,
+  flattenArrayIterative,
 };
 ```
+
 ---
 
 ## 🔹 Typescript
+
 - Latest version - 5.9.0
 - Difference between type vs interface
+
 ```javascript
 interface User {
   id: number;
@@ -205,21 +216,24 @@ type User = { id: number };
 // ❌ Error: Duplicate identifier 'User'
 type User = { name: string };
 ```
+
 - Gerneric type VS Specific type?
 - finding sum of digits of a number until sum becomes single digit. given a number n, we need to find the sum of its digits such that: if n < 10 digsum(n) = n else digsum(n) = sum(digsum(n)) examples : input : 1234 output : 1 explanation : the sum of 1+2+3+4 = 10, digsum(x) == 10 hence ans will be 1+0 = 1 input : 5674 output : 4
+
 ```javascript
-function  getSumOfDigits(num) {
-if(num<10) return num;
-let numArr = num.toString().split("");
-let newArr = numArr.map(n => parseInt(n));
-let sumOfDigits = newArr.reduce((a,b) => a+b,0);
-return getSumOfDigits(sumOfDigits);
+function getSumOfDigits(num) {
+  if (num < 10) return num;
+  let numArr = num.toString().split("");
+  let newArr = numArr.map((n) => parseInt(n));
+  let sumOfDigits = newArr.reduce((a, b) => a + b, 0);
+  return getSumOfDigits(sumOfDigits);
 }
 
 console.log(getSumOfDigits(5674));
 ```
 
 ## 🔹 SQL
+
 - ACID properties
 - CTE (Common Table Expressions)
 - Normalization vs Denormalization
@@ -242,13 +256,16 @@ console.log(getSumOfDigits(5674));
 ---
 
 ## 🔹 Java
+
 - Boxing and Unboxing
 - Hibernate
 - Java memory (Stack vs Heap)
 - Memory leak identification
 - Multithreading (e.g., concurrency, synchronization, thread pools)
 - Data structures (e.g., List, Map, Set implementations and their complexities)
+
 ### Core Java
+
 - What are the differences between JDK, JRE, and JVM?
 - How does Java achieve platform independence?
 - Explain OOP principles (Encapsulation, Abstraction, Inheritance, Polymorphism) with examples.
@@ -261,6 +278,7 @@ console.log(getSumOfDigits(5674));
 - What are functional interfaces and lambdas introduced in Java 8?
 
 ### Multithreading & Concurrency
+
 - Difference between process vs thread?
 - What are the states of a Thread lifecycle?
 - Explain synchronized vs ReentrantLock.
@@ -271,6 +289,7 @@ console.log(getSumOfDigits(5674));
 - Deadlock – how to detect and prevent it?
 
 ### Java Collections Framework
+
 - Difference between HashMap, LinkedHashMap, and TreeMap.
 - How does HashMap work internally (hashing, collision, resizing)?
 - Difference between ArrayList vs LinkedList.
@@ -279,6 +298,7 @@ console.log(getSumOfDigits(5674));
 - How does ConcurrentHashMap handle concurrency?
 
 ### Java 8+ Features
+
 - Explain Streams API and its advantages.
 - Difference between map() vs flatMap() in Streams.
 - What are Optional and its best practices?
@@ -287,6 +307,7 @@ console.log(getSumOfDigits(5674));
 - How does method reference (::) work?
 
 ### JVM & Performance
+
 - What are the components of the JVM architecture?
 - Difference between heap vs stack memory.
 - What are class loaders in Java?
@@ -295,6 +316,7 @@ console.log(getSumOfDigits(5674));
 - How do you analyze memory leaks in a Java application?
 
 ### Spring Boot & Microservices (Java Ecosystem)
+
 - Difference between Spring vs Spring Boot.
 - How does Dependency Injection (DI) work in Spring?
 - What is the role of @Component, @Service, @Repository, @Controller?
@@ -305,7 +327,8 @@ console.log(getSumOfDigits(5674));
 - How do you design a scalable microservice architecture in Java?
 - Spring WebFlux ?
 - What is the problem in this code?
-```javascript 
+
+```javascript
 public List<User> findAllUsers() {
     List<User> users = userRepository.findAll();
     for(User user : users) {
@@ -314,8 +337,10 @@ public List<User> findAllUsers() {
     return users;
 }
 ```
+
 - What is the problem in this code?
-```javascript 
+
+```javascript
 -@RestController
 public class UserController {
     @Autowired
@@ -326,10 +351,12 @@ public class UserController {
     }
 }
 ```
+
 - How do you handle security in Spring boot application ?
 - How so you handle migration ?
 
 ### Scenario-Based / Problem-Solving
+
 - You have a Java app facing high CPU usage – how would you debug it?
 - Your Java service is facing memory leaks – what tools and steps will you use?
 - How do you handle large data processing efficiently in Java?
@@ -338,11 +365,13 @@ public class UserController {
 - Given a large JSON payload, how would you efficiently parse it in Java?
 - What are the annotations in JUnit ?
 - Lambda function parameters are public or not ? // In Java, when you write a lambda expression, the parameters of the lambda do not have an access modifier like public, private, or protected.
+
 ---
 
 ## 🔹 Python
 
 ### Core Python
+
 - Difference between list, tuple, set, dictionary?
 - Explain Python’s GIL (Global Interpreter Lock).
 - Shallow copy vs deep copy?
@@ -355,11 +384,13 @@ public class UserController {
 - How do you handle concurrency in Python? (threading vs multiprocessing vs asyncio)
 
 ### Coding style Qs:
+
 - Reverse a string in Python in 3 ways.
 - Flatten a nested list.
 - Implement LRU cache in Python.
 
 ### AI / ML
+
 - What is bias-variance tradeoff?
 - Difference between supervised, unsupervised, reinforcement learning?
 - What is overfitting? How to prevent it?
@@ -372,11 +403,13 @@ public class UserController {
 - Difference between CNN, RNN, Transformer?
 
 ### Coding style Qs:
+
 - Implement linear regression using gradient descent (without sklearn).
 - Train/test split and accuracy calculation in Python.
 - Use scikit-learn to train a logistic regression on sample data.
 
 ### Agents (GenAI / LangChain / AI Ops)
+
 - What are AI Agents?
 - Difference between an LLM and an Agent?
 - What is LangChain?
@@ -389,11 +422,13 @@ public class UserController {
 - What are limitations of Agents (hallucination, cost, latency)?
 
 ### Coding style Qs:
+
 - Create a simple LangChain agent to call a weather API.
 - Use OpenAI + vector DB to answer from PDFs.
 - Build a task-planning agent (multi-step reasoning).
 
 ### Django
+
 - What is Django ORM? How does it compare to raw SQL?
 - Difference between @login_required vs middleware authentication?
 - What is Django Rest Framework (DRF)?
@@ -406,11 +441,13 @@ public class UserController {
 - How do you scale a Django app?
 
 ### Coding style Qs:
+
 - Write a Django model for Order with ForeignKey to Customer.
 - Write a DRF view to return JSON list of products.
 - Implement a custom Django middleware.
 
 ### FastAPI
+
 - Difference between Django REST Framework and FastAPI?
 - How does FastAPI handle async vs sync?
 - Explain dependency injection in FastAPI.
@@ -423,6 +460,7 @@ public class UserController {
 - How do you scale FastAPI with Gunicorn + Uvicorn workers?
 
 ### Coding style Qs:
+
 - Create a FastAPI endpoint for CRUD operations on Book.
 - Implement JWT auth in FastAPI.
 - Implement rate-limiting middleware in FastAPI.
@@ -430,6 +468,7 @@ public class UserController {
 ---
 
 ## 🔹 .NET (C#, .NET Core, .NET Framework)
+
 - Collections and types of collections
 - LINQ
 - Generic vs Non-generic classes
@@ -458,6 +497,7 @@ public class UserController {
 ---
 
 ## 🔹 ADO.NET
+
 - Connected vs Disconnected architecture
 - SqlDataReader vs SqlDataAdapter
 - Preventing SQL Injection in ADO.NET
@@ -465,7 +505,8 @@ public class UserController {
 
 ---
 
-## 🔹 Solution Architecture / System Design  / Solution Architect
+## 🔹 Solution Architecture / System Design / Solution Architect
+
 - When we use kafka - lots of cross questions on why we use kafka and not use SQL , more use cases of kafka
 - How to build docker image - is the dependency automatically added or we need to add manually.
 - Scenario based questions : How to create a Movie booking app with block and unblock seat.
@@ -480,12 +521,60 @@ public class UserController {
 - Data Structure , how and why use different types of data Strucure ?
 - SQS , SNS , alternatives of Kafka ?
 
+---
+
+## 🔹 ReactJs/DotNet Fullstack + DXC Technologies
+
+1. **End to end steps to write web API endpoint**
+   - Example: Write endpoint `/products` to get list of products
+   - How to proceed with development?
+   - How to connect with database and Entity Framework?
+   - What packages need to be installed before starting development?
+
+2. **SQL - Stored Procedures, Functions and Types of Functions**
+
+3. **How to write middleware**
+
+4. **How to connect to database and query**
+
+5. **How to call API from frontend (React) and render data in table**
+
+6. **Write a program to reverse the array**
+   - Input: `["a","a","b","c","c","c"]`
+   - Output: `["c","c","c","b","a","a"]`
+
+7. **Write a program to count each element in array**
+   - Input: `["a","a","b","c","c","c"]`
+   - Output: `{ c: 3, b: 1, a: 2 }`
+
+8. **In React.js - What is JSX and Context API use cases**
+
+9. **How many types of components in React.js?**
+   - Want to explore functional and class-based components
+
+10. **List products from API and display with loading state**
+    - API: https://dummyjson.com/products
+    - Display loading image until response comes from API
+    - Implement proper error handling
+
+11. **Why need Unit test cases and how to check code coverage**
+
+12. **Display property in CSS**
+
+13. **Semantic elements in HTML and Accessibility**
+
+14. **JWT token - How to create, store user info, and validate**
+
+15. **How to refresh user token when user is idle for some time and token expires**
+
+---
 
 ## 📌 Usage
+
 Use this repository as a **quick reference** when preparing for **Fullstack, Backend, or .NET interviews**.
 
 ✅ Covers **Node.js, React.js, SQL, JavaScript, Java, .NET, and ADO.NET**.  
 ✅ Includes both **theory & coding questions**.  
-✅ Based on **real interviews from 2026**.  
+✅ Based on **real interviews from 2026**.
 
 ---
