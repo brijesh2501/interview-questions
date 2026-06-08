@@ -1,6 +1,6 @@
 ﻿# PowerPresent 3 - Frontend Architecture
 
-**Prepared by:** Agarwal, Pulkit
+**Prepared by:** Brijesh Rawat
 
 **Date:** 04/11/2025
 
