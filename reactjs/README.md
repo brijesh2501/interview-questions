@@ -392,22 +392,19 @@ function NavBar() {
 ### Diagram
 
 ```mermaid
-graph TD
-    App["App (AuthProvider)"]
-    NavBar["NavBar"]
-    Dashboard["Dashboard"]
-    Profile["Profile"]
-    Settings["Settings"]
+flowchart TD
+  AppProvider["App + AuthProvider"]
+  ContextValue["AuthContext value: user, login, logout, isLoggedIn"]
 
-    App --> NavBar
-    App --> Dashboard
-    Dashboard --> Profile
-    Dashboard --> Settings
+  AppProvider --> NavBar["NavBar"]
+  AppProvider --> Dashboard["Dashboard"]
+  Dashboard --> Profile["Profile"]
+  Dashboard --> Settings["Settings"]
 
-    AuthContext["AuthContext Value\n{ user, login, logout }"]
-    AuthContext -.->|useAuth()| NavBar
-    AuthContext -.->|useAuth()| Profile
-    AuthContext -.->|useAuth()| Settings
+  AppProvider --> ContextValue
+  ContextValue -. "useAuth" .-> NavBar
+  ContextValue -. "useAuth" .-> Profile
+  ContextValue -. "useAuth" .-> Settings
 ```
 
 ---
