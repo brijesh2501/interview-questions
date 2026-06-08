@@ -60,27 +60,27 @@ Explain the different types of JOINs with a real e-commerce schema.
 -- order_items(id, order_id, product_id, qty, price)
 -- products(id, name, category, price, stock)
 
--- INNER JOIN â€“ only customers who have placed orders
+-- INNER JOIN - only customers who have placed orders
 SELECT c.name, COUNT(o.id) AS order_count, SUM(o.total) AS lifetime_value
 FROM customers c
 INNER JOIN orders o ON o.customer_id = c.id
 GROUP BY c.id, c.name
 ORDER BY lifetime_value DESC;
 
--- LEFT JOIN â€“ ALL customers, including those with no orders
+-- LEFT JOIN - ALL customers, including those with no orders
 SELECT c.name, COALESCE(COUNT(o.id), 0) AS order_count
 FROM customers c
 LEFT JOIN orders o ON o.customer_id = c.id
 GROUP BY c.id, c.name;
 
--- Self JOIN â€“ find customers referred by other customers
+-- Self JOIN - find customers referred by other customers
 SELECT
     r.name AS referrer,
     u.name AS referred_user
 FROM customers u
 JOIN customers r ON r.id = u.referred_by_id;
 
--- Multiple JOINs â€“ full order breakdown
+-- Multiple JOINs - full order breakdown
 SELECT
     c.name        AS customer,
     o.id          AS order_id,
@@ -164,7 +164,7 @@ Find the top 3 customers by revenue per region using a CTE.
 ### Answer
 
 ```sql
--- CTE (WITH clause) â€“ readable, reusable within the query
+-- CTE (WITH clause) - readable, reusable within the query
 WITH customer_revenue AS (
     SELECT
         c.id,
@@ -201,7 +201,7 @@ WHERE price > (
 );
 ```
 
-### Recursive CTE â€“ Employee Hierarchy
+### Recursive CTE - Employee Hierarchy
 
 ```sql
 -- employees(id, name, manager_id)
@@ -231,28 +231,28 @@ How do indexes work and when should you create them?
 ### Answer
 
 ```sql
--- B-tree index (default) â€“ equality + range queries
+-- B-tree index (default) - equality + range queries
 CREATE INDEX idx_orders_customer ON orders(customer_id);
 CREATE INDEX idx_orders_created  ON orders(created_at DESC);
 
--- Composite index â€“ supports queries filtering on BOTH columns
+-- Composite index - supports queries filtering on BOTH columns
 CREATE INDEX idx_orders_status_date ON orders(status, created_at);
 -- Efficient for: WHERE status = 'pending' AND created_at > ...
 -- NOT efficient for: WHERE created_at > ... (status not in lead position)
 
--- Partial index â€“ only index the rows you actually query
+-- Partial index - only index the rows you actually query
 CREATE INDEX idx_orders_pending ON orders(created_at)
 WHERE status = 'pending';  -- smaller, faster
 
--- Covering index â€“ avoids table lookup entirely
+-- Covering index - avoids table lookup entirely
 CREATE INDEX idx_products_search ON products(category, price)
 INCLUDE (name, stock);  -- PostgreSQL INCLUDE syntax
 
--- Unique index â€“ constraint + performance
+-- Unique index - constraint + performance
 CREATE UNIQUE INDEX idx_customers_email ON customers(email);
 ```
 
-### EXPLAIN ANALYZE â€“ Reading Query Plans
+### EXPLAIN ANALYZE - Reading Query Plans
 
 ```sql
 EXPLAIN ANALYZE
@@ -275,7 +275,7 @@ graph TD
     Query["SELECT WHERE customer_id = 42"]
     Index{"Index on customer_id?"}
     SeqScan["Full Table Scan\n(slow for large tables)"]
-    IdxScan["Index Lookup\n(fast â€“ O(log n))"]
+    IdxScan["Index Lookup\n(fast - O(log n))"]
 
     Query --> Index
     Index -->|No| SeqScan
@@ -417,13 +417,13 @@ COMMIT;
 ### Isolation Levels
 
 ```sql
--- READ COMMITTED (default PostgreSQL) â€“ sees committed data at each statement
+-- READ COMMITTED (default PostgreSQL) - sees committed data at each statement
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
--- REPEATABLE READ â€“ same rows seen throughout the transaction
+-- REPEATABLE READ - same rows seen throughout the transaction
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
--- SERIALIZABLE â€“ strongest: transactions appear to run sequentially
+-- SERIALIZABLE - strongest: transactions appear to run sequentially
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
 
@@ -436,7 +436,7 @@ Explain normalization forms with an e-commerce example.
 
 ### Answer
 
-### Unnormalized (0NF) â€“ Problems
+### Unnormalized (0NF) - Problems
 
 ```sql
 -- orders table with repeating groups and redundant data
@@ -444,7 +444,7 @@ Explain normalization forms with an e-commerce example.
 -- 101      | Alice         | a@a.com        | Laptop   | 1    | Mouse    | 2
 ```
 
-### 1NF â€“ Atomic values, no repeating groups
+### 1NF - Atomic values, no repeating groups
 
 ```sql
 CREATE TABLE orders (
@@ -458,7 +458,7 @@ CREATE TABLE orders (
 -- Problem: customer data repeats for every item â†’ update anomaly
 ```
 
-### 2NF â€“ Remove partial dependencies (all columns depend on full PK)
+### 2NF - Remove partial dependencies (all columns depend on full PK)
 
 ```sql
 CREATE TABLE orders    (order_id INT PRIMARY KEY, customer_id INT, created_at TIMESTAMP);
@@ -472,7 +472,7 @@ CREATE TABLE order_items (
 );
 ```
 
-### 3NF â€“ Remove transitive dependencies
+### 3NF - Remove transitive dependencies
 
 ```sql
 CREATE TABLE products (
@@ -509,7 +509,7 @@ When would you use a view vs a materialized view?
 ### Answer
 
 ```sql
--- VIEW â€“ virtual table, executes query on each access
+-- VIEW - virtual table, executes query on each access
 CREATE VIEW v_order_summary AS
 SELECT
     o.id,
@@ -525,7 +525,7 @@ GROUP BY o.id, c.name, o.total, o.status;
 -- Use like a table
 SELECT * FROM v_order_summary WHERE status = 'pending';
 
--- MATERIALIZED VIEW â€“ stores results physically, refresh on demand
+-- MATERIALIZED VIEW - stores results physically, refresh on demand
 CREATE MATERIALIZED VIEW mv_daily_sales AS
 SELECT
     DATE(created_at)        AS sale_date,
@@ -561,7 +561,7 @@ When do you use UNION, INTERSECT, and EXCEPT?
 ### Answer
 
 ```sql
--- UNION ALL â€“ combine two result sets (keeps duplicates, faster)
+-- UNION ALL - combine two result sets (keeps duplicates, faster)
 SELECT 'email' AS channel, customer_id, sent_at
 FROM email_campaigns
 WHERE campaign_id = 42
@@ -570,17 +570,17 @@ SELECT 'sms', customer_id, sent_at
 FROM sms_campaigns
 WHERE campaign_id = 42;
 
--- UNION â€“ removes duplicates
+-- UNION - removes duplicates
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
 UNION
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
 
--- INTERSECT â€“ customers who ordered in BOTH years
+-- INTERSECT - customers who ordered in BOTH years
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
 INTERSECT
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
 
--- EXCEPT â€“ customers who ordered in 2023 but NOT 2024 (churned customers)
+-- EXCEPT - customers who ordered in 2023 but NOT 2024 (churned customers)
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
 EXCEPT
 SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
@@ -637,11 +637,11 @@ GROUP BY c.id;
 CREATE INDEX CONCURRENTLY idx_orders_created ON orders(created_at DESC);
 
 -- Step 3: Rewrite correlated subquery as a JOIN (often 10-100Ã— faster)
--- âŒ Slow â€“ runs subquery for EVERY row
+-- âŒ Slow - runs subquery for EVERY row
 SELECT name FROM products p
 WHERE p.id IN (SELECT product_id FROM order_items);
 
--- âœ… Fast â€“ single join
+-- âœ… Fast - single join
 SELECT DISTINCT p.name FROM products p
 JOIN order_items oi ON oi.product_id = p.id;
 
@@ -659,11 +659,11 @@ SELECT * FROM orders;
 -- âœ…
 SELECT id, customer_id, total, status FROM orders;
 
--- Step 6: Pagination â€“ use keyset instead of OFFSET for large tables
--- âŒ Slow â€“ scans and discards first 10000 rows
+-- Step 6: Pagination - use keyset instead of OFFSET for large tables
+-- âŒ Slow - scans and discards first 10000 rows
 SELECT * FROM orders ORDER BY id LIMIT 20 OFFSET 10000;
 
--- âœ… Fast â€“ index seek
+-- âœ… Fast - index seek
 SELECT * FROM orders WHERE id > :last_seen_id ORDER BY id LIMIT 20;
 ```
 
@@ -698,7 +698,7 @@ graph TD
 | Topic | Key Points |
 |---|---|
 | SELECT / WHERE | Filtering, ordering, LIKE, IN, BETWEEN |
-| JOINs | INNER, LEFT â€“ read query results correctly |
+| JOINs | INNER, LEFT - read query results correctly |
 | GROUP BY / HAVING | Aggregates, filtering groups |
 | NULL Handling | IS NULL, COALESCE |
 
@@ -715,6 +715,6 @@ graph TD
 |---|---|
 | Query Optimisation | EXPLAIN ANALYZE, index strategies |
 | Transactions | ACID, isolation levels, deadlock prevention |
-| Normalisation | 1NFâ€“3NF trade-offs |
+| Normalisation | 1NF-3NF trade-offs |
 | Stored Procedures | Business logic in DB, error handling |
 

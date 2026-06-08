@@ -23,7 +23,7 @@ const element = (
 // )
 ```
 
-### Reconciliation â€“ Diffing Algorithm
+### Reconciliation - Diffing Algorithm
 
 React diffs the old virtual tree against the new one using three heuristics:
 1. Different element types â†’ destroy & rebuild subtree
@@ -33,10 +33,10 @@ React diffs the old virtual tree against the new one using three heuristics:
 ### Real-World Example
 
 ```jsx
-// âŒ No key â€“ React re-renders entire list on any change
+// âŒ No key - React re-renders entire list on any change
 {items.map(item => <ProductCard name={item.name} />)}
 
-// âœ… Stable key â€“ React only re-renders changed nodes
+// âœ… Stable key - React only re-renders changed nodes
 {items.map(item => <ProductCard key={item.id} name={item.name} />)}
 ```
 
@@ -73,10 +73,10 @@ import { useState } from "react";
 function Counter() {
   const [count, setCount] = useState(0);
 
-  // âŒ Wrong â€“ directly mutating state
+  // âŒ Wrong - directly mutating state
   // count++;
 
-  // âœ… Correct â€“ call setter
+  // âœ… Correct - call setter
   return (
     <div>
       <p>Count: {count}</p>
@@ -88,7 +88,7 @@ function Counter() {
 }
 ```
 
-### Real-World Example â€“ Form State
+### Real-World Example - Form State
 
 ```jsx
 function CheckoutForm() {
@@ -100,7 +100,7 @@ function CheckoutForm() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Generic field updater â€“ no need for one setter per field
+  // Generic field updater - no need for one setter per field
   function handleChange(field, value) {
     setForm(prev => ({ ...prev, [field]: value }));
     setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -136,7 +136,7 @@ function CheckoutForm() {
 
 ---
 
-## 3. useEffect â€“ Side Effects & Cleanup
+## 3. useEffect - Side Effects & Cleanup
 
 ### Question
 Explain `useEffect` and how to handle cleanups.
@@ -169,7 +169,7 @@ function UserProfile({ userId }) {
 
     loadUser();
 
-    // Cleanup â€“ runs before next effect OR on unmount
+    // Cleanup - runs before next effect OR on unmount
     return () => { cancelled = true; };
   }, [userId]); // re-run whenever userId changes
 
@@ -179,7 +179,7 @@ function UserProfile({ userId }) {
 }
 ```
 
-### Real-World Example â€“ WebSocket Connection
+### Real-World Example - WebSocket Connection
 
 ```jsx
 function LiveOrderStatus({ orderId }) {
@@ -236,14 +236,14 @@ function ProductList({ products, onAddToCart }) {
   const [filter, setFilter] = useState("");
   const [sortBy, setSortBy] = useState("price");
 
-  // useMemo â€“ expensive computation, recompute only when deps change
+  // useMemo - expensive computation, recompute only when deps change
   const filteredProducts = useMemo(() => {
     return products
       .filter(p => p.name.toLowerCase().includes(filter.toLowerCase()))
       .sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1);
   }, [products, filter, sortBy]);
 
-  // useCallback â€“ stable function reference for child props
+  // useCallback - stable function reference for child props
   const handleAddToCart = useCallback((productId, qty = 1) => {
     onAddToCart(productId, qty);
   }, [onAddToCart]);
@@ -273,7 +273,7 @@ const ProductCard = React.memo(({ product, onAdd }) => (
 
 ---
 
-## 5. useReducer â€“ Complex State Management
+## 5. useReducer - Complex State Management
 
 ### Question
 When should you use `useReducer` instead of `useState`?
@@ -329,7 +329,7 @@ function ShoppingCart() {
 
 ---
 
-## 6. useContext â€“ Context API
+## 6. useContext - Context API
 
 ### Question
 How do you avoid prop-drilling with the Context API?
@@ -364,7 +364,7 @@ export function AuthProvider({ children }) {
   );
 }
 
-// 3. Custom hook â€“ cleaner API + guards against usage outside provider
+// 3. Custom hook - cleaner API + guards against usage outside provider
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
@@ -420,7 +420,7 @@ How do you create and use custom hooks?
 ### Answer
 
 ```jsx
-// Custom hook â€“ useFetch
+// Custom hook - useFetch
 function useFetch(url) {
   const [data,    setData]    = useState(null);
   const [loading, setLoading] = useState(true);
@@ -450,7 +450,7 @@ function ProductPage({ id }) {
 }
 ```
 
-### Real-World Example â€“ useLocalStorage Hook
+### Real-World Example - useLocalStorage Hook
 
 ```jsx
 function useLocalStorage(key, initialValue) {
@@ -497,7 +497,7 @@ How do you prevent unnecessary re-renders?
 ### Answer
 
 ```jsx
-// Without optimisation â€“ Child re-renders on every Parent render
+// Without optimisation - Child re-renders on every Parent render
 function Parent() {
   const [count, setCount] = useState(0);
   const [name,  setName]  = useState("");
@@ -519,7 +519,7 @@ function ParentOptimised() {
   const [count, setCount] = useState(0);
   const [name,  setName]  = useState("");
 
-  // âœ… Stable reference â€“ only recreated if deps change
+  // âœ… Stable reference - only recreated if deps change
   const handleSelect = useCallback((id) => console.log("selected", id), []);
 
   return (
@@ -531,7 +531,7 @@ function ParentOptimised() {
   );
 }
 
-// âœ… React.memo â€“ skip re-render if props haven't changed
+// âœ… React.memo - skip re-render if props haven't changed
 const ExpensiveList = React.memo(function ExpensiveList({ onSelect }) {
   console.log("ExpensiveList rendered");
   return <ul>{/* hundreds of rows */}</ul>;
@@ -590,7 +590,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Usage â€“ wrap feature sections independently
+// Usage - wrap feature sections independently
 function App() {
   return (
     <div>
@@ -692,7 +692,7 @@ const cartSlice = createSlice({
   initialState: { items: [], total: 0 },
   reducers: {
     addItem(state, action) {
-      // Immer lets you "mutate" â€“ it creates a new state under the hood
+      // Immer lets you "mutate" - it creates a new state under the hood
       const existing = state.items.find(i => i.id === action.payload.id);
       if (existing) {
         existing.qty++;
@@ -757,7 +757,7 @@ graph TD
 
 ---
 
-## 12. React Router â€“ Routing & Navigation
+## 12. React Router - Routing & Navigation
 
 ### Question
 How do you implement routing in React?
@@ -810,7 +810,7 @@ function ProtectedRoute({ children }) {
 
 ---
 
-## 13. Next.js â€“ SSR, SSG & ISR
+## 13. Next.js - SSR, SSG & ISR
 
 ### Question
 Explain the rendering strategies in Next.js.
@@ -818,20 +818,20 @@ Explain the rendering strategies in Next.js.
 ### Answer
 
 ```jsx
-// 1. SERVER-SIDE RENDERING (SSR) â€“ fresh data on every request
+// 1. SERVER-SIDE RENDERING (SSR) - fresh data on every request
 // app/products/[id]/page.tsx  (Next.js 13+ App Router)
 export default async function ProductPage({ params }) {
   const product = await fetch(`https://api.example.com/products/${params.id}`, {
-    cache: "no-store" // SSR â€“ bypass cache
+    cache: "no-store" // SSR - bypass cache
   }).then(r => r.json());
 
   return <ProductDetail product={product} />;
 }
 
-// 2. STATIC SITE GENERATION (SSG) â€“ built once at build time
+// 2. STATIC SITE GENERATION (SSG) - built once at build time
 export default async function BlogPost({ params }) {
   const post = await fetch(`https://api.example.com/posts/${params.slug}`, {
-    cache: "force-cache" // SSG â€“ cache indefinitely
+    cache: "force-cache" // SSG - cache indefinitely
   }).then(r => r.json());
 
   return <Article post={post} />;
@@ -843,7 +843,7 @@ export async function generateStaticParams() {
   return posts.map(p => ({ slug: p.slug }));
 }
 
-// 3. INCREMENTAL STATIC REGENERATION (ISR) â€“ regenerate every N seconds
+// 3. INCREMENTAL STATIC REGENERATION (ISR) - regenerate every N seconds
 export default async function PricePage({ params }) {
   const data = await fetch(`https://api.example.com/prices/${params.id}`, {
     next: { revalidate: 60 } // revalidate every 60 seconds
@@ -879,7 +879,7 @@ What is the difference between controlled and uncontrolled components?
 ### Answer
 
 ```jsx
-// CONTROLLED â€“ React owns the state
+// CONTROLLED - React owns the state
 function ControlledInput() {
   const [value, setValue] = useState("");
 
@@ -892,7 +892,7 @@ function ControlledInput() {
   );
 }
 
-// UNCONTROLLED â€“ DOM owns the state, read via ref
+// UNCONTROLLED - DOM owns the state, read via ref
 function UncontrolledInput() {
   const inputRef = useRef(null);
 
@@ -909,7 +909,7 @@ function UncontrolledInput() {
 }
 ```
 
-### Real-World Example â€“ File Upload (must be uncontrolled)
+### Real-World Example - File Upload (must be uncontrolled)
 
 ```jsx
 function FileUpload({ onUpload }) {
@@ -954,7 +954,7 @@ What is a Higher-Order Component and when should you use it?
 ### Answer
 
 ```jsx
-// HOC â€“ a function that takes a component and returns an enhanced component
+// HOC - a function that takes a component and returns an enhanced component
 function withAuth(WrappedComponent) {
   return function AuthenticatedComponent(props) {
     const { isLoggedIn, user } = useAuth();

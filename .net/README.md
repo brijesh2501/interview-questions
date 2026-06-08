@@ -8,7 +8,7 @@ Explain the four OOP pillars with C# examples.
 ### Answer
 
 ```csharp
-// ENCAPSULATION â€“ hide internals, expose interface
+// ENCAPSULATION - hide internals, expose interface
 public class BankAccount
 {
     private decimal _balance;       // private field
@@ -29,7 +29,7 @@ public class BankAccount
     }
 }
 
-// INHERITANCE â€“ derive from base class
+// INHERITANCE - derive from base class
 public abstract class Animal
 {
     public string Name { get; init; }
@@ -45,12 +45,12 @@ public class Dog : Animal
     public override string Describe() => base.Describe() + ", a dog";
 }
 
-// POLYMORPHISM â€“ same interface, different behaviour
+// POLYMORPHISM - same interface, different behaviour
 Animal[] animals = { new Dog("Rex"), new Cat("Whiskers") };
 foreach (var a in animals)
     Console.WriteLine(a.Speak()); // Dog: Woof!  Cat: Meow!
 
-// ABSTRACTION â€“ abstract the contract
+// ABSTRACTION - abstract the contract
 public interface IPaymentProcessor
 {
     Task<PaymentResult> ProcessAsync(PaymentRequest request);
@@ -80,7 +80,7 @@ graph TD
 
 ---
 
-## 2. LINQ â€“ Language Integrated Query
+## 2. LINQ - Language Integrated Query
 
 ### Question
 Explain LINQ with real-world examples.
@@ -108,7 +108,7 @@ decimal totalRevenue = orders
     .Where(o => o.Status == "delivered")
     .Sum(o => o.Amount);   // 1349
 
-// GroupBy â€“ revenue per customer
+// GroupBy - revenue per customer
 var customerRevenue = orders
     .Where(o => o.Status == "delivered")
     .GroupBy(o => o.Customer)
@@ -128,12 +128,12 @@ var aliceOrders = orders.Where(o => o.Customer == "Alice").ToList();
 bool hasPending  = orders.Any(o => o.Status == "pending");
 bool allDelivered = orders.All(o => o.Status == "delivered");
 
-// Deferred execution â€“ query built, NOT executed yet
+// Deferred execution - query built, NOT executed yet
 var query = orders.Where(o => o.Amount > 100); // no execution
 var result = query.ToList();                    // executes NOW
 ```
 
-### Real-World Example â€“ Reporting API
+### Real-World Example - Reporting API
 
 ```csharp
 public async Task<SalesSummary> GetMonthlySummaryAsync(int year, int month)
@@ -173,7 +173,7 @@ public async Task<User> GetUserAsync(int id)
     return user;
 }
 
-// Parallel execution â€“ run all tasks at once
+// Parallel execution - run all tasks at once
 public async Task<DashboardDto> LoadDashboardAsync(int userId)
 {
     // Start all tasks simultaneously (not sequential await)
@@ -219,13 +219,13 @@ var result = await pipeline.ExecuteAsync(async ct =>
 ### Common Pitfalls
 
 ```csharp
-// âŒ Deadlock â€“ never .Result or .Wait() in sync context
+// âŒ Deadlock - never .Result or .Wait() in sync context
 var user = _userService.GetByIdAsync(1).Result;  // DEADLOCK!
 
 // âœ… Always await async calls
 var user = await _userService.GetByIdAsync(1);
 
-// âŒ async void â€“ swallows exceptions (only OK for event handlers)
+// âŒ async void - swallows exceptions (only OK for event handlers)
 async void LoadData() { await _service.LoadAsync(); }
 
 // âœ… async Task for all other methods
@@ -249,17 +249,17 @@ Explain DI lifetimes and how to configure them.
 ### Answer
 
 ```csharp
-// Program.cs â€“ service registration
+// Program.cs - service registration
 var builder = WebApplication.CreateBuilder(args);
 
-// Transient â€“ new instance every time it's requested
+// Transient - new instance every time it's requested
 builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 
-// Scoped â€“ one instance per HTTP request
+// Scoped - one instance per HTTP request
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Singleton â€“ one instance for the application lifetime
+// Singleton - one instance for the application lifetime
 builder.Services.AddSingleton<ICache, RedisCache>();
 builder.Services.AddSingleton<ILogger>(Log.Logger);
 
@@ -279,7 +279,7 @@ public class OrdersController : ControllerBase
     private readonly IOrderRepository _orders;
     private readonly IEmailService    _email;
 
-    // Constructor injection â€“ recommended
+    // Constructor injection - recommended
     public OrdersController(IOrderRepository orders, IEmailService email)
     {
         _orders = orders;
@@ -326,7 +326,7 @@ How does the middleware pipeline work? Write a custom middleware.
 ### Answer
 
 ```csharp
-// Middleware pipeline â€“ each component calls next()
+// Middleware pipeline - each component calls next()
 public class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -401,7 +401,7 @@ public class GlobalExceptionMiddleware
 }
 
 // Register in Program.cs
-app.UseMiddleware<GlobalExceptionMiddleware>();  // outermost â€“ catches everything
+app.UseMiddleware<GlobalExceptionMiddleware>();  // outermost - catches everything
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -474,7 +474,7 @@ public class ProductRepository
     private readonly AppDbContext _db;
     public ProductRepository(AppDbContext db) => _db = db;
 
-    // âœ… AsNoTracking â€“ faster reads when you don't need to update
+    // âœ… AsNoTracking - faster reads when you don't need to update
     public Task<List<ProductDto>> GetAllAsync() =>
         _db.Products
            .AsNoTracking()
@@ -503,12 +503,12 @@ public class ProductRepository
 ### N+1 Problem
 
 ```csharp
-// âŒ N+1 â€“ 1 query for orders + N queries for each customer
+// âŒ N+1 - 1 query for orders + N queries for each customer
 var orders = await _db.Orders.ToListAsync();
 foreach (var o in orders)
     Console.WriteLine(o.Customer.Name); // lazy load = N extra queries!
 
-// âœ… Eager load â€“ 1 query with JOIN
+// âœ… Eager load - 1 query with JOIN
 var orders = await _db.Orders.Include(o => o.Customer).ToListAsync();
 ```
 
@@ -522,7 +522,7 @@ Implement JWT authentication in ASP.NET Core.
 ### Answer
 
 ```csharp
-// Program.cs â€“ JWT setup
+// Program.cs - JWT setup
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -600,7 +600,7 @@ Implement Repository, Unit of Work, and CQRS patterns.
 ### Answer
 
 ```csharp
-// REPOSITORY PATTERN â€“ abstract data access
+// REPOSITORY PATTERN - abstract data access
 public interface IRepository<T> where T : class
 {
     Task<T?> GetByIdAsync(int id, CancellationToken ct = default);
@@ -627,7 +627,7 @@ public class ProductRepository : IRepository<Product>
     // ...
 }
 
-// UNIT OF WORK â€“ coordinate multiple repositories in one transaction
+// UNIT OF WORK - coordinate multiple repositories in one transaction
 public interface IUnitOfWork : IDisposable
 {
     IProductRepository  Products  { get; }
@@ -681,7 +681,7 @@ Implement CQRS using MediatR.
 ### Answer
 
 ```csharp
-// COMMAND â€“ changes state
+// COMMAND - changes state
 public record CreateOrderCommand(int CustomerId, List<OrderLineItem> Items)
     : IRequest<int>;
 
@@ -707,7 +707,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, int>
     }
 }
 
-// QUERY â€“ reads state, no side effects
+// QUERY - reads state, no side effects
 public record GetOrderByIdQuery(int OrderId) : IRequest<OrderDto?>;
 
 public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, OrderDto?>
@@ -724,7 +724,7 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, OrderDto?>
            .FirstOrDefaultAsync(ct);
 }
 
-// PIPELINE BEHAVIOUR â€“ cross-cutting concerns (validation, logging)
+// PIPELINE BEHAVIOUR - cross-cutting concerns (validation, logging)
 public class ValidationBehaviour<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -751,7 +751,7 @@ public class ValidationBehaviour<TRequest, TResponse>
     }
 }
 
-// Controller â€“ thin, just dispatches
+// Controller - thin, just dispatches
 [HttpPost]
 public async Task<IActionResult> Create(CreateOrderRequest req)
 {
@@ -793,11 +793,11 @@ Explain Clean Architecture and how to structure an ASP.NET Core project.
 
 ```
 Solution Structure:
-  MyApp.Domain          â€“ Entities, Value Objects, Domain Events, Interfaces
-  MyApp.Application     â€“ Use Cases (Commands/Queries), DTOs, Validators
-  MyApp.Infrastructure  â€“ EF Core, Redis, Email, external API clients
-  MyApp.API             â€“ Controllers, Middleware, Startup
-  MyApp.Tests           â€“ Unit + Integration tests
+  MyApp.Domain          - Entities, Value Objects, Domain Events, Interfaces
+  MyApp.Application     - Use Cases (Commands/Queries), DTOs, Validators
+  MyApp.Infrastructure  - EF Core, Redis, Email, external API clients
+  MyApp.API             - Controllers, Middleware, Startup
+  MyApp.Tests           - Unit + Integration tests
 ```
 
 **Dependency Rule:** Inner layers know nothing about outer layers.
@@ -817,7 +817,7 @@ graph TD
     style Domain fill:#4CAF50,color:#fff
 ```
 
-**Domain Entity â€“ no framework dependencies:**
+**Domain Entity - no framework dependencies:**
 
 ```csharp
 // Domain/Entities/Order.cs
@@ -831,7 +831,7 @@ public class Order
     public decimal     Total      => _items.Sum(i => i.LineTotal);
     public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
 
-    // Factory method â€“ encapsulates creation rules
+    // Factory method - encapsulates creation rules
     public static Order Create(int customerId, IEnumerable<OrderItem> items)
     {
         if (!items.Any()) throw new DomainException("Order must have at least one item");
@@ -928,7 +928,7 @@ How do you implement caching in ASP.NET Core?
 ### Answer
 
 ```csharp
-// IMemoryCache â€“ in-process (single server)
+// IMemoryCache - in-process (single server)
 public class ProductService
 {
     private readonly IMemoryCache _cache;
@@ -960,7 +960,7 @@ public class ProductService
     }
 }
 
-// IDistributedCache (Redis) â€“ works across multiple servers
+// IDistributedCache (Redis) - works across multiple servers
 public class DistributedProductService
 {
     private readonly IDistributedCache _cache;
@@ -990,7 +990,7 @@ public class DistributedProductService
         await _cache.RemoveAsync($"product:{id}");
 }
 
-// Response caching â€“ HTTP-level cache headers
+// Response caching - HTTP-level cache headers
 [HttpGet("{id}")]
 [ResponseCache(Duration = 300, VaryByHeader = "Accept")]
 public async Task<IActionResult> GetById(int id) { /* ... */ }
@@ -1006,7 +1006,7 @@ How do you run background tasks in ASP.NET Core?
 ### Answer
 
 ```csharp
-// Hosted service â€“ runs for application lifetime
+// Hosted service - runs for application lifetime
 public class OrderExpiryWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
@@ -1063,7 +1063,7 @@ Explain generics with constraints and real-world usage.
 ### Answer
 
 ```csharp
-// Generic Result type â€“ avoids exceptions for expected failures
+// Generic Result type - avoids exceptions for expected failures
 public class Result<T>
 {
     private Result() { }

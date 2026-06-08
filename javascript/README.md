@@ -25,11 +25,11 @@ counter.increment();
 console.log(counter.getCount()); // 2
 ```
 
-### Real-World Example â€“ Private Cart State
+### Real-World Example - Private Cart State
 
 ```javascript
 function createCart() {
-  const items = []; // private â€“ not accessible outside
+  const items = []; // private - not accessible outside
 
   return {
     addItem(product) {
@@ -43,7 +43,7 @@ function createCart() {
       return items.reduce((sum, i) => sum + i.price, 0);
     },
     getItems() {
-      return [...items]; // return copy â€“ protect internal state
+      return [...items]; // return copy - protect internal state
     }
   };
 }
@@ -98,7 +98,7 @@ console.log(dog.speak()); // inherited from Animal
 console.log(dog.bark());  // own method
 ```
 
-### Real-World Example â€“ ES6 Class (syntax sugar over prototypes)
+### Real-World Example - ES6 Class (syntax sugar over prototypes)
 
 ```javascript
 class Vehicle {
@@ -153,18 +153,18 @@ Explain the `this` keyword and the four binding rules.
 ### Answer
 
 ```javascript
-// 1. Default binding â€“ global / undefined (strict)
+// 1. Default binding - global / undefined (strict)
 function showThis() { console.log(this); }
 showThis(); // window (sloppy) | undefined (strict)
 
-// 2. Implicit binding â€“ left of the dot
+// 2. Implicit binding - left of the dot
 const user = {
   name: "Alice",
   greet() { return `Hi, I'm ${this.name}`; }
 };
 user.greet(); // "Hi, I'm Alice"
 
-// 3. Explicit binding â€“ call / apply / bind
+// 3. Explicit binding - call / apply / bind
 function greet(greeting) { return `${greeting}, ${this.name}`; }
 greet.call({ name: "Bob" }, "Hello");    // Hello, Bob
 greet.apply({ name: "Carol" }, ["Hey"]); // Hey, Carol
@@ -177,7 +177,7 @@ const p = new Person("Eve");
 console.log(p.name); // Eve
 ```
 
-### Real-World Example â€“ Arrow Function Captures `this`
+### Real-World Example - Arrow Function Captures `this`
 
 ```javascript
 class Timer {
@@ -218,7 +218,7 @@ const fetchData = (url) =>
     }, 1000);
   });
 
-// async/await â€“ cleaner syntax, same semantics
+// async/await - cleaner syntax, same semantics
 async function loadUser(id) {
   try {
     const res  = await fetch(`/api/users/${id}`);
@@ -231,7 +231,7 @@ async function loadUser(id) {
 }
 ```
 
-### Real-World Example â€“ Parallel API Calls
+### Real-World Example - Parallel API Calls
 
 ```javascript
 async function loadDashboard(userId) {
@@ -244,7 +244,7 @@ async function loadDashboard(userId) {
   return { user, orders, notifications };
 }
 
-// Promise.allSettled â€“ don't fail if one rejects
+// Promise.allSettled - don't fail if one rejects
 async function loadWidgets(ids) {
   const results = await Promise.allSettled(
     ids.map(id => fetch(`/api/widget/${id}`).then(r => r.json()))
@@ -277,23 +277,23 @@ Explain the JavaScript Event Loop and execution order.
 ### Answer
 
 ```javascript
-console.log("1 â€“ start");
+console.log("1 - start");
 
-setTimeout(() => console.log("4 â€“ setTimeout"), 0); // Macro task
+setTimeout(() => console.log("4 - setTimeout"), 0); // Macro task
 
-Promise.resolve().then(() => console.log("3 â€“ Promise microtask"));
+Promise.resolve().then(() => console.log("3 - Promise microtask"));
 
-console.log("2 â€“ end");
+console.log("2 - end");
 
 // Output: 1, 2, 3, 4
 // Microtasks (Promises) always run BEFORE macro tasks (setTimeout)
 ```
 
-### Real-World Example â€“ UI Update Timing
+### Real-World Example - UI Update Timing
 
 ```javascript
 async function saveAndRefresh(formData) {
-  console.log("Saving...");           // sync â€“ runs immediately
+  console.log("Saving...");           // sync - runs immediately
 
   await fetch("/api/save", {
     method: "POST",
@@ -334,11 +334,11 @@ What is hoisting and how do `var`, `let`, and `const` differ?
 ### Answer
 
 ```javascript
-// var â€“ hoisted AND initialized to undefined
+// var - hoisted AND initialized to undefined
 console.log(a); // undefined (no error)
 var a = 5;
 
-// let/const â€“ hoisted but NOT initialized (Temporal Dead Zone)
+// let/const - hoisted but NOT initialized (Temporal Dead Zone)
 // console.log(b); // ReferenceError
 let b = 10;
 
@@ -353,15 +353,15 @@ function demo() {
 }
 ```
 
-### Real-World Example â€“ Loop Variable Bug
+### Real-World Example - Loop Variable Bug
 
 ```javascript
-// âŒ Bug with var â€“ all handlers share the same i
+// âŒ Bug with var - all handlers share the same i
 for (var i = 0; i < 3; i++) {
   setTimeout(() => console.log(i), 100); // prints 3, 3, 3
 }
 
-// âœ… Fixed with let â€“ each iteration gets its own i
+// âœ… Fixed with let - each iteration gets its own i
 for (let i = 0; i < 3; i++) {
   setTimeout(() => console.log(i), 100); // prints 0, 1, 2
 }
@@ -374,7 +374,7 @@ for (let i = 0; i < 3; i++) {
 ### Question
 Explain key ES6+ features with practical examples.
 
-### Answer â€“ Destructuring
+### Answer - Destructuring
 
 ```javascript
 const user = { name: "Alice", age: 28, address: { city: "Mumbai" } };
@@ -391,24 +391,24 @@ function renderUser({ name, role = "Guest", avatar = "/default.png" }) {
 }
 ```
 
-### Answer â€“ Spread & Rest
+### Answer - Spread & Rest
 
 ```javascript
-// Spread â€“ expand iterable
+// Spread - expand iterable
 const defaults = { theme: "light", lang: "en" };
 const userPrefs = { ...defaults, theme: "dark" }; // override theme
 
 // Merge arrays without mutation
 const merged = [...arr1, ...arr2];
 
-// Rest â€“ collect remaining arguments
+// Rest - collect remaining arguments
 function sum(first, ...others) {
   return others.reduce((acc, n) => acc + n, first);
 }
 sum(1, 2, 3, 4); // 10
 ```
 
-### Real-World Example â€“ Config Merging
+### Real-World Example - Config Merging
 
 ```javascript
 const defaultConfig = {
@@ -434,7 +434,7 @@ const client = createApiClient({
 
 ---
 
-## 8. Higher-Order Functions â€“ map, filter, reduce
+## 8. Higher-Order Functions - map, filter, reduce
 
 ### Question
 Explain higher-order functions with real-world examples.
@@ -449,17 +449,17 @@ const orders = [
   { id: 4, product: "Keyboard", price: 75,  qty: 3, status: "pending"   }
 ];
 
-// map â€“ transform each element
+// map - transform each element
 const summaries = orders.map(o => ({
   id:    o.id,
   total: o.price * o.qty,
   label: `${o.product} x${o.qty}`
 }));
 
-// filter â€“ keep matching elements
+// filter - keep matching elements
 const delivered = orders.filter(o => o.status === "delivered");
 
-// reduce â€“ accumulate to a single value
+// reduce - accumulate to a single value
 const revenue = orders
   .filter(o => o.status === "delivered")
   .reduce((sum, o) => sum + o.price * o.qty, 0);
@@ -485,7 +485,7 @@ What is currying and function composition?
 ### Answer
 
 ```javascript
-// Currying â€“ transform f(a, b, c) into f(a)(b)(c)
+// Currying - transform f(a, b, c) into f(a)(b)(c)
 const multiply = a => b => a * b;
 const double  = multiply(2);
 const triple  = multiply(3);
@@ -501,7 +501,7 @@ const isValidScore = isInRange(0, 100);
 isValidAge(25);    // true
 isValidScore(105); // false
 
-// pipe â€“ left-to-right function composition
+// pipe - left-to-right function composition
 const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);
 
 const processUser = pipe(
@@ -536,15 +536,15 @@ function memoize(fn) {
   };
 }
 
-// Fibonacci without memoization â€“ O(2^n)
-// With memoization â€“ O(n) â€” each value computed once
+// Fibonacci without memoization - O(2^n)
+// With memoization - O(n) â€” each value computed once
 const fastFib = memoize(function fib(n) {
   if (n <= 1) return n;
   return fastFib(n - 1) + fastFib(n - 2);
 });
 ```
 
-### Real-World Example â€“ API Response Cache with TTL
+### Real-World Example - API Response Cache with TTL
 
 ```javascript
 function createCachedFetch(ttlMs = 60_000) {
@@ -580,7 +580,7 @@ What is the difference between debouncing and throttling?
 ### Answer
 
 ```javascript
-// DEBOUNCE â€“ wait until triggers stop for `delay` ms, then fire once
+// DEBOUNCE - wait until triggers stop for `delay` ms, then fire once
 function debounce(fn, delay) {
   let timerId;
   return function (...args) {
@@ -589,7 +589,7 @@ function debounce(fn, delay) {
   };
 }
 
-// THROTTLE â€“ fire at most once every `limit` ms
+// THROTTLE - fire at most once every `limit` ms
 function throttle(fn, limit) {
   let lastCall = 0;
   return function (...args) {
@@ -605,7 +605,7 @@ function throttle(fn, limit) {
 ### Real-World Example
 
 ```javascript
-// Search box â€“ API call only after 300 ms of no typing
+// Search box - API call only after 300 ms of no typing
 const searchInput = document.getElementById("search");
 const debouncedSearch = debounce(async (query) => {
   if (!query.trim()) return;
@@ -615,7 +615,7 @@ const debouncedSearch = debounce(async (query) => {
 
 searchInput.addEventListener("input", e => debouncedSearch(e.target.value));
 
-// Scroll â€“ update progress bar at most every 100 ms
+// Scroll - update progress bar at most every 100 ms
 const throttledScroll = throttle(() => {
   const pct = (window.scrollY / document.body.scrollHeight) * 100;
   document.getElementById("progress").style.width = `${pct}%`;
@@ -655,10 +655,10 @@ const greet = function (greeting, punctuation) {
 };
 const user = { name: "Alice" };
 
-greet.call(user, "Hello", "!");    // "Hello, Alice!" â€“ args listed
-greet.apply(user, ["Hey", "."]);   // "Hey, Alice."   â€“ args as array
+greet.call(user, "Hello", "!");    // "Hello, Alice!" - args listed
+greet.apply(user, ["Hey", "."]);   // "Hey, Alice."   - args as array
 const greetAlice = greet.bind(user, "Hi");
-greetAlice("?");                   // "Hi, Alice?"    â€“ returns new fn
+greetAlice("?");                   // "Hi, Alice?"    - returns new fn
 ```
 
 ### Real-World Example
@@ -701,9 +701,9 @@ const original = {
   hobbies: ["reading", "coding"]
 };
 
-// Shallow copy â€“ nested references are SHARED
+// Shallow copy - nested references are SHARED
 const shallow = { ...original };
-shallow.name = "Bob";           // OK â€“ primitive, original unchanged
+shallow.name = "Bob";           // OK - primitive, original unchanged
 shallow.address.city = "Delhi"; // âŒ MUTATES original.address.city
 
 // Deep copy options
@@ -711,10 +711,10 @@ const deep1 = JSON.parse(JSON.stringify(original)); // loses Date/fn/undefined
 const deep2 = structuredClone(original);            // modern, handles most types
 ```
 
-### Real-World Example â€“ Immutable State Update
+### Real-World Example - Immutable State Update
 
 ```javascript
-// Redux-style reducer â€“ never mutate state directly
+// Redux-style reducer - never mutate state directly
 function cartReducer(state, action) {
   switch (action.type) {
     case "UPDATE_QTY":
@@ -747,7 +747,7 @@ Explain Module, Singleton, and Observer patterns in JavaScript.
 ### Answer
 
 ```javascript
-// MODULE PATTERN â€“ encapsulate private state via IIFE
+// MODULE PATTERN - encapsulate private state via IIFE
 const AuthModule = (() => {
   let _token = null; // private
 
@@ -759,7 +759,7 @@ const AuthModule = (() => {
   };
 })();
 
-// SINGLETON â€“ exactly one instance
+// SINGLETON - exactly one instance
 class DatabaseConnection {
   constructor() {
     if (DatabaseConnection._instance) {
@@ -774,7 +774,7 @@ const db1 = new DatabaseConnection();
 const db2 = new DatabaseConnection();
 console.log(db1 === db2); // true
 
-// OBSERVER PATTERN â€“ pub/sub
+// OBSERVER PATTERN - pub/sub
 class EventEmitter {
   constructor() { this.listeners = {}; }
 
@@ -818,12 +818,12 @@ What is event delegation and why is it useful?
 ### Answer
 
 ```javascript
-// âŒ One listener per element â€“ expensive, misses dynamic elements
+// âŒ One listener per element - expensive, misses dynamic elements
 document.querySelectorAll(".btn").forEach(btn =>
   btn.addEventListener("click", handleClick)
 );
 
-// âœ… One listener on parent â€“ handles ALL children including future ones
+// âœ… One listener on parent - handles ALL children including future ones
 document.getElementById("order-list")
   .addEventListener("click", (event) => {
     const btn  = event.target.closest("[data-action]");
@@ -838,7 +838,7 @@ document.getElementById("order-list")
   });
 ```
 
-### Real-World Example â€“ Dynamic Table Rows
+### Real-World Example - Dynamic Table Rows
 
 ```javascript
 class DataTable {
@@ -867,7 +867,7 @@ class DataTable {
         <button data-action="delete">Delete</button>
       </td>`;
     this.table.tBodies[0].appendChild(tr);
-    // No new listener needed â€“ delegation covers it automatically
+    // No new listener needed - delegation covers it automatically
   }
 }
 ```
@@ -882,7 +882,7 @@ What are generators and when are they useful?
 ### Answer
 
 ```javascript
-// Generator â€“ function that can pause (yield) and resume
+// Generator - function that can pause (yield) and resume
 function* idGenerator(start = 1) {
   while (true) yield start++;
 }
@@ -900,7 +900,7 @@ function* range(start, end, step = 1) {
 for (const n of range(0, 10, 2)) console.log(n); // 0 2 4 6 8
 ```
 
-### Real-World Example â€“ Paginated API Fetcher
+### Real-World Example - Paginated API Fetcher
 
 ```javascript
 async function* fetchAllPages(baseUrl, pageSize = 20) {
@@ -910,13 +910,13 @@ async function* fetchAllPages(baseUrl, pageSize = 20) {
   while (hasMore) {
     const res  = await fetch(`${baseUrl}?page=${page}&size=${pageSize}`);
     const data = await res.json();
-    yield data.items;            // lazy â€“ only fetches next page when iterated
+    yield data.items;            // lazy - only fetches next page when iterated
     hasMore = data.hasNextPage;
     page++;
   }
 }
 
-// Process page by page â€“ memory efficient for large datasets
+// Process page by page - memory efficient for large datasets
 for await (const page of fetchAllPages("/api/products")) {
   await processPage(page);
 }
@@ -949,7 +949,7 @@ const person = new Proxy({ name: "Alice", age: 30 }, handler);
 person.age = "old"; // TypeError
 ```
 
-### Real-World Example â€“ Reactive Store
+### Real-World Example - Reactive Store
 
 ```javascript
 function createReactiveStore(initialState) {
@@ -980,7 +980,7 @@ store.state.count = 5; // logs "0 â†’ 5"
 
 ---
 
-## 18. Memory Leaks â€“ Prevention & Detection
+## 18. Memory Leaks - Prevention & Detection
 
 ### Question
 What causes memory leaks in JavaScript and how do you prevent them?
@@ -1008,18 +1008,18 @@ class PollingService {
 }
 
 // 3. Large closures holding unnecessary data
-// âŒ â€“ bigData stays alive because result closes over it
+// âŒ - bigData stays alive because result closes over it
 function process(bigData) {
   const result = transform(bigData);
   return () => result.summary; // bigData kept in memory
 }
-// âœ… â€“ extract only what you need
+// âœ… - extract only what you need
 function process(bigData) {
   const summary = transform(bigData).summary;
   return () => summary; // bigData can be GC'd
 }
 
-// 4. Detached DOM â€“ use WeakMap so GC can collect when node is removed
+// 4. Detached DOM - use WeakMap so GC can collect when node is removed
 const domData = new WeakMap();
 const el = document.querySelector("#widget");
 domData.set(el, { clicks: 0 }); // GC'd automatically when el is removed
@@ -1042,12 +1042,12 @@ Compare client-side storage options.
 | Access | JS only | JS only | JS + Server |
 
 ```javascript
-// localStorage â€“ persists across sessions
+// localStorage - persists across sessions
 localStorage.setItem("theme", "dark");
 const theme = localStorage.getItem("theme");
 localStorage.removeItem("theme");
 
-// sessionStorage â€“ cleared when tab closes
+// sessionStorage - cleared when tab closes
 sessionStorage.setItem("formDraft", JSON.stringify(formData));
 const draft = JSON.parse(sessionStorage.getItem("formDraft") || "{}");
 
