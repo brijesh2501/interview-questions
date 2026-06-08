@@ -1514,7 +1514,7 @@ graph LR
     Container["🐳 Container"]
     CloudRun["☁️ Cloud Run"]
     Scale["⚡ Auto-scaling"]
-    
+
     Container --> CloudRun
     CloudRun --> Scale
 ```
@@ -1602,12 +1602,12 @@ Traffic spikes during Black Friday sales.
 
 ## 63. Difference between Vertical and Horizontal Scaling?
 
-| Aspect | Vertical | Horizontal |
-|--------|----------|-----------|
-| Method | Bigger Server | More Servers |
-| Downtime | Required | Zero |
-| Cost | Can be higher | Lower per unit |
-| Limit | Hardware limit | Nearly unlimited |
+| Aspect   | Vertical       | Horizontal       |
+| -------- | -------------- | ---------------- |
+| Method   | Bigger Server  | More Servers     |
+| Downtime | Required       | Zero             |
+| Cost     | Can be higher  | Lower per unit   |
+| Limit    | Hardware limit | Nearly unlimited |
 
 ---
 
@@ -1621,7 +1621,7 @@ graph LR
     Cache["💾 Redis Cache"]
     VectorDB["🗄️ Distributed<br/>Vector DB"]
     K8S["☸️ Kubernetes"]
-    
+
     API --> Cache
     Cache --> VectorDB
     API --> K8S
@@ -1669,13 +1669,13 @@ Banking services requiring 99.99% availability.
 
 ### Comparison
 
-| Feature | FastAPI | Flask |
-|---------|---------|-------|
-| Async | Native | Add-on |
-| Performance | ~3x faster | Slower |
-| Validation | Built-in | Manual |
-| OpenAPI | Auto-generated | Manual |
-| Type hints | Required | Optional |
+| Feature     | FastAPI        | Flask    |
+| ----------- | -------------- | -------- |
+| Async       | Native         | Add-on   |
+| Performance | ~3x faster     | Slower   |
+| Validation  | Built-in       | Manual   |
+| OpenAPI     | Auto-generated | Manual   |
+| Type hints  | Required       | Optional |
 
 ### Example
 
@@ -1796,7 +1796,7 @@ graph LR
     Embed["🔤 Embedding<br/>v2.1"]
     LLM["🤖 LLM v3.4.1"]
     Retrieval["🔍 Strategy<br/>v1.0"]
-    
+
     Prompt --> GitRepo["📦 Git Repo"]
     Embed --> GitRepo
     LLM --> GitRepo
@@ -1855,7 +1855,7 @@ graph LR
     Accuracy["✓ Accuracy"]
     Rating["⭐ User Rating"]
     Ground["🎯 Groundedness"]
-    
+
     Hallucination --> Quality["📊 Quality Score"]
     Accuracy --> Quality
     Rating --> Quality
@@ -1898,7 +1898,7 @@ graph TD
     LB["⚖️ Load Balancer"]
     Blue["🔵 Blue (v1)<br/>Production"]
     Green["🟢 Green (v2)<br/>Staged"]
-    
+
     Traffic --> LB
     LB -->|Current| Blue
     LB -->|Test| Green
@@ -1962,7 +1962,7 @@ graph LR
     Faith["🎯 Faithfulness"]
     Latency["⏱️ Latency"]
     Cost["💰 Cost"]
-    
+
     Relevance --> Score["📊 Final Score"]
     Faith --> Score
     Latency --> Score
@@ -1982,7 +1982,7 @@ graph TD
     User["👤 User"]
     App["🔐 App"]
     AuthServer["🔑 Auth Server"]
-    
+
     User -->|Login| App
     App -->|Redirect| AuthServer
     AuthServer -->|Consent| User
@@ -2041,7 +2041,7 @@ graph TD
     Test["✅ Test New"]
     Switch["🔄 Switch"]
     Delete["🗑️ Delete Old"]
-    
+
     Current --> Generate
     Generate --> Test
     Test --> Switch
@@ -2064,7 +2064,7 @@ graph LR
     RBAC["👤 RBAC"]
     Network["🛡️ Network<br/>Isolation"]
     Audit["📋 Audit<br/>Logging"]
-    
+
     Encrypt --> Secure["✅ Secure VectorDB"]
     RBAC --> Secure
     Network --> Secure
@@ -2130,7 +2130,7 @@ graph TD
     Isolate["🔒 Context<br/>Isolation"]
     Filter["🛡️ Output<br/>Filtering"]
     Output["📤 Safe Output"]
-    
+
     Input --> Validate
     Validate --> Isolate
     Isolate --> Filter
@@ -2155,7 +2155,7 @@ graph LR
     Cache["💾 Caching<br/>Results"]
     Smaller["🤖 Smaller<br/>Models"]
     Parallel["🔄 Parallel<br/>Requests"]
-    
+
     Stream --> Improve["⏱️ Lower Latency"]
     Cache --> Improve
     Smaller --> Improve
@@ -2178,7 +2178,7 @@ graph LR
     Cache["💾 Cache<br/>Responses"]
     Batch["📨 Batch<br/>Requests"]
     Smaller["🤖 Cheaper<br/>Models"]
-    
+
     Compress --> Save["💰 Save 40-60%"]
     Cache --> Save
     Batch --> Save
@@ -2199,7 +2199,7 @@ Reduced monthly OpenAI spend from $50k to $15k.
 graph TD
     Q1["Question 1<br/>How to apply leave?"]
     Q2["Question 2<br/>How to take vacation?"]
-    
+
     Q1 --> Embed["🔤 Embedding"]
     Q2 --> Embed
     Embed -->|Semantic Match| Cache["💾 Cache Hit"]
@@ -2262,7 +2262,7 @@ graph TD
     NFR["📊 NFR Analysis<br/>Scalability, Security,<br/>Cost, Performance"]
     Blueprint["📐 Architecture<br/>Blueprint"]
     Impl["⚙️ Implementation<br/>Plan"]
-    
+
     Req --> NFR
     NFR --> Blueprint
     Blueprint --> Impl
@@ -2271,6 +2271,7 @@ graph TD
 ### Example
 
 "Build a customer support chatbot"
+
 - Scalability: 10k concurrent
 - Cost: <$0.02 per query
 - Availability: 99.9%
@@ -2289,7 +2290,7 @@ graph LR
     Sec["🔒 Security<br/>GDPR"]
     Cost["💰 Cost<br/>ROI"]
     Maint["🔧 Maintainability<br/>DevOps"]
-    
+
     Scale --> Success["✨ Successful<br/>System"]
     Avail --> Success
     Sec --> Success
@@ -2349,7 +2350,7 @@ graph TD
     Perf["✓ Performance?"]
     Cost["✓ Cost?"]
     Maint["✓ Maintainability?"]
-    
+
     Review --> Scale
     Review --> Sec
     Review --> Perf
@@ -2374,6 +2375,7 @@ graph TD
 **Incident:** Vector DB outage, RAG unavailable
 
 **Timeline:**
+
 - 14:00 - Vector DB failure detected
 - 14:05 - Fallback to keyword search triggered
 - 14:15 - Cached responses served to 80% users
@@ -2381,6 +2383,7 @@ graph TD
 - 15:00 - Full service restored
 
 **Resolution:**
+
 - Improved failover strategy
 - Added redundant Vector DB
 - Better monitoring
@@ -2404,7 +2407,7 @@ graph TD
     Teams["👥 Engineering<br/>Teams"]
     Prod["🚀 Production<br/>Systems"]
     Value["💰 Business<br/>Value"]
-    
+
     Goals --> Arch
     Arch --> Teams
     Teams --> Prod
