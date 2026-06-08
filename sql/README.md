@@ -1,812 +1,720 @@
-# SQL Interview Questions
+﻿# SQL Interview Questions & Answers
 
-## Overview
-
-This folder contains comprehensive interview questions for SQL developers, covering SQL fundamentals, query optimization, database design, and advanced SQL concepts.
-
-## Topics Covered
-
-### SQL Fundamentals
-
-- **SELECT Statement** - Retrieving data
-- **WHERE Clause** - Filtering conditions
-- **AND, OR, NOT** - Logical operators
-- **ORDER BY** - Sorting results
-- **DISTINCT** - Removing duplicates
-- **LIMIT/OFFSET** - Pagination
-- **NULL Handling** - IS NULL, IS NOT NULL
-- **LIKE & Wildcards** - Pattern matching
-- **IN & BETWEEN** - Range queries
-- **Data Types** - INT, VARCHAR, DATE, etc.
-
-### JOIN Operations
-
-- **INNER JOIN** - Intersection of tables
-- **LEFT JOIN** - Left table + matching right
-- **RIGHT JOIN** - Right table + matching left
-- **FULL OUTER JOIN** - All records from both tables
-- **CROSS JOIN** - Cartesian product
-- **Self JOIN** - Joining table with itself
-- **Multiple JOINs** - Complex joins
-- **JOIN Conditions** - ON vs WHERE
-
-### Aggregate Functions
-
-- **COUNT()** - Count records
-- **SUM()** - Sum of values
-- **AVG()** - Average value
-- **MIN() / MAX()** - Minimum/Maximum
-- **GROUP BY** - Grouping results
-- **HAVING** - Filtering groups
-- **PARTITION BY** - Window functions
-
-### Subqueries & CTE
-
-- **Subqueries** - Nested queries
-- **Scalar Subqueries** - Single value
-- **Table Subqueries** - Multiple rows/cols
-- **Correlated Subqueries** - Reference outer query
-- **CTE (Common Table Expressions)** - WITH clause
-- **Recursive CTE** - Hierarchical data
-
-### Advanced SQL
-
-- **UNION / UNION ALL** - Combining queries
-- **INTERSECT** - Common records
-- **EXCEPT** - Difference between sets
-- **CASE Statement** - Conditional logic
-- **COALESCE** - Handling NULL values
-- **String Functions** - CONCAT, SUBSTRING, etc.
-- **Date Functions** - GETDATE, DATEADD, etc.
-- **Math Functions** - ROUND, FLOOR, CEIL, etc.
-
-### Stored Procedures & Functions
-
-- **Stored Procedures** - Reusable SQL code
-- **Parameters** - Input/output parameters
-- **Return Values** - Procedure results
-- **User-Defined Functions** - Custom functions
-- **Scalar Functions** - Single value return
-- **Table-Valued Functions** - Multiple rows/cols
-- **Triggers** - Automatic actions
-
-### Database Design
-
-- **Normalization** - 1NF, 2NF, 3NF, BCNF
-- **Entity Relationships** - One-to-one, One-to-many
-- **Primary Keys** - Unique identifiers
-- **Foreign Keys** - Referential integrity
-- **Indexes** - Query performance
-- **Constraints** - UNIQUE, CHECK, DEFAULT
-- **Data Integrity** - Maintaining consistency
-
-### Performance Optimization
-
-- **Query Optimization** - Execution plans
-- **Indexing** - B-tree, Hash indexes
-- **Clustered vs Non-clustered** - Index types
-- **Query Plans** - EXPLAIN, Execution analysis
-- **Slow Query Debugging** - SLOW LOG
-- **Joins Optimization** - JOIN strategies
-- **Aggregation Optimization** - GROUP BY performance
-- **Caching** - Query result caching
-
-### Advanced Concepts
-
-- **Transactions** - ACID properties
-- **Isolation Levels** - Consistency levels
-- **Locking** - Preventing conflicts
-- **Deadlocks** - Detection and resolution
-- **Views** - Virtual tables
-- **Materialized Views** - Precomputed results
-- **Partitioning** - Large table optimization
-- **Replication** - Data duplication
-
-### Database Administration
-
-- **Backup & Recovery** - Data safety
-- **User Management** - Permissions
-- **Security** - Encryption, Authentication
-- **Monitoring** - Performance metrics
-- **Maintenance** - Index rebuilding
-- **Scaling** - Horizontal/Vertical
-
-## Interview Levels
-
-### Junior Developer
-
-- Basic SELECT, WHERE
-- Simple JOINs
-- Basic aggregate functions
-- ORDER BY, GROUP BY
-- Simple subqueries
-- Basic indexing
-
-### Mid-Level Developer
-
-- Complex JOINs
-- Window functions
-- CTEs
-- Stored procedures
-- Query optimization
-- Database design
-- Transactions
-
-### Senior Developer
-
-- Advanced optimization
-- Partitioning strategies
-- Replication design
-- Performance tuning
-- Architecture design
-- Scaling strategies
-- Leadership
-
----
-
-## Key Competencies
-
-✅ SQL mastery  
-✅ Query optimization  
-✅ Database design  
-✅ Indexing strategies  
-✅ Transaction handling  
-✅ Performance tuning  
-✅ Problem-solving  
-✅ Database security
-
-## Popular SQL Databases
-
-- **MySQL** - Open source, web applications
-- **PostgreSQL** - Advanced, enterprise
-- **SQL Server** - Microsoft, enterprise
-- **Oracle** - Large-scale, enterprise
-- **SQLite** - Lightweight, embedded
-- **MariaDB** - MySQL alternative
-
-## Recommended Learning Path
-
-1. Master SELECT, WHERE, JOINs
-2. Learn aggregate functions
-3. Study database design
-4. Optimize queries
-5. Learn stored procedures
-6. Understand transactions
-7. Master indexing
-8. Study security
-
-## Resources
-
-- **SQL Tutorial:** https://www.w3schools.com/sql/
-- **PostgreSQL Docs:** https://www.postgresql.org/docs/
-- **MySQL Docs:** https://dev.mysql.com/doc/
-- **SQL Server Docs:** https://learn.microsoft.com/en-us/sql/
-
----
-
-**Note:** This folder will be populated with detailed interview questions and answers for SQL and Database positions.
-
----
-
-# SQL Interview Questions & Answers
-
-## 1. ACID Properties
+## 1. SELECT, WHERE & Filtering
 
 ### Question
-
-Explain ACID properties in database transactions?
+Write a query to find all orders above $500 placed in the last 30 days.
 
 ### Answer
 
-**A - Atomicity:** All or nothing
+```sql
+SELECT
+    o.order_id,
+    o.customer_id,
+    c.name          AS customer_name,
+    o.total_amount,
+    o.created_at
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE
+    o.total_amount > 500
+    AND o.created_at >= CURRENT_DATE - INTERVAL '30 days'
+    AND o.status != 'cancelled'
+ORDER BY o.total_amount DESC;
+```
 
-- Either all operations complete or none do
-- No partial transactions
+### Pattern Matching & NULL Handling
 
-**C - Consistency:** Data integrity
+```sql
+-- LIKE: customers whose email is a Gmail address
+SELECT * FROM customers
+WHERE email LIKE '%@gmail.com'
+  AND phone IS NOT NULL;
 
-- Database moves from one valid state to another
-- Constraints maintained
+-- IN: orders in specific statuses
+SELECT * FROM orders
+WHERE status IN ('pending', 'processing', 'shipped');
 
-**I - Isolation:** Concurrent transactions don't interfere
+-- BETWEEN: products in a price range
+SELECT name, price FROM products
+WHERE price BETWEEN 100 AND 500;
 
-- Each transaction is independent
-- Prevents dirty reads, phantom reads
+-- COALESCE: replace NULL with a default
+SELECT name, COALESCE(phone, 'N/A') AS contact
+FROM customers;
+```
 
-**D - Durability:** Committed data persists
+---
 
-- Once committed, data survives failures
-- Stored in persistent storage
+## 2. JOIN Operations
 
-### Mermaid Diagram
+### Question
+Explain the different types of JOINs with a real e-commerce schema.
+
+### Answer
+
+```sql
+-- Schema
+-- customers(id, name, email)
+-- orders(id, customer_id, total, status, created_at)
+-- order_items(id, order_id, product_id, qty, price)
+-- products(id, name, category, price, stock)
+
+-- INNER JOIN â€“ only customers who have placed orders
+SELECT c.name, COUNT(o.id) AS order_count, SUM(o.total) AS lifetime_value
+FROM customers c
+INNER JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id, c.name
+ORDER BY lifetime_value DESC;
+
+-- LEFT JOIN â€“ ALL customers, including those with no orders
+SELECT c.name, COALESCE(COUNT(o.id), 0) AS order_count
+FROM customers c
+LEFT JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id, c.name;
+
+-- Self JOIN â€“ find customers referred by other customers
+SELECT
+    r.name AS referrer,
+    u.name AS referred_user
+FROM customers u
+JOIN customers r ON r.id = u.referred_by_id;
+
+-- Multiple JOINs â€“ full order breakdown
+SELECT
+    c.name        AS customer,
+    o.id          AS order_id,
+    p.name        AS product,
+    oi.qty,
+    oi.price,
+    oi.qty * oi.price AS line_total
+FROM orders o
+JOIN customers   c  ON c.id  = o.customer_id
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products    p  ON p.id  = oi.product_id
+WHERE o.status = 'delivered';
+```
+
+### Diagram
+
+```mermaid
+graph LR
+    C["customers"]
+    O["orders"]
+    OI["order_items"]
+    P["products"]
+
+    C -->|customer_id| O
+    O -->|order_id| OI
+    OI -->|product_id| P
+```
+
+---
+
+## 3. Aggregate Functions & GROUP BY
+
+### Question
+Write a query to generate a monthly sales report by product category.
+
+### Answer
+
+```sql
+SELECT
+    p.category,
+    DATE_TRUNC('month', o.created_at)   AS month,
+    COUNT(DISTINCT o.id)                AS order_count,
+    SUM(oi.qty)                         AS units_sold,
+    SUM(oi.qty * oi.price)              AS revenue,
+    AVG(oi.qty * oi.price)              AS avg_order_value,
+    MIN(oi.price)                       AS min_price,
+    MAX(oi.price)                       AS max_price
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products    p  ON p.id  = oi.product_id
+WHERE o.status = 'delivered'
+  AND o.created_at >= CURRENT_DATE - INTERVAL '12 months'
+GROUP BY p.category, DATE_TRUNC('month', o.created_at)
+HAVING SUM(oi.qty * oi.price) > 1000   -- only categories with >$1K revenue
+ORDER BY month DESC, revenue DESC;
+```
+
+### Window Functions (PARTITION BY)
+
+```sql
+-- Rank products by revenue within each category
+SELECT
+    p.name,
+    p.category,
+    SUM(oi.qty * oi.price)  AS revenue,
+    RANK()    OVER (PARTITION BY p.category ORDER BY SUM(oi.qty * oi.price) DESC) AS rank_in_cat,
+    ROW_NUMBER() OVER (ORDER BY SUM(oi.qty * oi.price) DESC)                      AS overall_rank,
+    SUM(SUM(oi.qty * oi.price)) OVER (PARTITION BY p.category)                   AS category_total
+FROM order_items oi
+JOIN products p ON p.id = oi.product_id
+GROUP BY p.id, p.name, p.category;
+```
+
+---
+
+## 4. Subqueries & CTEs
+
+### Question
+Find the top 3 customers by revenue per region using a CTE.
+
+### Answer
+
+```sql
+-- CTE (WITH clause) â€“ readable, reusable within the query
+WITH customer_revenue AS (
+    SELECT
+        c.id,
+        c.name,
+        c.region,
+        SUM(o.total) AS total_spent
+    FROM customers c
+    JOIN orders o ON o.customer_id = c.id
+    WHERE o.status = 'delivered'
+    GROUP BY c.id, c.name, c.region
+),
+ranked AS (
+    SELECT
+        *,
+        RANK() OVER (PARTITION BY region ORDER BY total_spent DESC) AS rank
+    FROM customer_revenue
+)
+SELECT region, name, total_spent
+FROM ranked
+WHERE rank <= 3
+ORDER BY region, rank;
+```
+
+### Correlated Subquery
+
+```sql
+-- Find products whose price is above their category average
+SELECT name, category, price
+FROM products p
+WHERE price > (
+    SELECT AVG(price)
+    FROM products
+    WHERE category = p.category  -- references outer query
+);
+```
+
+### Recursive CTE â€“ Employee Hierarchy
+
+```sql
+-- employees(id, name, manager_id)
+WITH RECURSIVE org_chart AS (
+    -- Anchor: top-level employees (no manager)
+    SELECT id, name, manager_id, 0 AS level, name::TEXT AS path
+    FROM employees
+    WHERE manager_id IS NULL
+
+    UNION ALL
+
+    -- Recursive: each employee's reports
+    SELECT e.id, e.name, e.manager_id, oc.level + 1, oc.path || ' > ' || e.name
+    FROM employees e
+    JOIN org_chart oc ON oc.id = e.manager_id
+)
+SELECT level, path FROM org_chart ORDER BY path;
+```
+
+---
+
+## 5. Indexes & Query Performance
+
+### Question
+How do indexes work and when should you create them?
+
+### Answer
+
+```sql
+-- B-tree index (default) â€“ equality + range queries
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_orders_created  ON orders(created_at DESC);
+
+-- Composite index â€“ supports queries filtering on BOTH columns
+CREATE INDEX idx_orders_status_date ON orders(status, created_at);
+-- Efficient for: WHERE status = 'pending' AND created_at > ...
+-- NOT efficient for: WHERE created_at > ... (status not in lead position)
+
+-- Partial index â€“ only index the rows you actually query
+CREATE INDEX idx_orders_pending ON orders(created_at)
+WHERE status = 'pending';  -- smaller, faster
+
+-- Covering index â€“ avoids table lookup entirely
+CREATE INDEX idx_products_search ON products(category, price)
+INCLUDE (name, stock);  -- PostgreSQL INCLUDE syntax
+
+-- Unique index â€“ constraint + performance
+CREATE UNIQUE INDEX idx_customers_email ON customers(email);
+```
+
+### EXPLAIN ANALYZE â€“ Reading Query Plans
+
+```sql
+EXPLAIN ANALYZE
+SELECT c.name, SUM(o.total)
+FROM customers c
+JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id;
+
+-- Look for:
+-- Seq Scan  â†’ full table scan (no index)
+-- Index Scan / Index Only Scan â†’ using an index âœ…
+-- Hash Join / Nested Loop / Merge Join â†’ join strategy
+-- Actual rows vs Estimated rows â†’ stale statistics? Run ANALYZE
+```
+
+### Diagram
 
 ```mermaid
 graph TD
-    Transaction["🔄 Transaction"]
-    Transaction --> Atomic["⚛️ Atomicity<br/>All or Nothing"]
-    Transaction --> Consistent["✓ Consistency<br/>Valid State"]
-    Transaction --> Isolated["🔒 Isolation<br/>Independent"]
-    Transaction --> Durable["💾 Durability<br/>Persistent"]
-```
+    Query["SELECT WHERE customer_id = 42"]
+    Index{"Index on customer_id?"}
+    SeqScan["Full Table Scan\n(slow for large tables)"]
+    IdxScan["Index Lookup\n(fast â€“ O(log n))"]
 
-### Real-World Example
-
-```sql
--- Money transfer transaction
-BEGIN TRANSACTION;
-
--- Debit account A
-UPDATE accounts SET balance = balance - 100 WHERE id = 1;
-
--- Credit account B
-UPDATE accounts SET balance = balance + 100 WHERE id = 2;
-
-COMMIT; -- All or nothing!
+    Query --> Index
+    Index -->|No| SeqScan
+    Index -->|Yes| IdxScan
 ```
 
 ---
 
-## 2. JOINs (INNER, LEFT, RIGHT, FULL)
+## 6. Stored Procedures & Functions
 
 ### Question
-
-Explain different types of JOINs with examples?
+Write a stored procedure to process an order with stock validation.
 
 ### Answer
 
-### INNER JOIN
-
-Returns only matching records from both tables.
-
 ```sql
-SELECT u.name, o.order_id
-FROM users u
-INNER JOIN orders o ON u.id = o.user_id;
-```
-
-### LEFT JOIN
-
-All records from left table + matching from right.
-
-```sql
-SELECT u.name, o.order_id
-FROM users u
-LEFT JOIN orders o ON u.id = o.user_id;
--- Returns users with NULL orders
-```
-
-### RIGHT JOIN
-
-All records from right table + matching from left.
-
-```sql
-SELECT u.name, o.order_id
-FROM users u
-RIGHT JOIN orders o ON u.id = o.user_id;
-```
-
-### FULL OUTER JOIN
-
-All records from both tables.
-
-```sql
-SELECT u.name, o.order_id
-FROM users u
-FULL OUTER JOIN orders o ON u.id = o.user_id;
-```
-
-### Mermaid Comparison
-
-```mermaid
-graph LR
-    Users["👥 Users<br/>ID | Name<br/>1 | John<br/>2 | Jane<br/>3 | Bob"]
-
-    Orders["📦 Orders<br/>UserID | OrderID<br/>1 | O1<br/>1 | O2<br/>2 | O3"]
-
-    Inner["INNER<br/>Matching Only<br/>John-O1, John-O2<br/>Jane-O3"]
-    Left["LEFT<br/>All Users<br/>John-O1, John-O2<br/>Jane-O3, Bob-NULL"]
-    Full["FULL<br/>All Records<br/>John-O1, John-O2<br/>Jane-O3, Bob-NULL"]
-
-    Users --> Inner
-    Orders --> Inner
-    Users --> Left
-    Orders --> Left
-    Users --> Full
-    Orders --> Full
-```
-
-### Real-World Example
-
-```sql
--- E-commerce: Find customers and their orders
-SELECT
-  c.customer_name,
-  COUNT(o.order_id) as total_orders,
-  SUM(o.amount) as total_spent
-FROM customers c
-LEFT JOIN orders o ON c.id = o.customer_id
-GROUP BY c.id, c.customer_name
-ORDER BY total_spent DESC;
-
--- Returns all customers, even those with 0 orders
-```
-
----
-
-## 3. GROUP BY and HAVING
-
-### Question
-
-Explain GROUP BY and HAVING with examples?
-
-### Answer
-
-**GROUP BY:** Aggregate data by groups
-**HAVING:** Filter groups (like WHERE for aggregates)
-
-```sql
--- Sales by product
-SELECT
-  product_id,
-  COUNT(*) as sales_count,
-  SUM(amount) as total_revenue
-FROM sales
-GROUP BY product_id
-HAVING SUM(amount) > 1000; -- Only products with revenue > 1000
-```
-
-### Difference: WHERE vs HAVING
-
-```sql
--- WHERE: Filter rows BEFORE grouping
-SELECT
-  product_id,
-  SUM(amount) as total
-FROM sales
-WHERE year = 2024            -- Filters rows
-GROUP BY product_id
-HAVING SUM(amount) > 1000;   -- Filters groups
-```
-
-### Real-World Example
-
-```sql
--- Find departments with average salary > $50,000
-SELECT
-  department,
-  AVG(salary) as avg_salary,
-  COUNT(*) as employee_count
-FROM employees
-GROUP BY department
-HAVING AVG(salary) > 50000
-ORDER BY avg_salary DESC;
-```
-
----
-
-## 4. Common Table Expressions (CTE)
-
-### Question
-
-Explain CTEs with examples?
-
-### Answer
-
-CTE (WITH clause) creates temporary result set.
-
-```sql
--- Simple CTE
-WITH high_earners AS (
-  SELECT id, name, salary
-  FROM employees
-  WHERE salary > 100000
+-- PostgreSQL stored procedure
+CREATE OR REPLACE PROCEDURE place_order(
+    p_customer_id  INT,
+    p_items        JSON,    -- [{"product_id":1,"qty":2}, ...]
+    OUT p_order_id INT
 )
-SELECT * FROM high_earners;
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_product   RECORD;
+    v_item      JSON;
+    v_total     NUMERIC := 0;
+BEGIN
+    -- Validate stock for all items first
+    FOR v_item IN SELECT * FROM json_array_elements(p_items)
+    LOOP
+        SELECT id, price, stock
+        INTO v_product
+        FROM products
+        WHERE id = (v_item->>'product_id')::INT
+        FOR UPDATE;  -- lock row
 
--- CTE in JOIN
-WITH sales_summary AS (
-  SELECT customer_id, SUM(amount) as total_spent
-  FROM orders
-  GROUP BY customer_id
-)
-SELECT c.name, ss.total_spent
-FROM customers c
-JOIN sales_summary ss ON c.id = ss.customer_id;
-```
+        IF v_product.stock < (v_item->>'qty')::INT THEN
+            RAISE EXCEPTION 'Insufficient stock for product %', v_product.id;
+        END IF;
 
-### Recursive CTE Example
+        v_total := v_total + v_product.price * (v_item->>'qty')::INT;
+    END LOOP;
 
-```sql
--- Find all subordinates in organization hierarchy
-WITH RECURSIVE employees_hierarchy AS (
-  -- Base case: Start with CEO
-  SELECT id, name, manager_id, 1 as level
-  FROM employees
-  WHERE manager_id IS NULL
+    -- Create order
+    INSERT INTO orders (customer_id, total, status)
+    VALUES (p_customer_id, v_total, 'pending')
+    RETURNING id INTO p_order_id;
 
-  UNION ALL
+    -- Insert items and decrement stock
+    FOR v_item IN SELECT * FROM json_array_elements(p_items)
+    LOOP
+        INSERT INTO order_items (order_id, product_id, qty, price)
+        SELECT p_order_id,
+               (v_item->>'product_id')::INT,
+               (v_item->>'qty')::INT,
+               price
+        FROM products WHERE id = (v_item->>'product_id')::INT;
 
-  -- Recursive case: Get subordinates
-  SELECT e.id, e.name, e.manager_id, eh.level + 1
-  FROM employees e
-  JOIN employees_hierarchy eh ON e.manager_id = eh.id
-)
-SELECT * FROM employees_hierarchy
-ORDER BY level, name;
+        UPDATE products
+        SET stock = stock - (v_item->>'qty')::INT
+        WHERE id  = (v_item->>'product_id')::INT;
+    END LOOP;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE;  -- rollback happens automatically
+END;
+$$;
+
+-- User-defined function (scalar)
+CREATE OR REPLACE FUNCTION get_discount_price(
+    p_price    NUMERIC,
+    p_tier     VARCHAR
+) RETURNS NUMERIC AS $$
+BEGIN
+    RETURN CASE p_tier
+        WHEN 'gold'     THEN p_price * 0.80
+        WHEN 'silver'   THEN p_price * 0.90
+        WHEN 'bronze'   THEN p_price * 0.95
+        ELSE p_price
+    END;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Usage
+SELECT name, price, get_discount_price(price, 'gold') AS gold_price
+FROM products;
 ```
 
 ---
 
-## 5. Normalization (1NF, 2NF, 3NF)
+## 7. Transactions & ACID Properties
 
 ### Question
-
-Explain database normalization forms?
+Explain ACID and write a transaction for a bank transfer.
 
 ### Answer
 
-### First Normal Form (1NF)
-
-- No repeating groups
-- Atomic values only
+| Property | Meaning | Example |
+|---|---|---|
+| Atomicity | All-or-nothing | Both debit & credit succeed or neither does |
+| Consistency | Data rules always valid | Balance never goes negative |
+| Isolation | Concurrent txns don't interfere | Two transfers don't corrupt each other |
+| Durability | Committed data survives crashes | Written to disk |
 
 ```sql
--- ❌ Not 1NF - repeating phones
-CREATE TABLE users_bad (
-  id INT,
-  name VARCHAR(100),
-  phones VARCHAR(100) -- '123-456, 789-012'
-);
+-- Bank transfer with full error handling
+BEGIN;
 
--- ✅ 1NF - atomic values
-CREATE TABLE users (
-  id INT,
-  name VARCHAR(100)
-);
+    -- Lock both accounts in consistent order (lower id first) to avoid deadlock
+    SELECT balance FROM accounts WHERE id = LEAST(1, 2)    FOR UPDATE;
+    SELECT balance FROM accounts WHERE id = GREATEST(1, 2) FOR UPDATE;
 
-CREATE TABLE phones (
-  id INT,
-  user_id INT,
-  phone VARCHAR(20)
-);
+    -- Validate sufficient funds
+    DO $$
+    DECLARE v_balance NUMERIC;
+    BEGIN
+        SELECT balance INTO v_balance FROM accounts WHERE id = 1;
+        IF v_balance < 500 THEN
+            RAISE EXCEPTION 'Insufficient funds: balance=%, required=500', v_balance;
+        END IF;
+    END $$;
+
+    -- Debit sender
+    UPDATE accounts SET balance = balance - 500 WHERE id = 1;
+
+    -- Credit receiver
+    UPDATE accounts SET balance = balance + 500 WHERE id = 2;
+
+    -- Audit log
+    INSERT INTO transfer_log (from_account, to_account, amount, transferred_at)
+    VALUES (1, 2, 500, NOW());
+
+COMMIT;
+-- On any error, PostgreSQL automatically rolls back
 ```
 
-### Second Normal Form (2NF)
-
-- Must be 1NF
-- No partial dependencies
+### Isolation Levels
 
 ```sql
--- ❌ Not 2NF - partial dependency
-CREATE TABLE orders_bad (
-  order_id INT,
-  product_id INT,
-  customer_name VARCHAR(100), -- Depends on order_id, not product_id
-  PRIMARY KEY (order_id, product_id)
-);
+-- READ COMMITTED (default PostgreSQL) â€“ sees committed data at each statement
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
--- ✅ 2NF
+-- REPEATABLE READ â€“ same rows seen throughout the transaction
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+-- SERIALIZABLE â€“ strongest: transactions appear to run sequentially
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+```
+
+---
+
+## 8. Database Normalization
+
+### Question
+Explain normalization forms with an e-commerce example.
+
+### Answer
+
+### Unnormalized (0NF) â€“ Problems
+
+```sql
+-- orders table with repeating groups and redundant data
+-- order_id | customer_name | customer_email | product1 | qty1 | product2 | qty2
+-- 101      | Alice         | a@a.com        | Laptop   | 1    | Mouse    | 2
+```
+
+### 1NF â€“ Atomic values, no repeating groups
+
+```sql
 CREATE TABLE orders (
-  order_id INT PRIMARY KEY,
-  customer_id INT
+    order_id    INT,
+    customer_name  VARCHAR(100),
+    customer_email VARCHAR(100),
+    product     VARCHAR(100),
+    qty         INT,
+    price       DECIMAL(10,2)
 );
+-- Problem: customer data repeats for every item â†’ update anomaly
+```
 
+### 2NF â€“ Remove partial dependencies (all columns depend on full PK)
+
+```sql
+CREATE TABLE orders    (order_id INT PRIMARY KEY, customer_id INT, created_at TIMESTAMP);
+CREATE TABLE customers (id INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(100));
 CREATE TABLE order_items (
-  order_id INT,
-  product_id INT,
-  PRIMARY KEY (order_id, product_id)
+    order_id   INT REFERENCES orders(order_id),
+    product_id INT REFERENCES products(id),
+    qty        INT,
+    price      DECIMAL(10,2),
+    PRIMARY KEY (order_id, product_id)
 );
 ```
 
-### Third Normal Form (3NF)
-
-- Must be 2NF
-- No transitive dependencies
+### 3NF â€“ Remove transitive dependencies
 
 ```sql
--- ❌ Not 3NF - transitive dependency
-CREATE TABLE students_bad (
-  student_id INT,
-  name VARCHAR(100),
-  department_id INT,
-  department_name VARCHAR(100) -- Depends on department_id, not student_id
+CREATE TABLE products (
+    id          INT PRIMARY KEY,
+    name        VARCHAR(100),
+    category_id INT REFERENCES categories(id),  -- category extracted
+    price       DECIMAL(10,2)
 );
-
--- ✅ 3NF
-CREATE TABLE students (
-  student_id INT PRIMARY KEY,
-  name VARCHAR(100),
-  department_id INT
-);
-
-CREATE TABLE departments (
-  department_id INT PRIMARY KEY,
-  department_name VARCHAR(100)
-);
+CREATE TABLE categories (id INT PRIMARY KEY, name VARCHAR(50), description TEXT);
+-- Now category name & description live only in categories table
 ```
 
-### Mermaid Progression
+### Diagram
 
 ```mermaid
-graph LR
-    Start["Unnormalized<br/>Data"]
-    Start -->|Remove<br/>repeating groups| 1NF["1NF<br/>Atomic values"]
-    1NF -->|Remove<br/>partial deps| 2NF["2NF<br/>No partial deps"]
-    2NF -->|Remove<br/>transitive deps| 3NF["3NF<br/>Normalized"]
+graph TD
+    UNF["Unnormalized\n(repeating groups)"]
+    N1["1NF\n(atomic values)"]
+    N2["2NF\n(full PK dependency)"]
+    N3["3NF\n(no transitive dependency)"]
+
+    UNF -->|split repeating| N1
+    N1  -->|remove partial dep| N2
+    N2  -->|remove transitive dep| N3
 ```
 
 ---
 
-## 6. Indexes (Clustered vs Non-clustered)
+## 9. Views & Materialized Views
 
 ### Question
-
-Explain clustered and non-clustered indexes?
+When would you use a view vs a materialized view?
 
 ### Answer
 
-| Feature     | Clustered         | Non-Clustered |
-| ----------- | ----------------- | ------------- |
-| Count       | 1 per table       | Multiple      |
-| Primary Key | Usually yes       | No            |
-| Sort Order  | Defines row order | Separate      |
-| Speed       | Faster            | Slower        |
-| Storage     | Inherent          | Extra         |
-
-### Clustered Index Example
-
 ```sql
--- Creates clustered index on user_id
-CREATE CLUSTERED INDEX idx_user_id
-ON users(id);
+-- VIEW â€“ virtual table, executes query on each access
+CREATE VIEW v_order_summary AS
+SELECT
+    o.id,
+    c.name          AS customer,
+    o.total,
+    o.status,
+    COUNT(oi.id)    AS item_count
+FROM orders o
+JOIN customers   c  ON c.id = o.customer_id
+JOIN order_items oi ON oi.order_id = o.id
+GROUP BY o.id, c.name, o.total, o.status;
 
--- Rows sorted physically by id
--- Much faster searches on id
+-- Use like a table
+SELECT * FROM v_order_summary WHERE status = 'pending';
+
+-- MATERIALIZED VIEW â€“ stores results physically, refresh on demand
+CREATE MATERIALIZED VIEW mv_daily_sales AS
+SELECT
+    DATE(created_at)        AS sale_date,
+    p.category,
+    SUM(oi.qty * oi.price)  AS daily_revenue
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products    p  ON p.id = oi.product_id
+WHERE o.status = 'delivered'
+GROUP BY DATE(created_at), p.category
+WITH DATA;
+
+CREATE INDEX ON mv_daily_sales(sale_date, category);
+
+-- Refresh nightly via a cron job
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_daily_sales;
 ```
 
-### Non-Clustered Index
+| Feature | View | Materialized View |
+|---|---|---|
+| Storage | No | Yes |
+| Performance | Query runs every time | Pre-computed |
+| Freshness | Always current | Stale until refreshed |
+| Use case | Simple abstraction | Heavy analytics queries |
+
+---
+
+## 10. UNION, INTERSECT & EXCEPT
+
+### Question
+When do you use UNION, INTERSECT, and EXCEPT?
+
+### Answer
 
 ```sql
--- Creates non-clustered index on email
-CREATE NONCLUSTERED INDEX idx_email
-ON users(email);
+-- UNION ALL â€“ combine two result sets (keeps duplicates, faster)
+SELECT 'email' AS channel, customer_id, sent_at
+FROM email_campaigns
+WHERE campaign_id = 42
+UNION ALL
+SELECT 'sms', customer_id, sent_at
+FROM sms_campaigns
+WHERE campaign_id = 42;
 
--- Separate B-tree structure pointing to clustered index
--- Faster email searches without sorting all data
-```
+-- UNION â€“ removes duplicates
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
+UNION
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
 
-### Real-World Performance
+-- INTERSECT â€“ customers who ordered in BOTH years
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
+INTERSECT
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
 
-```sql
--- Without index - scans all 1M rows
-SELECT * FROM users WHERE email = 'john@example.com'; -- 500ms
-
--- With index - binary search
-CREATE NONCLUSTERED INDEX idx_email ON users(email);
-SELECT * FROM users WHERE email = 'john@example.com'; -- 5ms
+-- EXCEPT â€“ customers who ordered in 2023 but NOT 2024 (churned customers)
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2023
+EXCEPT
+SELECT customer_id FROM orders WHERE EXTRACT(YEAR FROM created_at) = 2024;
 ```
 
 ---
 
-## 7. Query Optimization
+## 11. CASE Statement & Conditional Logic
 
 ### Question
-
-How do you optimize slow queries?
+Write a query that segments customers by spend tier.
 
 ### Answer
 
-### Step 1: Analyze with EXPLAIN
-
 ```sql
--- See execution plan
-EXPLAIN SELECT * FROM users WHERE email = 'john@example.com';
--- Shows if full table scan or index used
+SELECT
+    c.name,
+    SUM(o.total) AS total_spent,
+    CASE
+        WHEN SUM(o.total) >= 10000 THEN 'Platinum'
+        WHEN SUM(o.total) >= 5000  THEN 'Gold'
+        WHEN SUM(o.total) >= 1000  THEN 'Silver'
+        ELSE                            'Bronze'
+    END AS tier,
+    -- Pivot: count orders per status in one row
+    COUNT(CASE WHEN o.status = 'delivered'  THEN 1 END) AS delivered_orders,
+    COUNT(CASE WHEN o.status = 'cancelled'  THEN 1 END) AS cancelled_orders,
+    COUNT(CASE WHEN o.status = 'pending'    THEN 1 END) AS pending_orders
+FROM customers c
+JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id, c.name
+ORDER BY total_spent DESC;
 ```
 
-### Step 2: Add Indexes
+---
+
+## 12. Query Optimisation Checklist
+
+### Question
+How do you optimise a slow SQL query?
+
+### Answer
 
 ```sql
--- Before: Full table scan
-SELECT * FROM orders WHERE customer_id = 5;
+-- Step 1: Run EXPLAIN ANALYZE to see the execution plan
+EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+SELECT c.name, SUM(o.total)
+FROM customers c JOIN orders o ON o.customer_id = c.id
+WHERE o.created_at > NOW() - INTERVAL '90 days'
+GROUP BY c.id;
 
--- After: Create index
-CREATE INDEX idx_customer_id ON orders(customer_id);
--- Now uses index - much faster
-```
+-- Step 2: Add missing indexes
+-- Seq Scan on orders with filter on created_at â†’ add index
+CREATE INDEX CONCURRENTLY idx_orders_created ON orders(created_at DESC);
 
-### Step 3: Optimize Joins
+-- Step 3: Rewrite correlated subquery as a JOIN (often 10-100Ã— faster)
+-- âŒ Slow â€“ runs subquery for EVERY row
+SELECT name FROM products p
+WHERE p.id IN (SELECT product_id FROM order_items);
 
-```sql
--- ❌ Inefficient - large cartesian product
-SELECT u.*, o.*
-FROM users u, orders o
-WHERE u.id = o.user_id;
+-- âœ… Fast â€“ single join
+SELECT DISTINCT p.name FROM products p
+JOIN order_items oi ON oi.product_id = p.id;
 
--- ✅ Efficient - explicit join
-SELECT u.*, o.*
-FROM users u
-INNER JOIN orders o ON u.id = o.user_id;
-```
-
-### Real-World Example
-
-```sql
--- Slow query
-SELECT * FROM customers c
-WHERE c.id IN (
-  SELECT customer_id FROM orders WHERE amount > 1000
+-- Step 4: Use EXISTS instead of IN for large subqueries
+-- âŒ
+SELECT * FROM customers WHERE id IN (SELECT customer_id FROM orders);
+-- âœ…
+SELECT * FROM customers c WHERE EXISTS (
+    SELECT 1 FROM orders WHERE customer_id = c.id
 );
 
--- Optimized with JOIN
-SELECT DISTINCT c.*
-FROM customers c
-INNER JOIN orders o ON c.id = o.customer_id
-WHERE o.amount > 1000;
+-- Step 5: Avoid SELECT * in production queries
+-- âŒ
+SELECT * FROM orders;
+-- âœ…
+SELECT id, customer_id, total, status FROM orders;
 
--- Or with CTE
-WITH big_spenders AS (
-  SELECT DISTINCT customer_id
-  FROM orders
-  WHERE amount > 1000
-)
-SELECT c.*
-FROM customers c
-WHERE c.id IN (SELECT customer_id FROM big_spenders);
+-- Step 6: Pagination â€“ use keyset instead of OFFSET for large tables
+-- âŒ Slow â€“ scans and discards first 10000 rows
+SELECT * FROM orders ORDER BY id LIMIT 20 OFFSET 10000;
+
+-- âœ… Fast â€“ index seek
+SELECT * FROM orders WHERE id > :last_seen_id ORDER BY id LIMIT 20;
 ```
 
----
-
-## 8. Nth Highest Salary Query
-
-### Question
-
-Find the Nth highest salary from employees table?
-
-### Answer
-
-```sql
--- Find 3rd highest salary
-SELECT DISTINCT salary
-FROM employees
-ORDER BY salary DESC
-LIMIT 1 OFFSET 2;
-
--- Or using window functions
-WITH ranked_salaries AS (
-  SELECT salary,
-         DENSE_RANK() OVER (ORDER BY salary DESC) as rank
-  FROM employees
-)
-SELECT salary
-FROM ranked_salaries
-WHERE rank = 3;
-```
-
-### Real-World Example
-
-```sql
--- Top 5 highest earners with their details
-SELECT
-  name,
-  salary,
-  DENSE_RANK() OVER (ORDER BY salary DESC) as salary_rank
-FROM employees
-WHERE DENSE_RANK() OVER (ORDER BY salary DESC) <= 5;
-
--- Or simpler
-WITH top_earners AS (
-  SELECT name, salary,
-         ROW_NUMBER() OVER (ORDER BY salary DESC) as rank
-  FROM employees
-)
-SELECT name, salary
-FROM top_earners
-WHERE rank <= 5;
-```
-
----
-
-## 9. DELETE vs DROP vs TRUNCATE
-
-### Question
-
-Difference between DELETE, DROP, and TRUNCATE?
-
-### Answer
-
-| Operation | DELETE    | DROP  | TRUNCATE  |
-| --------- | --------- | ----- | --------- |
-| Type      | DML       | DDL   | DDL       |
-| Removes   | Rows      | Table | Rows      |
-| Speed     | Slow      | Fast  | Very Fast |
-| Rollback  | Yes       | Yes   | Depends   |
-| Identity  | Preserved | Reset | Reset     |
-
-### Examples
-
-```sql
--- DELETE - removes rows, can use WHERE
-DELETE FROM employees WHERE id = 5;
-DELETE FROM employees; -- All rows, but structure remains
-
--- DROP - removes entire table
-DROP TABLE employees; -- Table gone!
-
--- TRUNCATE - removes all rows, fast
-TRUNCATE TABLE employees; -- Faster than DELETE
-```
-
-### Real-World Scenario
-
-```sql
--- Clear old logs but keep table structure
-TRUNCATE TABLE activity_logs; -- Fast, no rollback needed
-
--- Remove specific users
-DELETE FROM users WHERE status = 'inactive';
-
--- Archive and drop old table
-DROP TABLE users_2020;
-```
-
----
-
-## 10. Window Functions (RANK vs DENSE_RANK)
-
-### Question
-
-Difference between RANK and DENSE_RANK?
-
-### Answer
-
-```sql
--- Sample data: salaries [5000, 5000, 6000, 7000]
-
--- RANK - has gaps
-SELECT name, salary,
-       RANK() OVER (ORDER BY salary DESC) as rank
-FROM employees;
--- Results: 1, 1, 3, 4 (gap at 3)
-
--- DENSE_RANK - no gaps
-SELECT name, salary,
-       DENSE_RANK() OVER (ORDER BY salary DESC) as rank
-FROM employees;
--- Results: 1, 1, 2, 3 (no gaps)
-
--- ROW_NUMBER - unique
-SELECT name, salary,
-       ROW_NUMBER() OVER (ORDER BY salary DESC) as rank
-FROM employees;
--- Results: 1, 2, 3, 4 (always unique)
-```
-
-### Real-World Example
-
-```sql
--- Sales rankings per region
-SELECT
-  salesman_name,
-  region,
-  sales,
-  RANK() OVER (PARTITION BY region ORDER BY sales DESC) as region_rank,
-  RANK() OVER (ORDER BY sales DESC) as overall_rank
-FROM sales_data;
-
--- Each region has its own ranking
-```
-
-### Mermaid Comparison
+### Optimisation Diagram
 
 ```mermaid
-graph LR
-    Data["Salaries<br/>5K, 5K, 6K, 7K"]
-    Rank["RANK<br/>1, 1, 3, 4<br/>Has gaps"]
-    DenseRank["DENSE_RANK<br/>1, 1, 2, 3<br/>No gaps"]
-    RowNum["ROW_NUMBER<br/>1, 2, 3, 4<br/>All unique"]
+graph TD
+    Slow["ðŸ¢ Slow Query"]
+    Explain["EXPLAIN ANALYZE"]
+    SeqScan{"Seq Scan?"}
+    AddIndex["Add Index"]
+    HighCost{"High Cost Join?"}
+    RewriteJoin["Rewrite as JOIN / EXISTS"]
+    StaleStats{"Stale Statistics?"}
+    Analyze["Run ANALYZE"]
+    Fast["âš¡ Fast Query"]
 
-    Data --> Rank
-    Data --> DenseRank
-    Data --> RowNum
+    Slow --> Explain
+    Explain --> SeqScan
+    SeqScan -->|yes| AddIndex --> Fast
+    SeqScan -->|no| HighCost
+    HighCost -->|yes| RewriteJoin --> Fast
+    HighCost -->|no| StaleStats
+    StaleStats -->|yes| Analyze --> Fast
 ```
+
+---
+
+## Interview Level Summary
+
+### Junior
+| Topic | Key Points |
+|---|---|
+| SELECT / WHERE | Filtering, ordering, LIKE, IN, BETWEEN |
+| JOINs | INNER, LEFT â€“ read query results correctly |
+| GROUP BY / HAVING | Aggregates, filtering groups |
+| NULL Handling | IS NULL, COALESCE |
+
+### Mid-Level
+| Topic | Key Points |
+|---|---|
+| CTEs | WITH clause, readability |
+| Window Functions | RANK, ROW_NUMBER, PARTITION BY |
+| Indexes | B-tree, composite, when to create |
+| Subqueries | Correlated, EXISTS vs IN |
+
+### Senior
+| Topic | Key Points |
+|---|---|
+| Query Optimisation | EXPLAIN ANALYZE, index strategies |
+| Transactions | ACID, isolation levels, deadlock prevention |
+| Normalisation | 1NFâ€“3NF trade-offs |
+| Stored Procedures | Business logic in DB, error handling |
+

@@ -1,401 +1,134 @@
-# React.js Interview Questions
+﻿# React.js Interview Questions & Answers
 
-## Overview
-
-This folder contains comprehensive interview questions for React developers, covering React fundamentals, hooks, state management, performance optimization, and modern patterns.
-
-## Topics Covered
-
-### React Fundamentals
-
-- **JSX** - Syntax extension, Compilation
-- **Components** - Functional vs Class components
-- **Props** - Passing data, Prop validation
-- **State** - useState hook, State management
-- **Rendering** - Virtual DOM, Reconciliation
-- **Keys** - List rendering best practices
-- **Events** - Event handling, Event delegation
-- **Forms** - Controlled vs Uncontrolled components
-- **Conditional Rendering** - if/else, Ternary, &&
-
-### React Hooks
-
-- **useState** - State management
-- **useEffect** - Side effects, Cleanup
-- **useContext** - Context API consumption
-- **useReducer** - Complex state management
-- **useCallback** - Memoizing callbacks
-- **useMemo** - Memoizing values
-- **useRef** - DOM references
-- **useLayoutEffect** - Synchronous effects
-- **Custom Hooks** - Creating reusable logic
-- **Rules of Hooks** - Dependency arrays
-
-### Context & State Management
-
-- **Context API** - Props drilling solution
-- **Redux** - Centralized state
-- **Redux Toolkit** - Simplified Redux
-- **Zustand** - Lightweight state manager
-- **Recoil** - Atom-based state
-- **MobX** - Observable state
-- **Jotai** - Primitive state management
-
-### Performance Optimization
-
-- **React.memo** - Component memoization
-- **Code Splitting** - Lazy loading
-- **Suspense** - Async component loading
-- **Profiling** - Performance analysis
-- **Web Vitals** - Core metrics
-- **Bundle Size** - Optimization
-- **Image Optimization** - Lazy loading images
-- **Virtualization** - Large list rendering
-
-### Advanced Concepts
-
-- **Render Props** - Component pattern
-- **Higher-Order Components** - HOC pattern
-- **Composition** - Component composition
-- **Error Boundaries** - Error handling
-- **Portals** - Rendering outside DOM
-- **Fiber Architecture** - React internals
-- **Concurrent Mode** - Future features
-- **Server Components** - Next.js integration
-
-### Routing
-
-- **React Router** - Single page routing
-- **Route Parameters** - Dynamic routes
-- **Nested Routes** - Route hierarchy
-- **Navigation** - useNavigate, Link
-- **Lazy Routes** - Code splitting routes
-- **Query Strings** - URL parameters
-
-### Testing
-
-- **Jest** - Testing framework
-- **React Testing Library** - Component testing
-- **Unit Tests** - Function testing
-- **Integration Tests** - Component interaction
-- **Mocking** - Mocking dependencies
-- **Coverage** - Code coverage metrics
-
-### Next.js / SSR
-
-- **Server-Side Rendering** - SSR benefits
-- **Static Generation** - Static HTML
-- **Incremental Static Regeneration** - ISR
-- **API Routes** - Backend routes
-- **Middleware** - Request processing
-- **Deployment** - Vercel deployment
-
-### Best Practices
-
-- **Clean Code** - Readability
-- **DRY Principle** - Don't repeat yourself
-- **SOLID Principles** - Code structure
-- **Error Handling** - Graceful errors
-- **Accessibility** - a11y standards
-- **SEO** - Search engine optimization
-
-## Interview Levels
-
-### Junior Developer
-
-- JSX syntax
-- Functional components
-- Props & state
-- Basic hooks
-- Event handling
-- Simple styling
-
-### Mid-Level Developer
-
-- Advanced hooks
-- Context API
-- Performance optimization
-- Custom hooks
-- State management
-- Testing
-- Routing
-
-### Senior Developer
-
-- Architecture patterns
-- Micro-frontends
-- Advanced performance
-- Next.js/SSR
-- System design
-- Team leadership
-- Scale considerations
-
----
-
-## Key Competencies
-
-✅ JSX mastery  
-✅ Hooks proficiency  
-✅ State management  
-✅ Performance optimization  
-✅ Routing  
-✅ Testing  
-✅ TypeScript (optional)  
-✅ Code quality
-
-## Recommended Learning Path
-
-1. Master React fundamentals
-2. Learn hooks deeply
-3. Understand Context API
-4. Explore state management
-5. Learn performance optimization
-6. Study advanced patterns
-7. Master routing
-8. Learn testing
-9. Explore Next.js
-
-## Resources
-
-- **React Docs:** https://react.dev/
-- **React Hooks:** https://react.dev/reference/react/hooks
-- **React Router:** https://reactrouter.com/
-- **Next.js:** https://nextjs.org/
-- **React Testing Library:** https://testing-library.com/react
-
----
-
-**Note:** This folder will be populated with detailed interview questions and answers for React positions.
-
----
-
-# React Interview Questions & Answers
-
-## 1. Controlled vs Uncontrolled Components
+## 1. Virtual DOM & Reconciliation
 
 ### Question
-
-What are controlled and uncontrolled components?
+What is the Virtual DOM and how does React's reconciliation work?
 
 ### Answer
-
-**Controlled Component:** React state controls the form input value.
-
-```jsx
-function ControlledInput() {
-  const [name, setName] = useState("");
-
-  return <input value={name} onChange={(e) => setName(e.target.value)} />;
-}
-```
-
-**Uncontrolled Component:** DOM controls the form input value.
+The Virtual DOM is a lightweight JavaScript representation of the real DOM. React uses it to batch and minimise actual DOM mutations.
 
 ```jsx
-function UncontrolledInput() {
-  const inputRef = useRef();
-
-  return <input ref={inputRef} />;
-}
+// React creates a virtual tree
+const element = (
+  <div className="card">
+    <h2>Product</h2>
+    <p>$99</p>
+  </div>
+);
+// This compiles to:
+// React.createElement("div", { className: "card" },
+//   React.createElement("h2", null, "Product"),
+//   React.createElement("p", null, "$99")
+// )
 ```
 
-### Comparison
+### Reconciliation â€“ Diffing Algorithm
 
-| Feature    | Controlled  | Uncontrolled |
-| ---------- | ----------- | ------------ |
-| State      | React state | DOM state    |
-| Updates    | Immediate   | On demand    |
-| Testing    | Easy        | Harder       |
-| Validation | Real-time   | Form submit  |
+React diffs the old virtual tree against the new one using three heuristics:
+1. Different element types â†’ destroy & rebuild subtree
+2. Same element type â†’ update only changed attributes
+3. Lists â†’ use `key` prop to match old and new nodes
 
 ### Real-World Example
 
 ```jsx
-// Search with real-time filtering
-function SearchUsers() {
-  const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
+// âŒ No key â€“ React re-renders entire list on any change
+{items.map(item => <ProductCard name={item.name} />)}
 
-  useEffect(() => {
-    if (search.length > 2) {
-      fetchSearchResults(search).then(setResults);
-    }
-  }, [search]); // Controlled component enables this
+// âœ… Stable key â€“ React only re-renders changed nodes
+{items.map(item => <ProductCard key={item.id} name={item.name} />)}
+```
 
+### Diagram
+
+```mermaid
+graph TD
+    StateChange["State Change"]
+    NewVDOM["New Virtual DOM Tree"]
+    OldVDOM["Old Virtual DOM Tree"]
+    Diff["Diffing Algorithm"]
+    Patch["Minimal DOM Patch"]
+    RealDOM["Real DOM Update"]
+
+    StateChange --> NewVDOM
+    OldVDOM --> Diff
+    NewVDOM --> Diff
+    Diff --> Patch
+    Patch --> RealDOM
+```
+
+---
+
+## 2. useState & State Management
+
+### Question
+How does `useState` work and what are common pitfalls?
+
+### Answer
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  // âŒ Wrong â€“ directly mutating state
+  // count++;
+
+  // âœ… Correct â€“ call setter
   return (
-    <>
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search users..."
-      />
-      <ul>
-        {results.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ul>
-    </>
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(c => c + 1)}>+</button>
+      <button onClick={() => setCount(c => c - 1)}>-</button>
+      <button onClick={() => setCount(0)}>Reset</button>
+    </div>
   );
 }
 ```
 
----
-
-## 2. useEffect Dependency Arrays
-
-### Question
-
-Explain the difference between useEffect with different dependency arrays?
-
-### Answer
-
-```javascript
-// 1. No dependency array - runs after EVERY render
-useEffect(() => {
-  console.log("Runs every render");
-});
-
-// 2. Empty dependency array [] - runs ONCE after mount
-useEffect(() => {
-  console.log("Runs once on mount");
-}, []);
-
-// 3. With dependencies - runs when deps change
-useEffect(() => {
-  console.log("Runs when userId changes");
-}, [userId]);
-```
-
-### Mermaid Diagram
-
-```mermaid
-graph TD
-    Component["📦 Component Renders"]
-    NoDeps["❌ No deps<br/>Run every time"]
-    EmptyDeps["✅ []<br/>Run once on mount"]
-    WithDeps["📍 [dep1, dep2]<br/>Run when deps change"]
-
-    Component --> NoDeps
-    Component --> EmptyDeps
-    Component --> WithDeps
-```
-
-### Real-World Examples
+### Real-World Example â€“ Form State
 
 ```jsx
-// 1. API call on component mount
-useEffect(() => {
-  fetchUserData(userId);
-}, []); // ⚠️ Only runs on mount - DON'T FORGET!
+function CheckoutForm() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    address: { street: "", city: "", zip: "" }
+  });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
-// 2. Update title when user changes
-useEffect(() => {
-  document.title = `User: ${user.name}`;
-}, [user.name]); // Runs when user.name changes
-
-// 3. Cleanup function
-useEffect(() => {
-  const subscription = eventBus.subscribe("notification", alert);
-
-  return () => {
-    subscription.unsubscribe(); // Cleanup
-  };
-}, []); // Run once, cleanup on unmount
-```
-
----
-
-## 3. useReducer vs useState
-
-### Question
-
-When should you use useReducer over useState?
-
-### Answer
-
-**useState:** Simple state updates
-
-```jsx
-const [count, setCount] = useState(0);
-
-setCount(count + 1); // Simple
-```
-
-**useReducer:** Complex state logic
-
-```jsx
-const [state, dispatch] = useReducer(reducer, initialState);
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "INCREMENT":
-      return { ...state, count: state.count + 1 };
-    case "DECREMENT":
-      return { ...state, count: state.count - 1 };
-    default:
-      return state;
+  // Generic field updater â€“ no need for one setter per field
+  function handleChange(field, value) {
+    setForm(prev => ({ ...prev, [field]: value }));
+    setErrors(prev => ({ ...prev, [field]: undefined }));
   }
-}
 
-dispatch({ type: "INCREMENT" });
-```
-
-### Decision Flow
-
-```mermaid
-graph TD
-    Start["State Update Logic"]
-    Simple{Simple?}
-    Complex{Complex?}
-
-    Start --> Simple
-    Simple -->|Yes| useState["✅ useState"]
-    Simple -->|No| Complex
-    Complex -->|Yes| useReducer["✅ useReducer"]
-```
-
-### Real-World Example
-
-```jsx
-// Form with multiple fields - useReducer is cleaner
-const initialState = {
-  name: "",
-  email: "",
-  errors: {},
-};
-
-function formReducer(state, action) {
-  switch (action.type) {
-    case "SET_FIELD":
-      return { ...state, [action.field]: action.value };
-    case "SET_ERROR":
-      return {
-        ...state,
-        errors: { ...state.errors, [action.field]: action.error },
-      };
-    case "RESET":
-      return initialState;
-    default:
-      return state;
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await submitOrder(form);
+    } catch (err) {
+      setErrors(err.fieldErrors || {});
+    } finally {
+      setSubmitting(false);
+    }
   }
-}
-
-function Form() {
-  const [state, dispatch] = useReducer(formReducer, initialState);
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <input
-        value={state.name}
-        onChange={(e) =>
-          dispatch({
-            type: "SET_FIELD",
-            field: "name",
-            value: e.target.value,
-          })
-        }
+        value={form.name}
+        onChange={e => handleChange("name", e.target.value)}
+        placeholder="Full name"
       />
-      {state.errors.name && <span>{state.errors.name}</span>}
+      {errors.name && <span className="error">{errors.name}</span>}
+      <button disabled={submitting}>
+        {submitting ? "Placing orderâ€¦" : "Place Order"}
+      </button>
     </form>
   );
 }
@@ -403,475 +136,475 @@ function Form() {
 
 ---
 
-## 4. Context API vs Redux
+## 3. useEffect â€“ Side Effects & Cleanup
 
 ### Question
-
-When to use Context API vs Redux?
+Explain `useEffect` and how to handle cleanups.
 
 ### Answer
 
-| Feature     | Context API  | Redux     |
-| ----------- | ------------ | --------- |
-| Setup       | Simple       | Complex   |
-| Boilerplate | Minimal      | Lots      |
-| Performance | Slower       | Optimized |
-| DevTools    | None         | Great     |
-| Scale       | Small-medium | Large     |
+```jsx
+import { useState, useEffect } from "react";
 
-### Context API Example
+function UserProfile({ userId }) {
+  const [user, setUser]       = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(null);
+
+  useEffect(() => {
+    let cancelled = false; // prevent state update on unmounted component
+
+    async function loadUser() {
+      try {
+        setLoading(true);
+        const res  = await fetch(`/api/users/${userId}`);
+        const data = await res.json();
+        if (!cancelled) setUser(data);
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadUser();
+
+    // Cleanup â€“ runs before next effect OR on unmount
+    return () => { cancelled = true; };
+  }, [userId]); // re-run whenever userId changes
+
+  if (loading) return <Spinner />;
+  if (error)   return <ErrorMessage msg={error} />;
+  return <div>{user?.name}</div>;
+}
+```
+
+### Real-World Example â€“ WebSocket Connection
 
 ```jsx
-const ThemeContext = React.createContext();
+function LiveOrderStatus({ orderId }) {
+  const [status, setStatus] = useState("pending");
 
-function App() {
-  const [theme, setTheme] = useState("light");
+  useEffect(() => {
+    const ws = new WebSocket(`wss://api.example.com/orders/${orderId}`);
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <Header />
-      <Content />
-    </ThemeContext.Provider>
-  );
-}
+    ws.onmessage = (event) => {
+      const { orderStatus } = JSON.parse(event.data);
+      setStatus(orderStatus);
+    };
 
-function useTheme() {
-  return useContext(ThemeContext);
+    ws.onerror = () => setStatus("error");
+
+    // Cleanup closes the socket when component unmounts or orderId changes
+    return () => ws.close();
+  }, [orderId]);
+
+  return <OrderBadge status={status} />;
 }
 ```
 
-### Redux Example
-
-```javascript
-// Action
-const setTheme = (theme) => ({ type: "SET_THEME", payload: theme });
-
-// Reducer
-const themeReducer = (state = "light", action) => {
-  if (action.type === "SET_THEME") return action.payload;
-  return state;
-};
-
-// Store
-const store = createStore(themeReducer);
-```
-
-### Decision Tree
+### Diagram
 
 ```mermaid
 graph TD
-    Start["Global State Needed?"]
-    Simple{Simple?}
-    Scale{Scale?}
+    Mount["Component Mounts"]
+    Effect["useEffect Runs"]
+    Deps["Dependency Changes"]
+    Cleanup["Cleanup Function Runs"]
+    NewEffect["Effect Runs Again"]
+    Unmount["Component Unmounts"]
 
-    Start -->|Yes| Simple
-    Simple -->|Props + Context| Context["✅ Context API"]
-    Simple -->|Complex logic| Scale
-    Scale -->|Small-medium| Context
-    Scale -->|Large enterprise| Redux["✅ Redux"]
+    Mount --> Effect
+    Deps --> Cleanup
+    Cleanup --> NewEffect
+    Unmount --> Cleanup
 ```
 
-### Real-World Example
+---
+
+## 4. useCallback & useMemo
+
+### Question
+When should you use `useCallback` and `useMemo`?
+
+### Answer
 
 ```jsx
-// Context API - Perfect for theme, auth, language
-const AuthContext = createContext();
+import { useState, useCallback, useMemo } from "react";
 
+function ProductList({ products, onAddToCart }) {
+  const [filter, setFilter] = useState("");
+  const [sortBy, setSortBy] = useState("price");
+
+  // useMemo â€“ expensive computation, recompute only when deps change
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter(p => p.name.toLowerCase().includes(filter.toLowerCase()))
+      .sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1);
+  }, [products, filter, sortBy]);
+
+  // useCallback â€“ stable function reference for child props
+  const handleAddToCart = useCallback((productId, qty = 1) => {
+    onAddToCart(productId, qty);
+  }, [onAddToCart]);
+
+  return (
+    <div>
+      <input value={filter} onChange={e => setFilter(e.target.value)} />
+      {filteredProducts.map(p => (
+        <ProductCard
+          key={p.id}
+          product={p}
+          onAdd={handleAddToCart}  // stable reference â†’ no unnecessary re-render
+        />
+      ))}
+    </div>
+  );
+}
+
+// Wrap child in React.memo so it skips re-render when props haven't changed
+const ProductCard = React.memo(({ product, onAdd }) => (
+  <div>
+    <h3>{product.name}</h3>
+    <button onClick={() => onAdd(product.id)}>Add to Cart</button>
+  </div>
+));
+```
+
+---
+
+## 5. useReducer â€“ Complex State Management
+
+### Question
+When should you use `useReducer` instead of `useState`?
+
+### Answer
+Use `useReducer` when state transitions are complex, interdependent, or driven by defined action types.
+
+```jsx
+const initialState = {
+  items: [],
+  total: 0,
+  discount: 0,
+  loading: false
+};
+
+function cartReducer(state, action) {
+  switch (action.type) {
+    case "ADD_ITEM": {
+      const exists = state.items.find(i => i.id === action.item.id);
+      const items  = exists
+        ? state.items.map(i => i.id === action.item.id ? { ...i, qty: i.qty + 1 } : i)
+        : [...state.items, { ...action.item, qty: 1 }];
+      return { ...state, items, total: calcTotal(items, state.discount) };
+    }
+    case "REMOVE_ITEM":
+      const items = state.items.filter(i => i.id !== action.id);
+      return { ...state, items, total: calcTotal(items, state.discount) };
+    case "APPLY_DISCOUNT":
+      return { ...state, discount: action.pct, total: calcTotal(state.items, action.pct) };
+    case "CLEAR":
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+function ShoppingCart() {
+  const [cart, dispatch] = useReducer(cartReducer, initialState);
+
+  return (
+    <div>
+      <p>Total: ${cart.total.toFixed(2)}</p>
+      <button onClick={() => dispatch({ type: "APPLY_DISCOUNT", pct: 10 })}>
+        Apply 10% Discount
+      </button>
+      <button onClick={() => dispatch({ type: "CLEAR" })}>
+        Clear Cart
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## 6. useContext â€“ Context API
+
+### Question
+How do you avoid prop-drilling with the Context API?
+
+### Answer
+
+```jsx
+import { createContext, useContext, useState } from "react";
+
+// 1. Create context with a sensible default
+const AuthContext = createContext(null);
+
+// 2. Provider wraps the subtree that needs access
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  const login = async (email, password) => {
-    const user = await api.login(email, password);
-    setUser(user);
-    localStorage.setItem("token", user.token);
-  };
+  async function login(credentials) {
+    const data = await authService.login(credentials);
+    setUser(data.user);
+    localStorage.setItem("token", data.token);
+  }
+
+  function logout() {
+    setUser(null);
+    localStorage.removeItem("token");
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn: !!user }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Use anywhere
-function ProtectedRoute() {
-  const { user } = useContext(AuthContext);
-  return user ? <Dashboard /> : <Login />;
+// 3. Custom hook â€“ cleaner API + guards against usage outside provider
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 }
-```
 
----
-
-## 5. React.memo vs useMemo
-
-### Question
-
-Difference between React.memo and useMemo?
-
-### Answer
-
-**React.memo:** Memoize component to prevent re-renders
-
-```jsx
-const ExpensiveComponent = React.memo(({ data }) => {
-  console.log("Rendering");
-  return <div>{data}</div>;
-});
-
-// Only re-renders if `data` prop changes
-```
-
-**useMemo:** Memoize computed value
-
-```jsx
-const memoizedValue = useMemo(() => {
-  return expensiveComputation(data);
-}, [data]);
-```
-
-### Comparison Table
-
-| Aspect   | React.memo | useMemo       |
-| -------- | ---------- | ------------- |
-| Memoizes | Component  | Value         |
-| Prevents | Re-render  | Recomputation |
-| Input    | Props      | Dependencies  |
-| Output   | JSX        | Value         |
-
-### Real-World Example
-
-```jsx
-// Parent component
-function UserDashboard() {
-  const [filter, setFilter] = useState("");
-  const [sortBy, setSortBy] = useState("name");
-
-  // Memoized computation
-  const filteredUsers = useMemo(() => {
-    console.log("Computing filtered users");
-    return users
-      .filter((u) => u.name.includes(filter))
-      .sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
-  }, [filter, sortBy]);
-
+// 4. Consume anywhere in the tree
+function NavBar() {
+  const { user, logout } = useAuth();
   return (
-    <>
-      <input
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        placeholder="Filter..."
-      />
-      <UserList users={filteredUsers} />
-    </>
-  );
-}
-
-// Memoized child component
-const UserList = React.memo(({ users }) => {
-  console.log("Rendering UserList");
-  return users.map((u) => <UserItem key={u.id} user={u} />);
-});
-
-// UserList only re-renders when filteredUsers changes
-```
-
----
-
-## 6. Prop Drilling vs Context API
-
-### Question
-
-What is prop drilling and how to solve it?
-
-### Answer
-
-**Prop Drilling Problem:**
-
-```jsx
-function App() {
-  const user = { name: "John", theme: "dark" };
-  return <Level1 user={user} theme={theme} />;
-}
-
-function Level1({ user, theme }) {
-  return <Level2 user={user} theme={theme} />;
-}
-
-function Level2({ user, theme }) {
-  return <Level3 user={user} theme={theme} />;
-}
-
-function Level3({ user, theme }) {
-  return (
-    <div>
-      {user.name} - {theme}
-    </div>
+    <nav>
+      {user ? (
+        <>
+          <span>Hi, {user.name}</span>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <a href="/login">Login</a>
+      )}
+    </nav>
   );
 }
 ```
 
-**Solution with Context:**
-
-```jsx
-const AppContext = createContext();
-
-function App() {
-  const value = { user: { name: "John" }, theme: "dark" };
-
-  return (
-    <AppContext.Provider value={value}>
-      <Level1 />
-    </AppContext.Provider>
-  );
-}
-
-function Level3() {
-  const { user, theme } = useContext(AppContext);
-  return (
-    <div>
-      {user.name} - {theme}
-    </div>
-  );
-}
-```
-
-### Mermaid Comparison
+### Diagram
 
 ```mermaid
 graph TD
-    subgraph Drilling["❌ Prop Drilling"]
-        App1["App"]
-        L11["Level1"]
-        L21["Level2"]
-        L31["Level3"]
+    App["App (AuthProvider)"]
+    NavBar["NavBar"]
+    Dashboard["Dashboard"]
+    Profile["Profile"]
+    Settings["Settings"]
 
-        App1 -->|user, theme| L11
-        L11 -->|user, theme| L21
-        L21 -->|user, theme| L31
-    end
+    App --> NavBar
+    App --> Dashboard
+    Dashboard --> Profile
+    Dashboard --> Settings
 
-    subgraph Context["✅ Context API"]
-        App2["App<br/>Provider"]
-        L12["Level1"]
-        L22["Level2"]
-        L32["Level3<br/>useContext"]
-
-        App2 -.->|context| L32
-    end
+    AuthContext["AuthContext Value\n{ user, login, logout }"]
+    AuthContext -.->|useAuth()| NavBar
+    AuthContext -.->|useAuth()| Profile
+    AuthContext -.->|useAuth()| Settings
 ```
 
 ---
 
-## 7. Controlled Form Example
+## 7. Custom Hooks
 
 ### Question
-
-Build a controlled search form with real-time filtering?
+How do you create and use custom hooks?
 
 ### Answer
 
 ```jsx
-function SearchForm() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+// Custom hook â€“ useFetch
+function useFetch(url) {
+  const [data,    setData]    = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
 
   useEffect(() => {
-    if (query.length < 2) {
-      setResults([]);
-      return;
+    let cancelled = false;
+
+    fetch(url)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(e => { if (!cancelled) setError(e.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Usage
+function ProductPage({ id }) {
+  const { data: product, loading, error } = useFetch(`/api/products/${id}`);
+  if (loading) return <Spinner />;
+  if (error)   return <p>Error: {error}</p>;
+  return <ProductDetail product={product} />;
+}
+```
+
+### Real-World Example â€“ useLocalStorage Hook
+
+```jsx
+function useLocalStorage(key, initialValue) {
+  const [stored, setStored] = useState(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch {
+      return initialValue;
     }
+  });
 
-    setIsLoading(true);
-
-    // Debounce API call
-    const timer = setTimeout(async () => {
-      const data = await searchAPI(query);
-      setResults(data);
-      setIsLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query]);
-
-  return (
-    <div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search fruits..."
-      />
-
-      {isLoading && <p>Loading...</p>}
-
-      <ul>
-        {results.map((result) => (
-          <li key={result.id}>{result.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-```
-
-### Array Filtering Example
-
-```jsx
-const fruits = [
-  "Banana",
-  "Apple",
-  "Orange",
-  "Mango",
-  "Pineapple",
-  "Watermelon",
-];
-
-function FruitSearch() {
-  const [search, setSearch] = useState("");
-
-  const filtered = fruits.filter((fruit) =>
-    fruit.toLowerCase().includes(search.toLowerCase()),
-  );
-
-  return (
-    <>
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search fruits..."
-      />
-      <ul>
-        {filtered.map((fruit, i) => (
-          <li key={i}>{fruit}</li>
-        ))}
-      </ul>
-    </>
-  );
-}
-```
-
----
-
-## 8. Todo Application Example
-
-### Question
-
-Build a todo application with add, delete, and complete functionality?
-
-### Answer
-
-```jsx
-function TodoApp() {
-  const [todos, setTodos] = useState([]);
-  const [input, setInput] = useState("");
-
-  const addTodo = () => {
-    if (input.trim()) {
-      setTodos([...todos, { id: Date.now(), text: input, completed: false }]);
-      setInput("");
+  function setValue(value) {
+    try {
+      const val = value instanceof Function ? value(stored) : value;
+      setStored(val);
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (error) {
+      console.error("localStorage write failed:", error);
     }
-  };
+  }
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-
-  const toggleComplete = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    );
-  };
-
-  return (
-    <div className="todo-app">
-      <h1>My Todos</h1>
-
-      <div className="input-section">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && addTodo()}
-          placeholder="Add a new todo..."
-        />
-        <button onClick={addTodo}>Add</button>
-      </div>
-
-      <ul className="todo-list">
-        {todos.map((todo) => (
-          <li key={todo.id} className={todo.completed ? "completed" : ""}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleComplete(todo.id)}
-            />
-            <span>{todo.text}</span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-
-      <p>
-        Total: {todos.length} | Completed:{" "}
-        {todos.filter((t) => t.completed).length}
-      </p>
-    </div>
-  );
+  return [stored, setValue];
 }
-```
 
----
-
-## 9. On/Off Toggle Button
-
-### Question
-
-Create an ON/OFF button that toggles text?
-
-### Answer
-
-```jsx
-function ToggleButton() {
-  const [isOn, setIsOn] = useState(false);
-
+// Usage
+function ThemeToggle() {
+  const [theme, setTheme] = useLocalStorage("theme", "light");
   return (
-    <button
-      onClick={() => setIsOn(!isOn)}
-      style={{
-        backgroundColor: isOn ? "green" : "red",
-        color: "white",
-        padding: "10px 20px",
-        fontSize: "16px",
-        cursor: "pointer",
-      }}
-    >
-      {isOn ? "ON" : "OFF"}
+    <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>
+      Switch to {theme === "light" ? "dark" : "light"} mode
     </button>
   );
 }
 ```
 
-### Advanced Version with State
+---
+
+## 8. React.memo, useCallback & Performance
+
+### Question
+How do you prevent unnecessary re-renders?
+
+### Answer
 
 ```jsx
-function AdvancedToggle() {
-  const [status, setStatus] = useState("OFF");
+// Without optimisation â€“ Child re-renders on every Parent render
+function Parent() {
+  const [count, setCount] = useState(0);
+  const [name,  setName]  = useState("");
 
-  const handleToggle = () => {
-    setStatus(status === "OFF" ? "ON" : "OFF");
-  };
+  // âŒ New function reference every render â†’ ExpensiveList always re-renders
+  const handleSelect = (id) => console.log("selected", id);
 
   return (
+    <>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <button onClick={() => setCount(c => c + 1)}>Clicks: {count}</button>
+      <ExpensiveList onSelect={handleSelect} />
+    </>
+  );
+}
+
+// With optimisation
+function ParentOptimised() {
+  const [count, setCount] = useState(0);
+  const [name,  setName]  = useState("");
+
+  // âœ… Stable reference â€“ only recreated if deps change
+  const handleSelect = useCallback((id) => console.log("selected", id), []);
+
+  return (
+    <>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <button onClick={() => setCount(c => c + 1)}>Clicks: {count}</button>
+      <ExpensiveList onSelect={handleSelect} />
+    </>
+  );
+}
+
+// âœ… React.memo â€“ skip re-render if props haven't changed
+const ExpensiveList = React.memo(function ExpensiveList({ onSelect }) {
+  console.log("ExpensiveList rendered");
+  return <ul>{/* hundreds of rows */}</ul>;
+});
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    ParentRender["Parent Re-renders"]
+    PropsChanged{"Props Changed?"}
+    SkipRender["Skip Re-render âœ…"]
+    ReRender["Re-render âŒ"]
+
+    ParentRender --> PropsChanged
+    PropsChanged -->|"No (React.memo)"| SkipRender
+    PropsChanged -->|"Yes"| ReRender
+```
+
+---
+
+## 9. Error Boundaries
+
+### Question
+What are error boundaries and how do you implement them?
+
+### Answer
+
+```jsx
+// Error boundaries must be class components
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    // Log to monitoring service
+    logErrorToService(error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="error-ui">
+          <h2>Something went wrong</h2>
+          <button onClick={() => this.setState({ hasError: false, error: null })}>
+            Try again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Usage â€“ wrap feature sections independently
+function App() {
+  return (
     <div>
-      <button
-        onClick={handleToggle}
-        className={`toggle ${status.toLowerCase()}`}
-      >
-        {status}
-      </button>
-      <p>Status: {status === "ON" ? "🟢 Online" : "🔴 Offline"}</p>
+      <ErrorBoundary fallback={<p>Header failed</p>}>
+        <Header />
+      </ErrorBoundary>
+
+      <ErrorBoundary fallback={<p>Products failed to load</p>}>
+        <ProductCatalogue />
+      </ErrorBoundary>
+
+      <ErrorBoundary fallback={<p>Checkout unavailable</p>}>
+        <Checkout />
+      </ErrorBoundary>
     </div>
   );
 }
@@ -879,70 +612,461 @@ function AdvancedToggle() {
 
 ---
 
-## 10. Conditional Rendering
+## 10. Code Splitting & Lazy Loading
 
 ### Question
-
-How to render conditionally in React?
+How do you implement code splitting in React?
 
 ### Answer
 
 ```jsx
-// 1. If/else
-function Component({ isLoggedIn }) {
-  if (isLoggedIn) {
-    return <Dashboard />;
-  }
-  return <Login />;
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+
+// Each page is loaded only when the route is visited
+const Home       = lazy(() => import("./pages/Home"));
+const Dashboard  = lazy(() => import("./pages/Dashboard"));
+const Profile    = lazy(() => import("./pages/Profile"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel"));
+
+function App() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route path="/"          element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile"   element={<Profile />} />
+        <Route path="/admin"     element={<AdminPanel />} />
+      </Routes>
+    </Suspense>
+  );
 }
 
-// 2. Ternary operator
-function Component({ isLoggedIn }) {
-  return isLoggedIn ? <Dashboard /> : <Login />;
-}
+// Lazy load a heavy component within a page
+const RichTextEditor = lazy(() => import("./components/RichTextEditor"));
 
-// 3. Logical && operator
-function Component({ showMessage }) {
-  return <div>{showMessage && <p>Hello!</p>}</div>;
-}
-
-// 4. Switch statement
-function Component({ userRole }) {
-  switch (userRole) {
-    case "admin":
-      return <AdminPanel />;
-    case "user":
-      return <UserDashboard />;
-    default:
-      return <GuestPage />;
-  }
-}
-```
-
-### Real-World Example
-
-```jsx
-function UserProfile({ userId }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchUser(userId)
-      .then(setUser)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [userId]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!user) return <div>User not found</div>;
-
+function PostEditor({ post }) {
+  const [showEditor, setShowEditor] = useState(false);
   return (
     <div>
-      <h1>{user.name}</h1>
-      <p>{user.email}</p>
+      <button onClick={() => setShowEditor(true)}>Edit Post</button>
+      {showEditor && (
+        <Suspense fallback={<div>Loading editorâ€¦</div>}>
+          <RichTextEditor content={post.body} />
+        </Suspense>
+      )}
     </div>
   );
 }
 ```
+
+---
+
+## 11. Redux Toolkit
+
+### Question
+How does Redux Toolkit simplify state management?
+
+### Answer
+
+```jsx
+// store/cartSlice.js
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+// Async thunk for API call
+export const fetchProducts = createAsyncThunk(
+  "products/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await fetch("/api/products");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: { items: [], total: 0 },
+  reducers: {
+    addItem(state, action) {
+      // Immer lets you "mutate" â€“ it creates a new state under the hood
+      const existing = state.items.find(i => i.id === action.payload.id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        state.items.push({ ...action.payload, qty: 1 });
+      }
+      state.total = state.items.reduce((s, i) => s + i.price * i.qty, 0);
+    },
+    removeItem(state, action) {
+      state.items = state.items.filter(i => i.id !== action.payload);
+      state.total = state.items.reduce((s, i) => s + i.price * i.qty, 0);
+    }
+  }
+});
+
+export const { addItem, removeItem } = cartSlice.actions;
+export default cartSlice.reducer;
+
+// store/index.js
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./cartSlice";
+
+export const store = configureStore({
+  reducer: { cart: cartReducer }
+});
+
+// Component usage
+import { useSelector, useDispatch } from "react-redux";
+import { addItem } from "../store/cartSlice";
+
+function ProductCard({ product }) {
+  const cartCount = useSelector(state => state.cart.items.length);
+  const dispatch  = useDispatch();
+
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <button onClick={() => dispatch(addItem(product))}>
+        Add to Cart ({cartCount})
+      </button>
+    </div>
+  );
+}
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    Component["âš›ï¸ React Component"]
+    Dispatch["dispatch(action)"]
+    Reducer["ðŸ“¦ Slice Reducer"]
+    Store["ðŸ—„ï¸ Redux Store"]
+    Selector["useSelector"]
+
+    Component -->|user action| Dispatch
+    Dispatch --> Reducer
+    Reducer --> Store
+    Store -->|re-render| Selector
+    Selector --> Component
+```
+
+---
+
+## 12. React Router â€“ Routing & Navigation
+
+### Question
+How do you implement routing in React?
+
+### Answer
+
+```jsx
+import { BrowserRouter, Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <NavBar />
+      <Routes>
+        <Route path="/"                 element={<Home />} />
+        <Route path="/products"         element={<Products />} />
+        <Route path="/products/:id"     element={<ProductDetail />} />
+        <Route path="/orders"           element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+        <Route path="*"                 element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+// Route params
+function ProductDetail() {
+  const { id }                      = useParams();
+  const { data: product, loading }  = useFetch(`/api/products/${id}`);
+  if (loading) return <Spinner />;
+  return <div>{product?.name}</div>;
+}
+
+// Programmatic navigation
+function LoginPage() {
+  const navigate = useNavigate();
+
+  async function handleLogin(credentials) {
+    await authService.login(credentials);
+    navigate("/dashboard", { replace: true }); // replaces history entry
+  }
+  return <LoginForm onSubmit={handleLogin} />;
+}
+
+// Protected route wrapper
+function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+}
+```
+
+---
+
+## 13. Next.js â€“ SSR, SSG & ISR
+
+### Question
+Explain the rendering strategies in Next.js.
+
+### Answer
+
+```jsx
+// 1. SERVER-SIDE RENDERING (SSR) â€“ fresh data on every request
+// app/products/[id]/page.tsx  (Next.js 13+ App Router)
+export default async function ProductPage({ params }) {
+  const product = await fetch(`https://api.example.com/products/${params.id}`, {
+    cache: "no-store" // SSR â€“ bypass cache
+  }).then(r => r.json());
+
+  return <ProductDetail product={product} />;
+}
+
+// 2. STATIC SITE GENERATION (SSG) â€“ built once at build time
+export default async function BlogPost({ params }) {
+  const post = await fetch(`https://api.example.com/posts/${params.slug}`, {
+    cache: "force-cache" // SSG â€“ cache indefinitely
+  }).then(r => r.json());
+
+  return <Article post={post} />;
+}
+
+// Pre-render specific paths
+export async function generateStaticParams() {
+  const posts = await fetch("/api/posts").then(r => r.json());
+  return posts.map(p => ({ slug: p.slug }));
+}
+
+// 3. INCREMENTAL STATIC REGENERATION (ISR) â€“ regenerate every N seconds
+export default async function PricePage({ params }) {
+  const data = await fetch(`https://api.example.com/prices/${params.id}`, {
+    next: { revalidate: 60 } // revalidate every 60 seconds
+  }).then(r => r.json());
+
+  return <PriceDisplay data={data} />;
+}
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    subgraph SSR["SSR (per request)"]
+        R1["Request"] --> S1["Server fetches data"] --> R2["HTML sent"]
+    end
+    subgraph SSG["SSG (build time)"]
+        B1["Build"] --> S2["Static HTML"] --> CDN["CDN serves instantly"]
+    end
+    subgraph ISR["ISR (time-based)"]
+        I1["Request"] --> I2{"Stale?"} -->|yes| I3["Regenerate in bg"] --> I4["Serve new HTML"]
+        I2 -->|no| I5["Serve cached HTML"]
+    end
+```
+
+---
+
+## 14. Controlled vs Uncontrolled Components
+
+### Question
+What is the difference between controlled and uncontrolled components?
+
+### Answer
+
+```jsx
+// CONTROLLED â€“ React owns the state
+function ControlledInput() {
+  const [value, setValue] = useState("");
+
+  return (
+    <input
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Controlled"
+    />
+  );
+}
+
+// UNCONTROLLED â€“ DOM owns the state, read via ref
+function UncontrolledInput() {
+  const inputRef = useRef(null);
+
+  function handleSubmit() {
+    console.log(inputRef.current.value); // read on demand
+  }
+
+  return (
+    <>
+      <input ref={inputRef} defaultValue="" placeholder="Uncontrolled" />
+      <button onClick={handleSubmit}>Submit</button>
+    </>
+  );
+}
+```
+
+### Real-World Example â€“ File Upload (must be uncontrolled)
+
+```jsx
+function FileUpload({ onUpload }) {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+
+  async function handleUpload() {
+    const file = fileInputRef.current.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const { url } = await res.json();
+      onUpload(url);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      <input ref={fileInputRef} type="file" accept="image/*" />
+      <button onClick={handleUpload} disabled={uploading}>
+        {uploading ? "Uploadingâ€¦" : "Upload"}
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## 15. Higher-Order Components (HOC)
+
+### Question
+What is a Higher-Order Component and when should you use it?
+
+### Answer
+
+```jsx
+// HOC â€“ a function that takes a component and returns an enhanced component
+function withAuth(WrappedComponent) {
+  return function AuthenticatedComponent(props) {
+    const { isLoggedIn, user } = useAuth();
+
+    if (!isLoggedIn) return <Navigate to="/login" replace />;
+    return <WrappedComponent {...props} user={user} />;
+  };
+}
+
+function withLoading(WrappedComponent) {
+  return function WithLoadingComponent({ loading, ...props }) {
+    if (loading) return <Spinner />;
+    return <WrappedComponent {...props} />;
+  };
+}
+
+// Usage
+const ProtectedDashboard    = withAuth(Dashboard);
+const DashboardWithLoading  = withLoading(ProtectedDashboard);
+
+// Modern alternative: custom hooks (preferred)
+function Dashboard() {
+  const { user } = useAuth();          // replaces withAuth
+  const { data, loading } = useFetch("/api/dashboard"); // replaces withLoading
+  if (loading) return <Spinner />;
+  return <div>Welcome, {user.name}</div>;
+}
+```
+
+---
+
+## 16. React Testing with React Testing Library
+
+### Question
+How do you write tests for React components?
+
+### Answer
+
+```jsx
+// ProductCard.test.jsx
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ProductCard } from "./ProductCard";
+
+describe("ProductCard", () => {
+  const mockProduct = {
+    id: 1,
+    name: "Laptop",
+    price: 999,
+    inStock: true
+  };
+
+  it("renders product name and price", () => {
+    render(<ProductCard product={mockProduct} onAdd={jest.fn()} />);
+    expect(screen.getByText("Laptop")).toBeInTheDocument();
+    expect(screen.getByText("$999")).toBeInTheDocument();
+  });
+
+  it("calls onAdd with product id when Add to Cart is clicked", async () => {
+    const mockOnAdd = jest.fn();
+    const user = userEvent.setup();
+
+    render(<ProductCard product={mockProduct} onAdd={mockOnAdd} />);
+    await user.click(screen.getByRole("button", { name: /add to cart/i }));
+
+    expect(mockOnAdd).toHaveBeenCalledWith(mockProduct.id);
+  });
+
+  it("disables Add to Cart when out of stock", () => {
+    render(<ProductCard product={{ ...mockProduct, inStock: false }} onAdd={jest.fn()} />);
+    expect(screen.getByRole("button", { name: /add to cart/i })).toBeDisabled();
+  });
+
+  it("loads and shows product on async fetch", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockProduct
+    });
+
+    render(<ProductPage id={1} />);
+    expect(screen.getByRole("progressbar")).toBeInTheDocument(); // loading
+
+    await waitFor(() => expect(screen.getByText("Laptop")).toBeInTheDocument());
+  });
+});
+```
+
+---
+
+## Interview Level Summary
+
+### Junior
+| Topic | Key Points |
+|---|---|
+| JSX & Components | Functional components, props, state |
+| Virtual DOM | Diffing, keys in lists |
+| useState/useEffect | Basic hooks, dependency arrays |
+| Forms | Controlled inputs, submit handling |
+
+### Mid-Level
+| Topic | Key Points |
+|---|---|
+| Hooks | useCallback, useMemo, useReducer |
+| Context API | Provider pattern, custom hooks |
+| Performance | React.memo, code splitting |
+| React Router | Dynamic routes, protected routes |
+
+### Senior
+| Topic | Key Points |
+|---|---|
+| Redux Toolkit | Slices, thunks, selectors |
+| Next.js | SSR vs SSG vs ISR trade-offs |
+| Error Boundaries | Class component catch mechanism |
+| Testing | RTL, user-event, mocking |
+
