@@ -4,9 +4,29 @@ This repository contains a **curated list of interview questions with answers, r
 
 ---
 
+## Section Summary
+
+| Section | Questions |
+|---|---:|
+| Node.js | 18 |
+| React.js | 33 |
+| JavaScript | 18 |
+| TypeScript | 4 |
+| SQL | 17 |
+| Java | 17 |
+| Python | 11 |
+| .NET (C#, .NET Core, .NET Framework) | 14 |
+| ADO.NET | 4 |
+| Solution Architecture / System Design | 10 |
+| ReactJs / .NET Fullstack + DXC Technologies | 15 |
+
+Last updated: 2026-06-08 (section counts)
+
+---
+
 ## 🔹 Node.js
 
-### Callstack, Event Loop, Thread pool, Task / Callback Queue, Microtask Queue, Web API?
+### 1. Callstack, Event Loop, Thread pool, Task / Callback Queue, Microtask Queue, Web API?
 
 **Answer:**
 
@@ -59,7 +79,7 @@ graph TD
 
 ---
 
-### How to handle 1 million concurrent requests using Node.js?
+### 2. How to handle 1 million concurrent requests using Node.js?
 
 **Answer:**
 
@@ -115,7 +135,7 @@ graph LR
 
 ---
 
-### What are streams / buffers in Node.js?
+### 3. What are streams / buffers in Node.js?
 
 **Answer:**
 
@@ -154,7 +174,7 @@ app.get("/stream", (req, res) => {
 
 ---
 
-### How to create custom middleware in Node.js?
+### 4. How to create custom middleware in Node.js?
 
 **Answer:**
 
@@ -203,7 +223,7 @@ app.use(errorHandler);                // last – catches all errors
 
 ---
 
-### Have you created custom middleware in Node.js and how?
+### 5. Have you created custom middleware in Node.js and how?
 
 **Answer:** Yes — see example above. A real scenario: rate-limiting middleware that counts requests per IP using Redis.
 
@@ -233,7 +253,7 @@ app.use(rateLimit(100, 60_000)); // 100 requests per minute
 
 ---
 
-### How do you handle CPU intensive tasks in Node.js?
+### 6. How do you handle CPU intensive tasks in Node.js?
 
 **Answer:**
 
@@ -270,7 +290,7 @@ app.post("/resize", async (req, res) => {
 
 ---
 
-### How do you handle concurrent requests in Node.js?
+### 7. How do you handle concurrent requests in Node.js?
 
 **Answer:** Node handles concurrency natively through its non-blocking event loop — no need for threads per request like Java/PHP. Key techniques:
 
@@ -291,7 +311,7 @@ const pool = mysql.createPool({ connectionLimit: 20 });
 
 ---
 
-### How do you manage a high CPU on a server?
+### 8. How do you manage a high CPU on a server?
 
 **Answer:**
 
@@ -312,7 +332,7 @@ Fixes:
 
 ---
 
-### How do you create indexing in MongoDB?
+### 9. How do you create indexing in MongoDB?
 
 **Answer:**
 
@@ -342,7 +362,7 @@ db.orders.explain("executionStats").find({ customerId: "123" });
 
 ---
 
-### How do you design a scalable schema using MongoDB?
+### 10. How do you design a scalable schema using MongoDB?
 
 **Answer:**
 
@@ -375,7 +395,7 @@ Two strategies: **Embedding** (denormalise) vs **Referencing** (normalise).
 
 ---
 
-### CAP Theorem
+### 11. CAP Theorem
 
 **Answer:**
 
@@ -395,7 +415,7 @@ Network partitions always happen → choose C or A:
 
 ---
 
-### Kafka – why use it instead of SQL?
+### 12. Kafka – why use it instead of SQL?
 
 **Answer:**
 
@@ -439,7 +459,7 @@ await consumer.run({
 
 ---
 
-### How to build Docker image (dependencies)?
+### 13. How to build Docker image (dependencies)?
 
 **Answer:**
 
@@ -479,7 +499,7 @@ docker run -p 3000:3000 --env-file .env myapp:1.0
 
 ---
 
-### Sharding and partitioning
+### 14. Sharding and partitioning
 
 **Answer:**
 
@@ -499,7 +519,7 @@ sh.shardCollection("ecommerce.orders", { customerId: "hashed" })
 
 ---
 
-### Horizontal vs vertical scaling
+### 15. Horizontal vs vertical scaling
 
 **Answer:**
 
@@ -515,7 +535,7 @@ sh.shardCollection("ecommerce.orders", { customerId: "hashed" })
 
 ---
 
-### What is child process in Node.js?
+### 16. What is child process in Node.js?
 
 **Answer:**
 
@@ -539,7 +559,7 @@ child.on("message", result => console.log("Done:", result));
 
 ---
 
-### Design patterns: Singleton, Factory, Observer?
+### 17. Design patterns: Singleton, Factory, Observer?
 
 **Answer:**
 
@@ -587,7 +607,7 @@ orderService.on("order:placed", order => notifyWarehouse(order));
 
 ---
 
-### How do you handle if request route is not found using Node.js?
+### 18. How do you handle if request route is not found using Node.js?
 
 **Answer:**
 
@@ -611,7 +631,7 @@ fastify.setNotFoundHandler((request, reply) => {
 
 ## 🔹 React.js
 
-### Controlled vs Uncontrolled components
+### 1. Controlled vs Uncontrolled components
 
 **Answer:**
 
@@ -641,7 +661,7 @@ function UncontrolledForm() {
 
 ---
 
-### Static site vs server-side rendering
+### 2. Static site vs server-side rendering
 
 **Answer:**
 
@@ -669,7 +689,7 @@ export async function getServerSideProps(context) {
 
 ---
 
-### How do you manage state in React?
+### 3. How do you manage state in React?
 
 **Answer:**
 
@@ -697,7 +717,7 @@ function Products() {
 
 ---
 
-### How to avoid prop drilling in React?
+### 4. How to avoid prop drilling in React?
 
 **Answer:**
 
@@ -734,7 +754,7 @@ function Layout({ sidebar, content }) {
 
 ---
 
-### Context API vs Redux (re-renders)
+### 5. Context API vs Redux (re-renders)
 
 **Answer:**
 
@@ -756,7 +776,7 @@ const price = useSelector(state => state.cart.total); // only re-renders when to
 
 ---
 
-### React.memo vs useMemo
+### 6. React.memo vs useMemo
 
 **Answer:**
 
@@ -779,7 +799,7 @@ function ProductList({ products, searchTerm }) {
 
 ---
 
-### useEffect vs useLayoutEffect
+### 7. useEffect vs useLayoutEffect
 
 **Answer:**
 
@@ -803,7 +823,7 @@ function Tooltip({ text, targetRef }) {
 
 ---
 
-### useReducer vs useCallback vs useMemo
+### 8. useReducer vs useCallback vs useMemo
 
 **Answer:**
 
@@ -826,7 +846,7 @@ const sortedItems = useMemo(
 
 ---
 
-### useRefs in React vs DOM manipulation in JavaScript
+### 9. useRefs in React vs DOM manipulation in JavaScript
 
 **Answer:**
 
@@ -860,7 +880,7 @@ function Timer() {
 
 ---
 
-### React portals
+### 10. React portals
 
 **Answer:**
 
@@ -887,7 +907,7 @@ function Modal({ isOpen, children, onClose }) {
 
 ---
 
-### mapStateToProps
+### 11. mapStateToProps
 
 **Answer:**
 
@@ -914,7 +934,7 @@ function NavBar() {
 
 ---
 
-### Redux connect() arguments
+### 12. Redux connect() arguments
 
 **Answer:**
 
@@ -933,7 +953,7 @@ connect(
 
 ---
 
-### React virtualization (react-window, react-virtualized)
+### 13. React virtualization (react-window, react-virtualized)
 
 **Answer:**
 
@@ -963,7 +983,7 @@ function HugeList() {
 
 ---
 
-### How to unmount a component in functional React?
+### 14. How to unmount a component in functional React?
 
 **Answer:**
 
@@ -991,13 +1011,13 @@ function Widget() {
 
 ---
 
-### How many virtual DOMs does React use?
+### 15. How many virtual DOMs does React use?
 
 **Answer:** React maintains **2 virtual DOM trees** — the current (last rendered) and the work-in-progress (new). The diffing algorithm compares them and generates the minimal set of real DOM mutations. With React Fiber, work-in-progress can be interrupted and resumed.
 
 ---
 
-### Filter elements from array in React (search example)
+### 16. Filter elements from array in React (search example)
 
 **Answer:**
 
@@ -1026,7 +1046,7 @@ function FruitSearch() {
 
 ---
 
-### Jest unit test for button render and API response
+### 17. Jest unit test for button render and API response
 
 **Answer:**
 
@@ -1065,7 +1085,7 @@ test("add to cart button calls handler", async () => {
 
 ---
 
-### How do you secure React applications?
+### 18. How do you secure React applications?
 
 **Answer:**
 
@@ -1098,7 +1118,7 @@ function PrivateRoute({ children }) {
 
 ---
 
-### How do you make code more maintainable and readable in React?
+### 19. How do you make code more maintainable and readable in React?
 
 **Answer:**
 
@@ -1117,7 +1137,7 @@ function PrivateRoute({ children }) {
 
 ---
 
-### How do you debug React apps (e.g. login failure)?
+### 20. How do you debug React apps (e.g. login failure)?
 
 **Answer:**
 
@@ -1138,7 +1158,7 @@ Debugging login failure:
 
 ---
 
-### Difference Between Axios vs Fetch API?
+### 21. Difference Between Axios vs Fetch API?
 
 **Answer:**
 
@@ -1163,7 +1183,7 @@ const data = await res.json();
 
 ---
 
-### Create search feature in React for given array
+### 22. Create search feature in React for given array
 
 **Answer:**
 
@@ -1194,7 +1214,7 @@ function FruitSearch() {
 
 ---
 
-### Create todo application in React
+### 23. Create todo application in React
 
 **Answer:**
 
@@ -1237,7 +1257,7 @@ function TodoApp() {
 
 ---
 
-### How do you handle concurrency in React using useTransition?
+### 24. How do you handle concurrency in React using useTransition?
 
 **Answer:**
 
@@ -1270,7 +1290,7 @@ function SearchPage() {
 
 ---
 
-### React Fiber Algorithm
+### 25. React Fiber Algorithm
 
 **Answer:**
 
@@ -1306,7 +1326,7 @@ graph TD
 
 ---
 
-### Create ON/OFF button in React
+### 26. Create ON/OFF button in React
 
 **Answer:**
 
@@ -1326,7 +1346,7 @@ function ToggleButton() {
 
 ---
 
-### What is Higher Order Component (HOC)? Why and when to use?
+### 27. What is Higher Order Component (HOC)? Why and when to use?
 
 **Answer:**
 
@@ -1355,7 +1375,7 @@ function useProductList() {
 
 ---
 
-### React Reconciliation Algorithm?
+### 28. React Reconciliation Algorithm?
 
 **Answer:**
 
@@ -1376,7 +1396,7 @@ React's diffing makes 2 assumptions to achieve O(n) instead of O(n³):
 
 ---
 
-### Throttling vs Debouncing?
+### 29. Throttling vs Debouncing?
 
 **Answer:**
 
@@ -1401,7 +1421,7 @@ const throttledScroll = throttle(() => {
 
 ---
 
-### Redux Thunk vs Redux Saga middleware?
+### 30. Redux Thunk vs Redux Saga middleware?
 
 **Answer:**
 
@@ -1437,7 +1457,7 @@ function* rootSaga() {
 
 ---
 
-### React Hydration?
+### 31. React Hydration?
 
 **Answer:**
 
@@ -1464,7 +1484,7 @@ const Map = dynamic(() => import("./Map"), { ssr: false });
 
 ---
 
-### What is Webpack, how to configure?
+### 32. What is Webpack, how to configure?
 
 **Answer:**
 
@@ -1503,7 +1523,7 @@ module.exports = {
 
 ---
 
-### useEffect variants comparison
+### 33. useEffect variants comparison
 
 - `useEffect(() => {}, [])` — runs **once** after first render (componentDidMount)
 - `useEffect(() => {})` — runs after **every** render (no dependency array)
@@ -1528,7 +1548,7 @@ useEffect(() => {
 
 ## 🔹 JavaScript
 
-### ES6+ features (Spread, Rest, Arrow functions, Destructuring, Promises, Import, Class)
+### 1. ES6+ features (Spread, Rest, Arrow functions, Destructuring, Promises, Import, Class)
 
 **Answer:**
 
@@ -1573,7 +1593,7 @@ export default function App() {}
 
 ---
 
-### Closure
+### 2. Closure
 
 **Answer:**
 
@@ -1599,7 +1619,7 @@ function createCounter() {
 
 ---
 
-### Hoisting
+### 3. Hoisting
 
 **Answer:**
 
@@ -1622,7 +1642,7 @@ var arrow = () => {};
 
 ---
 
-### Rest vs Spread operator
+### 4. Rest vs Spread operator
 
 **Answer:**
 
@@ -1643,7 +1663,7 @@ const obj2 = { ...obj1, key: "new" }; // shallow merge
 
 ---
 
-### call(), bind(), apply()
+### 5. call(), bind(), apply()
 
 **Answer:**
 
@@ -1661,7 +1681,7 @@ fn("?");  // "Hi, Alice?"
 
 ---
 
-### forEach vs map()
+### 6. forEach vs map()
 
 **Answer:**
 
@@ -1677,7 +1697,7 @@ const doubled = [1,2,3].map(n => n * 2);  // [2, 4, 6]
 
 ---
 
-### map vs filter vs reduce
+### 7. map vs filter vs reduce
 
 **Answer:**
 
@@ -1695,7 +1715,7 @@ const revenue   = orders.reduce((sum, o) => sum + o.amount, 0); // aggregate →
 
 ---
 
-### Currying (with and without nested functions)
+### 8. Currying (with and without nested functions)
 
 **Answer:**
 
@@ -1728,7 +1748,7 @@ add(1, 2)(3);   // 6
 
 ---
 
-### Currying using closures
+### 9. Currying using closures
 
 **Answer:**
 
@@ -1748,7 +1768,7 @@ isValidScore(105); // false
 
 ---
 
-### Memoization
+### 10. Memoization
 
 **Answer:**
 
@@ -1773,7 +1793,7 @@ fastFib(40);  // instant (O(n) instead of O(2^n))
 
 ---
 
-### Normal function vs Arrow function
+### 11. Normal function vs Arrow function
 
 **Answer:**
 
@@ -1795,7 +1815,7 @@ const obj = {
 
 ---
 
-### Tricky JavaScript output questions
+### 12. Tricky JavaScript output questions
 
 **Answer:**
 
@@ -1841,7 +1861,7 @@ console.log(newArr.join(" "));
 
 ---
 
-### Event bubbling vs Event Delegation?
+### 13. Event bubbling vs Event Delegation?
 
 **Answer:**
 
@@ -1867,7 +1887,7 @@ document.querySelector("#order-list").addEventListener("click", e => {
 
 ---
 
-### Write a JavaScript Program: Input [20, 30, 40] → Output [70, 60, 50]
+### 14. Write a JavaScript Program: Input [20, 30, 40] → Output [70, 60, 50]
 
 **Answer:**
 
@@ -1883,7 +1903,7 @@ console.log(transform([20, 30, 40])); // [70, 60, 50]
 
 ---
 
-### Find non-repeating char: Input "Sdbfsbd" → Output "f"
+### 15. Find non-repeating char: Input "Sdbfsbd" → Output "f"
 
 **Answer:**
 
@@ -1899,7 +1919,7 @@ console.log(firstNonRepeating("Sdbfsbd")); // "f"
 
 ---
 
-### Count characters + sort keys: Input "aaddbbcf" → { a:2, b:2, c:1, d:2, f:1 }
+### 16. Count characters + sort keys: Input "aaddbbcf" → { a:2, b:2, c:1, d:2, f:1 }
 
 **Answer:**
 
@@ -1914,7 +1934,7 @@ console.log(charCount("aaddbbcf")); // { a:2, b:2, c:1, d:2, f:1 }
 
 ---
 
-### Deep copy vs shallow copy?
+### 17. Deep copy vs shallow copy?
 
 **Answer:**
 
@@ -1932,7 +1952,7 @@ const deep2 = structuredClone(original);                  // modern, handles mos
 
 ---
 
-### Flatten nested array (recursive and iterative) — with given solution explained
+### 18. Flatten nested array (recursive and iterative) — with given solution explained
 
 **Answer:**
 
@@ -1970,11 +1990,11 @@ const sample = [1, [2, [3, [4]], 5]];
 
 ## 🔹 TypeScript
 
-### Latest version — 5.9.0
+### 1. Latest version — 5.9.0
 
 ---
 
-### Difference between type vs interface
+### 2. Difference between type vs interface
 
 ```typescript
 // INTERFACE — declaration merging (can be extended)
@@ -1994,7 +2014,7 @@ type AdminUser = User & { role: "admin" };            // intersection
 
 ---
 
-### Generic type VS Specific type?
+### 3. Generic type VS Specific type?
 
 **Answer:**
 
@@ -2022,7 +2042,7 @@ interface Repository<T> {
 
 ---
 
-### Finding sum of digits until single digit (Digital Root)
+### 4. Finding sum of digits until single digit (Digital Root)
 
 ```typescript
 function getSumOfDigits(num: number): number {
@@ -2043,7 +2063,7 @@ console.log(getSumOfDigits(5674)); // 5+6+7+4=22 → 2+2=4
 
 ## 🔹 SQL
 
-### ACID properties
+### 1. ACID properties
 
 **Answer:**
 
@@ -2063,7 +2083,7 @@ COMMIT;  -- both succeed, or ROLLBACK both on error
 
 ---
 
-### CTE (Common Table Expressions)
+### 2. CTE (Common Table Expressions)
 
 **Answer:**
 
@@ -2094,7 +2114,7 @@ SELECT * FROM org;
 
 ---
 
-### Normalization vs Denormalization
+### 3. Normalization vs Denormalization
 
 **Answer:**
 
@@ -2108,7 +2128,7 @@ SELECT * FROM org;
 
 ---
 
-### 1NF, 2NF, 3NF
+### 4. 1NF, 2NF, 3NF
 
 **Answer:**
 
@@ -2127,7 +2147,7 @@ SELECT * FROM org;
 
 ---
 
-### Database table partitioning
+### 5. Database table partitioning
 
 **Answer:**
 
@@ -2145,7 +2165,7 @@ CREATE TABLE orders (
 
 ---
 
-### Views, Indexes, Stored Procedures
+### 6. Views, Indexes, Stored Procedures
 
 **Answer:**
 
@@ -2168,7 +2188,7 @@ CALL GetOrdersByCustomer(42);
 
 ---
 
-### Joins (INNER, OUTER, LEFT, RIGHT, CROSS)
+### 7. Joins (INNER, OUTER, LEFT, RIGHT, CROSS)
 
 **Answer:**
 
@@ -2188,7 +2208,7 @@ SELECT s.size, c.color FROM sizes s CROSS JOIN colors c;
 
 ---
 
-### Clustered vs Non-clustered index
+### 8. Clustered vs Non-clustered index
 
 **Answer:**
 
@@ -2201,7 +2221,7 @@ SELECT s.size, c.color FROM sizes s CROSS JOIN colors c;
 
 ---
 
-### Delete vs Drop table
+### 9. Delete vs Drop table
 
 **Answer:**
 
@@ -2213,7 +2233,7 @@ DROP TABLE old_archive;     -- removes table + structure entirely, cannot rollba
 
 ---
 
-### Debugging slow queries (EXPLAIN, indexes)
+### 10. Debugging slow queries (EXPLAIN, indexes)
 
 **Answer:**
 
@@ -2235,7 +2255,7 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 
 ---
 
-### InnoDB vs MyISAM
+### 11. InnoDB vs MyISAM
 
 **Answer:**
 
@@ -2252,7 +2272,7 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 
 ---
 
-### CHAR vs VARCHAR
+### 12. CHAR vs VARCHAR
 
 **Answer:**
 
@@ -2266,7 +2286,7 @@ VARCHAR(255) -- Variable: actual length + 1-2 bytes overhead – efficient for v
 
 ---
 
-### Nth highest salary query
+### 13. Nth highest salary query
 
 **Answer:**
 
@@ -2289,7 +2309,7 @@ LIMIT 1;
 
 ---
 
-### SQL vs NoSQL
+### 14. SQL vs NoSQL
 
 **Answer:**
 
@@ -2303,13 +2323,13 @@ LIMIT 1;
 
 ---
 
-### Can identity column be DOUBLE?
+### 15. Can identity column be DOUBLE?
 
 **Answer:** No — identity/auto-increment columns must be of an **integer** type (INT, BIGINT, SMALLINT). DOUBLE/FLOAT are not allowed because identity values must be exact sequential integers.
 
 ---
 
-### Magic tables
+### 16. Magic tables
 
 **Answer:**
 
@@ -2327,7 +2347,7 @@ END;
 
 ---
 
-### RANK vs DENSE_RANK
+### 17. RANK vs DENSE_RANK
 
 **Answer:**
 
@@ -2346,7 +2366,7 @@ FROM employees;
 
 ## 🔹 Java
 
-### Boxing and Unboxing
+### 1. Boxing and Unboxing
 
 **Answer:**
 
@@ -2372,7 +2392,7 @@ for (int i = 0; i < 1_000_000; i++) list.add(i);  // 1M boxing operations!
 
 ---
 
-### Hibernate
+### 2. Hibernate
 
 **Answer:**
 
@@ -2401,7 +2421,7 @@ List<Order> findWithCustomer(@Param("status") String status);
 
 ---
 
-### Java memory (Stack vs Heap)
+### 3. Java memory (Stack vs Heap)
 
 **Answer:**
 
@@ -2421,7 +2441,7 @@ void foo() {
 
 ---
 
-### Memory leak identification
+### 4. Memory leak identification
 
 **Answer:**
 
@@ -2442,7 +2462,7 @@ Fix:
 
 ---
 
-### What are the differences between JDK, JRE, and JVM?
+### 5. What are the differences between JDK, JRE, and JVM?
 
 ```
 JVM (Java Virtual Machine)
@@ -2458,13 +2478,13 @@ JDK (Java Development Kit) = JRE + compiler (javac) + tools (javap, jconsole)
 
 ---
 
-### How does Java achieve platform independence?
+### 6. How does Java achieve platform independence?
 
 **Answer:** Write Once, Run Anywhere. `javac` compiles `.java` → `.class` (platform-neutral bytecode). The JVM interprets/JIT-compiles bytecode to native machine code for each OS.
 
 ---
 
-### Explain OOP principles with examples
+### 7. Explain OOP principles with examples
 
 **Answer:**
 
@@ -2495,7 +2515,7 @@ class StripeGateway implements PaymentGateway { /* details hidden */ }
 
 ---
 
-### Difference between abstract class vs interface?
+### 8. Difference between abstract class vs interface?
 
 **Answer:**
 
@@ -2510,7 +2530,7 @@ class StripeGateway implements PaymentGateway { /* details hidden */ }
 
 ---
 
-### What is the difference between String, StringBuilder, and StringBuffer?
+### 9. What is the difference between String, StringBuilder, and StringBuffer?
 
 **Answer:**
 
@@ -2533,7 +2553,7 @@ String result = sb.toString();
 
 ---
 
-### Thread lifecycle states
+### 10. Thread lifecycle states
 
 **Answer:**
 
@@ -2549,7 +2569,7 @@ run() returns → TERMINATED
 
 ---
 
-### synchronized vs ReentrantLock
+### 11. synchronized vs ReentrantLock
 
 **Answer:**
 
@@ -2577,7 +2597,7 @@ if (lock.tryLock(100, TimeUnit.MILLISECONDS)) {
 
 ---
 
-### How does HashMap work internally?
+### 12. How does HashMap work internally?
 
 **Answer:**
 
@@ -2595,7 +2615,7 @@ get("Alice"):
 
 ---
 
-### Explain Streams API
+### 13. Explain Streams API
 
 **Answer:**
 
@@ -2617,7 +2637,7 @@ long count = orders.parallelStream()
 
 ---
 
-### What is the problem in this code? (N+1)
+### 14. What is the problem in this code? (N+1)
 
 ```java
 public List<User> findAllUsers() {
@@ -2635,7 +2655,7 @@ List<User> findAllWithOrders();
 
 ---
 
-### What is the problem in this code? (NPE + anti-pattern)
+### 15. What is the problem in this code? (NPE + anti-pattern)
 
 ```java
 @GetMapping("/user/{id}")
@@ -2650,7 +2670,7 @@ return userService.findById(id)
 
 ---
 
-### How do you handle security in Spring Boot?
+### 16. How do you handle security in Spring Boot?
 
 **Answer:**
 
@@ -2680,7 +2700,7 @@ public class SecurityConfig {
 
 ---
 
-### JUnit annotations
+### 17. JUnit annotations
 
 **Answer:**
 
@@ -2701,7 +2721,7 @@ public class SecurityConfig {
 
 ## 🔹 Python
 
-### Difference between list, tuple, set, dictionary?
+### 1. Difference between list, tuple, set, dictionary?
 
 **Answer:**
 
@@ -2715,7 +2735,7 @@ public class SecurityConfig {
 
 ---
 
-### Explain Python's GIL
+### 2. Explain Python's GIL
 
 **Answer:**
 
@@ -2738,7 +2758,7 @@ with Pool(4) as p:
 
 ---
 
-### Python decorators
+### 3. Python decorators
 
 **Answer:**
 
@@ -2780,7 +2800,7 @@ def call_api(): ...
 
 ---
 
-### What is a generator? How does yield work?
+### 4. What is a generator? How does yield work?
 
 **Answer:**
 
@@ -2813,7 +2833,7 @@ for user in fetch_all_users():  # processes one page at a time
 
 ---
 
-### Reverse a string in Python in 3 ways
+### 5. Reverse a string in Python in 3 ways
 
 **Answer:**
 
@@ -2834,7 +2854,7 @@ for ch in s:
 
 ---
 
-### Implement LRU cache in Python
+### 6. Implement LRU cache in Python
 
 **Answer:**
 
@@ -2869,7 +2889,7 @@ def fib(n):
 
 ---
 
-### What are AI Agents?
+### 7. What are AI Agents?
 
 **Answer:**
 
@@ -2896,7 +2916,7 @@ result = executor.invoke({"input": "Book me a flight to Mumbai if weather is goo
 
 ---
 
-### Explain RAG (Retrieval Augmented Generation)
+### 8. Explain RAG (Retrieval Augmented Generation)
 
 **Answer:**
 
@@ -2929,7 +2949,7 @@ answer = chain.invoke("How many leave days?")
 
 ---
 
-### Django ORM vs raw SQL
+### 9. Django ORM vs raw SQL
 
 **Answer:**
 
@@ -2952,7 +2972,7 @@ with connection.cursor() as cursor:
 
 ---
 
-### Difference between Django REST Framework and FastAPI?
+### 10. Difference between Django REST Framework and FastAPI?
 
 **Answer:**
 
@@ -2967,7 +2987,7 @@ with connection.cursor() as cursor:
 
 ---
 
-### FastAPI CRUD example
+### 11. FastAPI CRUD example
 
 **Answer:**
 
@@ -3007,7 +3027,7 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 
 ## 🔹 .NET (C#, .NET Core, .NET Framework)
 
-### Collections and types of collections
+### 1. Collections and types of collections
 
 **Answer:**
 
@@ -3029,7 +3049,7 @@ BlockingCollection<string>        blocking = new();
 
 ---
 
-### LINQ
+### 2. LINQ
 
 **Answer:**
 
@@ -3049,7 +3069,7 @@ var list  = query.ToList();                     // executes now
 
 ---
 
-### Generic vs Non-generic classes
+### 3. Generic vs Non-generic classes
 
 **Answer:**
 
@@ -3067,7 +3087,7 @@ int val = typedList[0];  // no cast needed
 
 ---
 
-### Class vs Structure
+### 4. Class vs Structure
 
 **Answer:**
 
@@ -3094,7 +3114,7 @@ s2.Name = "Bob";     // s1.Name is still "Alice"
 
 ---
 
-### Value types vs Reference types
+### 5. Value types vs Reference types
 
 **Answer:**
 
@@ -3111,7 +3131,7 @@ list2.Add(4);       // list1 also has 4
 
 ---
 
-### == vs .Equals()
+### 6. == vs .Equals()
 
 **Answer:**
 
@@ -3132,7 +3152,7 @@ Console.WriteLine(s1 == s2);    // True (value comparison)
 
 ---
 
-### Abstract class vs Interface
+### 7. Abstract class vs Interface
 
 **Answer:**
 
@@ -3159,7 +3179,7 @@ public class Dog : Animal, ILoggable, IAuditable
 
 ---
 
-### const vs readonly vs static
+### 8. const vs readonly vs static
 
 **Answer:**
 
@@ -3180,7 +3200,7 @@ class Config
 
 ---
 
-### async / await in C#
+### 9. async / await in C#
 
 **Answer:**
 
@@ -3208,7 +3228,7 @@ var user = await GetUserAsync(id);
 
 ---
 
-### IActionResult vs ActionResult
+### 10. IActionResult vs ActionResult
 
 **Answer:**
 
@@ -3232,7 +3252,7 @@ public ActionResult<UserDto> GetUser(int id)
 
 ---
 
-### Is there a way to avoid storing token in local storage?
+### 11. Is there a way to avoid storing token in local storage?
 
 **Answer:** Yes — use **HttpOnly cookies**. The browser sends them automatically and JavaScript cannot access them (prevents XSS theft).
 
@@ -3259,13 +3279,13 @@ options.Events = new JwtBearerEvents
 
 ---
 
-### What is Kestrel in .NET Core?
+### 12. What is Kestrel in .NET Core?
 
 **Answer:** Kestrel is the **built-in cross-platform web server** in ASP.NET Core. It is the default server used when you run `dotnet run`. In production it is typically placed behind a reverse proxy (Nginx/IIS/Azure).
 
 ---
 
-### What is CLR, GAC, AppDomain?
+### 13. What is CLR, GAC, AppDomain?
 
 **Answer:**
 
@@ -3288,7 +3308,7 @@ AppDomain (Legacy – .NET Framework)
 
 ---
 
-### .NET Framework vs .NET Core
+### 14. .NET Framework vs .NET Core
 
 **Answer:**
 
@@ -3304,7 +3324,7 @@ AppDomain (Legacy – .NET Framework)
 
 ## 🔹 ADO.NET
 
-### Connected vs Disconnected architecture
+### 1. Connected vs Disconnected architecture
 
 **Answer:**
 
@@ -3328,7 +3348,7 @@ adapter.Fill(dataSet);  // connection opened, data loaded, connection closed
 
 ---
 
-### SqlDataReader vs SqlDataAdapter
+### 2. SqlDataReader vs SqlDataAdapter
 
 **Answer:**
 
@@ -3342,7 +3362,7 @@ adapter.Fill(dataSet);  // connection opened, data loaded, connection closed
 
 ---
 
-### Preventing SQL Injection in ADO.NET
+### 3. Preventing SQL Injection in ADO.NET
 
 **Answer:**
 
@@ -3361,7 +3381,7 @@ cmd.Parameters.AddWithValue("@UserId", userId);
 
 ---
 
-### Transactions in ADO.NET
+### 4. Transactions in ADO.NET
 
 **Answer:**
 
@@ -3396,7 +3416,7 @@ catch
 
 ## 🔹 Solution Architecture / System Design
 
-### When to use Kafka – use cases, why not SQL?
+### 1. When to use Kafka – use cases, why not SQL?
 
 **Answer:**
 
@@ -3419,7 +3439,7 @@ Use Kafka when:
 
 ---
 
-### How to build Docker image – dependencies added manually or automatically?
+### 2. How to build Docker image – dependencies added manually or automatically?
 
 **Answer:** Dependencies are **NOT** automatic — you explicitly define them in your `Dockerfile`. Best practice: copy `package.json`/`requirements.txt` first to exploit layer caching.
 
@@ -3434,7 +3454,7 @@ CMD ["node", "server.js"]
 
 ---
 
-### Design a Movie Booking App (block/unblock seats)
+### 3. Design a Movie Booking App (block/unblock seats)
 
 **Answer:**
 
@@ -3471,7 +3491,7 @@ WHERE seat_id=@seatId AND status='available' AND version=@expectedVersion;
 
 ---
 
-### When to use MongoDB over SQL?
+### 4. When to use MongoDB over SQL?
 
 **Answer:**
 
@@ -3491,7 +3511,7 @@ Use SQL when:
 
 ---
 
-### Micro Frontend Architecture
+### 5. Micro Frontend Architecture
 
 **Answer:**
 
@@ -3524,19 +3544,19 @@ const CartWidget = React.lazy(() => import("cartApp/CartWidget"));
 
 ---
 
-### CAP Theorem
+### 6. CAP Theorem
 
 See Node.js section above.
 
 ---
 
-### ACID Properties
+### 7. ACID Properties
 
 See SQL section above.
 
 ---
 
-### SOLID Principles
+### 8. SOLID Principles
 
 **Answer:**
 
@@ -3562,7 +3582,7 @@ D – Dependency Inversion: Depend on abstractions, not concretions
 
 ---
 
-### Data Structures – how and why use different types?
+### 9. Data Structures – how and why use different types?
 
 **Answer:**
 
@@ -3581,7 +3601,7 @@ Trie             prefix search – autocomplete, spell checker
 
 ---
 
-### SQS, SNS – alternatives to Kafka?
+### 10. SQS, SNS – alternatives to Kafka?
 
 **Answer:**
 
