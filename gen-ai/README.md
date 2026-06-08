@@ -2475,3 +2475,763 @@ graph TD
 - **Frameworks:** LangChain, LlamaIndex, Semantic Kernel
 - **Models:** GPT-4, Claude, Gemini, Llama 2
 - **Certifications:** Azure AI Engineer, AWS ML Specialist
+
+---
+
+# Code-Heavy Deep Dives
+
+## Q101. Build a RAG Pipeline with LangChain & Azure OpenAI
+
+### Answer
+
+```python
+# requirements: langchain langchain-openai langchain-community azure-search-documents
+
+import os
+from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
+from langchain_community.vectorstores import AzureSearch
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+
+# ── Configuration ───────────────────────────────────────────────────
+embeddings = AzureOpenAIEmbeddings(
+    azure_deployment = os.environ["AZURE_EMBED_DEPLOYMENT"],  # e.g. text-embedding-ada-002
+    azure_endpoint   = os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_key          = os.environ["AZURE_OPENAI_API_KEY"],
+    api_version      = "2024-02-01"
+)
+
+llm = AzureChatOpenAI(
+    azure_deployment = os.environ["AZURE_CHAT_DEPLOYMENT"],  # e.g. gpt-4o
+    azure_endpoint   = os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_key          = os.environ["AZURE_OPENAI_API_KEY"],
+    api_version      = "2024-02-01",
+    temperature      = 0.0,   # deterministic for factual Q&A
+    max_tokens       = 1024
+)
+
+# ── Vector Store (Azure AI Search) ──────────────────────────────────
+vector_store = AzureSearch(
+    azure_search_endpoint = os.environ["AZURE_SEARCH_ENDPOINT"],
+    azure_search_key      = os.environ["AZURE_SEARCH_KEY"],
+    index_name            = "hr-policies",
+    embedding_function    = embeddings.embed_query
+)
+
+# ── Document Ingestion ───────────────────────────────────────────────
+def ingest_documents(file_paths: list[str]) -> int:
+    """Chunk, embed, and index documents. Returns number of chunks stored."""
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size     = 600,
+        chunk_overlap  = 100,
+        separators     = ["\n\n", "\n", ". ", " "]
+    )
+    docs: list[Document] = []
+    for path in file_paths:
+        with open(path) as f:
+            content = f.read()
+        chunks = splitter.create_documents(
+            [content],
+            metadatas=[{"source": path, "ingested_at": datetime.utcnow().isoformat()}]
+        )
+        docs.extend(chunks)
+
+    vector_store.add_documents(docs)
+    return len(docs)
+
+# ── RAG Chain ────────────────────────────────────────────────────────
+SYSTEM_PROMPT = """You are an HR policy assistant.
+Answer ONLY using the provided context.
+If the answer is not in the context, say "I don't have that information."
+Always cite the source document.
+
+Context:
+{context}"""
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", SYSTEM_PROMPT),
+    ("human",  "{question}")
+])
+
+def format_docs(docs: list[Document]) -> str:
+    return "\n\n".join(
+        f"[Source: {d.metadata.get('source', 'unknown')}]\n{d.page_content}"
+        for d in docs
+    )
+
+retriever = vector_store.as_retriever(
+    search_type = "hybrid",          # keyword + vector
+    k           = 5                  # top-5 chunks
+)
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+# ── Usage ─────────────────────────────────────────────────────────────
+answer = rag_chain.invoke("How many annual leave days do I get?")
+print(answer)
+
+# Streaming response
+for chunk in rag_chain.stream("What is the remote work policy?"):
+    print(chunk, end="", flush=True)
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    User["❓ User Question"]
+    Embed["🔤 Embed Question\n(text-embedding-ada-002)"]
+    Search["🔍 Azure AI Search\n(Hybrid: BM25 + Vector)"]
+    Docs["📄 Top-5 Chunks\n(with source metadata)"]
+    Prompt["📝 Prompt Construction\n(System + Context + Question)"]
+    GPT["🤖 GPT-4o\n(Azure OpenAI)"]
+    Answer["💬 Grounded Answer\n(with citations)"]
+
+    User --> Embed --> Search --> Docs --> Prompt --> GPT --> Answer
+```
+
+---
+
+## Q102. Implement Semantic Caching for RAG
+
+### Answer
+
+```python
+import hashlib
+import json
+import numpy as np
+from redis import asyncio as aioredis
+from langchain_openai import AzureOpenAIEmbeddings
+
+class SemanticCache:
+    """Cache RAG responses by semantic similarity, not exact string match."""
+
+    def __init__(
+        self,
+        redis_url: str,
+        embeddings: AzureOpenAIEmbeddings,
+        similarity_threshold: float = 0.95,
+        ttl_seconds: int = 3600
+    ):
+        self.redis     = aioredis.from_url(redis_url)
+        self.embeddings = embeddings
+        self.threshold  = similarity_threshold
+        self.ttl        = ttl_seconds
+
+    def _cosine_similarity(self, v1: list[float], v2: list[float]) -> float:
+        a, b = np.array(v1), np.array(v2)
+        return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
+    async def get(self, question: str) -> str | None:
+        """Return cached answer if a semantically similar question was asked before."""
+        q_embedding = await self.embeddings.aembed_query(question)
+        q_key       = hashlib.md5(question.encode()).hexdigest()
+
+        # Fetch all cached question embeddings
+        keys = await self.redis.keys("cache:embed:*")
+        for key in keys:
+            cached_embed = json.loads(await self.redis.get(key))
+            similarity   = self._cosine_similarity(q_embedding, cached_embed)
+            if similarity >= self.threshold:
+                answer_key = key.decode().replace("embed:", "answer:")
+                answer     = await self.redis.get(answer_key)
+                if answer:
+                    return answer.decode()
+        return None
+
+    async def set(self, question: str, answer: str) -> None:
+        """Cache the question embedding and the answer."""
+        q_embedding = await self.embeddings.aembed_query(question)
+        q_key       = hashlib.md5(question.encode()).hexdigest()
+
+        pipe = self.redis.pipeline()
+        pipe.setex(f"cache:embed:{q_key}",  self.ttl, json.dumps(q_embedding))
+        pipe.setex(f"cache:answer:{q_key}", self.ttl, answer)
+        await pipe.execute()
+
+# Usage in FastAPI
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    # 1. Try semantic cache first
+    cached = await semantic_cache.get(request.question)
+    if cached:
+        return {"answer": cached, "from_cache": True}
+
+    # 2. Run RAG chain
+    answer = await rag_chain.ainvoke(request.question)
+
+    # 3. Cache result
+    await semantic_cache.set(request.question, answer)
+    return {"answer": answer, "from_cache": False}
+```
+
+---
+
+## Q103. Agentic AI with LangGraph
+
+### Answer
+
+```python
+# Build a multi-step research agent that uses tools to answer questions
+from langchain_openai import AzureChatOpenAI
+from langchain.tools import tool
+from langgraph.graph import StateGraph, END
+from langgraph.prebuilt import ToolNode
+from typing import TypedDict, Annotated
+import operator
+
+# ── Define state ─────────────────────────────────────────────────────
+class AgentState(TypedDict):
+    messages:    Annotated[list, operator.add]
+    question:    str
+    final_answer: str | None
+
+# ── Tools the agent can call ─────────────────────────────────────────
+@tool
+def search_kb(query: str) -> str:
+    """Search the internal knowledge base for HR policies."""
+    docs = vector_store.similarity_search(query, k=3)
+    return "\n".join(d.page_content for d in docs)
+
+@tool
+def get_employee_info(employee_id: str) -> dict:
+    """Fetch employee record from HR system."""
+    # In production: call HR API
+    return {"id": employee_id, "department": "Engineering", "leave_balance": 18}
+
+@tool
+def create_leave_request(employee_id: str, days: int, reason: str) -> str:
+    """Submit a leave request on behalf of an employee."""
+    # In production: call HR system API
+    return f"Leave request created for {days} days. Reference: LR-{employee_id}-001"
+
+tools = [search_kb, get_employee_info, create_leave_request]
+llm_with_tools = llm.bind_tools(tools)
+
+# ── Agent nodes ───────────────────────────────────────────────────────
+def agent_node(state: AgentState) -> AgentState:
+    """LLM decides which tool to call or returns final answer."""
+    response = llm_with_tools.invoke(state["messages"])
+    return {"messages": [response]}
+
+def should_continue(state: AgentState) -> str:
+    last = state["messages"][-1]
+    if last.tool_calls:
+        return "tools"   # call a tool
+    return END            # done
+
+# ── Build graph ───────────────────────────────────────────────────────
+graph = StateGraph(AgentState)
+graph.add_node("agent", agent_node)
+graph.add_node("tools", ToolNode(tools))
+graph.set_entry_point("agent")
+graph.add_conditional_edges("agent", should_continue)
+graph.add_edge("tools", "agent")   # after tool call, think again
+agent = graph.compile()
+
+# Usage
+result = agent.invoke({
+    "messages": [("human", "Book 5 days leave for employee E123 for personal reasons")],
+    "question": "Book leave",
+    "final_answer": None
+})
+print(result["messages"][-1].content)
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    Start["User Message"]
+    Agent["🤖 LLM Agent\n(thinks + decides)"]
+    Tools["🔧 Tool Executor\n(search_kb / get_employee / create_leave)"]
+    ToolResult["Tool Result"]
+    End["✅ Final Answer"]
+
+    Start --> Agent
+    Agent -->|has tool_calls| Tools
+    Tools --> ToolResult --> Agent
+    Agent -->|no tool_calls| End
+```
+
+---
+
+## Q104. Prompt Engineering Best Practices
+
+### Answer
+
+```python
+from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
+
+# 1. SYSTEM PROMPT – define role, boundaries, output format
+SYSTEM = """You are a financial analyst assistant.
+Rules:
+- Answer ONLY questions related to finance and accounting
+- ALWAYS cite sources from the provided context
+- Use markdown tables for comparisons
+- If uncertain, say "I'm not sure" rather than guessing
+- Output format: {"answer": "...", "confidence": "high|medium|low", "sources": [...]}"""
+
+# 2. FEW-SHOT EXAMPLES – teach the model the expected pattern
+examples = [
+    {
+        "question": "What is EBITDA?",
+        "context":  "EBITDA = Earnings Before Interest, Taxes, Depreciation, and Amortisation",
+        "answer":   '{"answer": "EBITDA measures core profitability before non-operating items.", "confidence": "high", "sources": ["Glossary p.3"]}'
+    },
+    {
+        "question": "What was Q3 revenue?",
+        "context":  "Q1 revenue was $5M. No Q3 data provided.",
+        "answer":   '{"answer": "I don\'t have Q3 revenue data in the provided context.", "confidence": "high", "sources": []}'
+    }
+]
+
+example_prompt = ChatPromptTemplate.from_messages([
+    ("human",  "Context: {context}\nQuestion: {question}"),
+    ("ai",     "{answer}")
+])
+
+few_shot_prompt = FewShotChatMessagePromptTemplate(
+    examples        = examples,
+    example_prompt  = example_prompt
+)
+
+final_prompt = ChatPromptTemplate.from_messages([
+    ("system",  SYSTEM),
+    few_shot_prompt,
+    ("human",   "Context: {context}\nQuestion: {question}")
+])
+
+# 3. CHAIN-OF-THOUGHT – for complex reasoning
+COT_SYSTEM = """Before answering, think step-by-step:
+1. What is the question asking?
+2. What relevant information is in the context?
+3. What is the correct answer?
+4. Am I confident? What could be wrong?
+
+Format: <thinking>...</thinking>\n<answer>...</answer>"""
+```
+
+---
+
+## Q105. Guardrails & PII Masking
+
+### Answer
+
+```python
+import re
+from presidio_analyzer import AnalyzerEngine
+from presidio_anonymizer import AnonymizerEngine
+from presidio_anonymizer.entities import OperatorConfig
+
+class InputGuardrails:
+    """Detect prompt injection and mask PII before sending to LLM."""
+
+    INJECTION_PATTERNS = [
+        r"ignore\s+(all\s+)?previous\s+instructions",
+        r"disregard\s+your\s+system\s+prompt",
+        r"you\s+are\s+now\s+in\s+developer\s+mode",
+        r"forget\s+everything\s+above",
+        r"act\s+as\s+(if\s+you\s+are\s+)?",
+        r"pretend\s+you\s+are",
+    ]
+
+    def __init__(self):
+        self.analyzer   = AnalyzerEngine()
+        self.anonymizer = AnonymizerEngine()
+
+    def detect_injection(self, text: str) -> bool:
+        """Return True if prompt injection attempt detected."""
+        lower = text.lower()
+        return any(re.search(p, lower) for p in self.INJECTION_PATTERNS)
+
+    def mask_pii(self, text: str) -> tuple[str, dict]:
+        """Replace PII with placeholders, return masked text + mapping."""
+        results = self.analyzer.analyze(
+            text     = text,
+            language = "en",
+            entities = ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON",
+                        "CREDIT_CARD", "IBAN_CODE", "DATE_TIME"]
+        )
+        anonymized = self.anonymizer.anonymize(
+            text              = text,
+            analyzer_results  = results,
+            operators         = {
+                "PERSON":       OperatorConfig("replace", {"new_value": "[NAME]"}),
+                "EMAIL_ADDRESS":OperatorConfig("replace", {"new_value": "[EMAIL]"}),
+                "PHONE_NUMBER": OperatorConfig("replace", {"new_value": "[PHONE]"}),
+                "CREDIT_CARD":  OperatorConfig("replace", {"new_value": "[CC]"}),
+            }
+        )
+        return anonymized.text, {"original_length": len(text), "entities_found": len(results)}
+
+    def validate(self, text: str) -> tuple[str, dict]:
+        """Full validation pipeline: injection check → PII mask."""
+        if self.detect_injection(text):
+            raise ValueError("Prompt injection attempt detected")
+        masked, meta = self.mask_pii(text)
+        return masked, meta
+
+# FastAPI endpoint with guardrails
+@app.post("/chat")
+async def chat(request: ChatRequest, user: User = Depends(get_current_user)):
+    try:
+        safe_input, meta = guardrails.validate(request.message)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    answer = await rag_chain.ainvoke(safe_input)
+    # Also mask PII in the output before returning
+    safe_output, _ = guardrails.mask_pii(answer)
+    return {"answer": safe_output}
+```
+
+---
+
+## Q106. RAG Evaluation with RAGAS
+
+### Answer
+
+```python
+# RAGAS (RAG Assessment) – evaluate faithfulness, relevance, groundedness
+from ragas import evaluate
+from ragas.metrics import (
+    faithfulness,          # Does answer stick to retrieved context?
+    answer_relevancy,      # Is the answer relevant to the question?
+    context_recall,        # How much of the ground truth is in context?
+    context_precision      # Are retrieved chunks actually useful?
+)
+from datasets import Dataset
+
+# Collect evaluation samples
+eval_data = {
+    "question": [
+        "How many annual leave days do permanent employees get?",
+        "What is the notice period for resignation?"
+    ],
+    "answer": [
+        "Permanent employees receive 20 days of annual leave per year.",
+        "The notice period is 30 days for staff and 60 days for managers."
+    ],
+    "contexts": [
+        ["Section 5.1: Permanent employees are entitled to 20 working days annual leave."],
+        ["Section 8.2: Staff must provide 30 days notice. Managers: 60 days."]
+    ],
+    "ground_truth": [
+        "20 days annual leave for permanent employees.",
+        "30 days for staff, 60 days for managers."
+    ]
+}
+
+dataset = Dataset.from_dict(eval_data)
+
+result = evaluate(
+    dataset,
+    metrics=[faithfulness, answer_relevancy, context_recall, context_precision]
+)
+
+print(result)
+# Output:
+# {'faithfulness': 0.97, 'answer_relevancy': 0.93,
+#  'context_recall': 0.95, 'context_precision': 0.89}
+```
+
+### Evaluation Scorecard
+
+```mermaid
+graph LR
+    Faithful["✅ Faithfulness\n0.97 – Answer grounded in docs"]
+    Relevant["✅ Answer Relevancy\n0.93 – On-topic answers"]
+    Recall["⚠️ Context Recall\n0.95 – Docs cover ground truth"]
+    Precision["⚠️ Context Precision\n0.89 – Retrieved chunks useful"]
+
+    Faithful --> Score["📊 Overall\nRAG Quality"]
+    Relevant --> Score
+    Recall --> Score
+    Precision --> Score
+```
+
+---
+
+## Q107. Multi-Agent Orchestration Pattern
+
+### Answer
+
+```python
+from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+class OrchestratorAgent:
+    """Routes requests to specialized sub-agents."""
+
+    def __init__(self):
+        self.hr_agent      = self._build_agent("hr",      hr_tools)
+        self.finance_agent = self._build_agent("finance",  finance_tools)
+        self.it_agent      = self._build_agent("it",       it_tools)
+
+    def _build_agent(self, domain: str, tools: list) -> AgentExecutor:
+        system_prompt = f"""You are a {domain.upper()} specialist assistant.
+Only handle {domain}-related queries. For other topics say 'Not my domain'."""
+        prompt = ChatPromptTemplate.from_messages([
+            ("system",  system_prompt),
+            ("human",   "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad")
+        ])
+        agent = create_openai_functions_agent(llm, tools, prompt)
+        return AgentExecutor(agent=agent, tools=tools, verbose=False)
+
+    def route(self, question: str) -> str:
+        """Classify question and delegate to the right specialist."""
+        classification_prompt = f"""Classify this question into exactly one category: hr, finance, it, or unknown.
+Question: {question}
+Answer with just the category word."""
+        domain = llm.invoke(classification_prompt).content.strip().lower()
+
+        agents = {
+            "hr":      self.hr_agent,
+            "finance": self.finance_agent,
+            "it":      self.it_agent
+        }
+        if domain not in agents:
+            return "I can only handle HR, Finance, or IT questions."
+
+        return agents[domain].invoke({"input": question})["output"]
+```
+
+### Diagram
+
+```mermaid
+graph TD
+    User["👤 User Query"]
+    Orch["🎪 Orchestrator\n(route/classify)"]
+    HR["👥 HR Agent\n(leave, payroll, policies)"]
+    Finance["💰 Finance Agent\n(expenses, invoices)"]
+    IT["💻 IT Agent\n(tickets, access)"]
+    Result["💬 Answer"]
+
+    User --> Orch
+    Orch -->|HR query| HR
+    Orch -->|Finance query| Finance
+    Orch -->|IT query| IT
+    HR --> Result
+    Finance --> Result
+    IT --> Result
+```
+
+---
+
+## Q108. Vector DB: Pinecone vs Azure AI Search vs pgvector
+
+### Comparison
+
+| Feature | Pinecone | Azure AI Search | pgvector (PostgreSQL) |
+|---|---|---|---|
+| Type | Managed vector DB | Enterprise search | PostgreSQL extension |
+| Hybrid Search | ✅ | ✅ (best-in-class) | ✅ (with pg_bm25) |
+| Metadata Filtering | ✅ | ✅ | ✅ |
+| Scale | Billions of vectors | Millions | Millions |
+| Cost | Pay-per-query | Azure pricing | Self-hosted (cheap) |
+| Integration | API | Azure native | Any PostgreSQL client |
+| Best For | Pure vector at scale | Azure ecosystem | Existing Postgres apps |
+
+### pgvector Code Example
+
+```sql
+-- Enable extension
+CREATE EXTENSION vector;
+
+-- Table with embedding column
+CREATE TABLE hr_documents (
+    id          SERIAL PRIMARY KEY,
+    content     TEXT,
+    source      TEXT,
+    embedding   vector(1536),    -- 1536 dims for ada-002
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create HNSW index for fast ANN search
+CREATE INDEX ON hr_documents
+USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+
+-- Insert a document with embedding
+INSERT INTO hr_documents (content, source, embedding)
+VALUES ('Employees receive 20 days annual leave', 'policy.pdf',
+        '[0.021, -0.053, ...]'::vector);
+
+-- Find top-5 similar documents
+SELECT content, source,
+       1 - (embedding <=> $1::vector) AS similarity
+FROM hr_documents
+ORDER BY embedding <=> $1::vector
+LIMIT 5;
+```
+
+---
+
+## Q109. LLMOps – CI/CD Pipeline for GenAI
+
+### Answer
+
+```yaml
+# .github/workflows/rag-deploy.yml
+name: RAG Service CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest ragas
+
+      - name: Run unit tests
+        run: pytest tests/unit -v --tb=short
+
+      - name: Run RAG evaluation
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY:  ${{ secrets.AZURE_OPENAI_API_KEY }}
+        run: python scripts/evaluate_rag.py --min-faithfulness 0.90
+
+      - name: Check prompt templates
+        run: python scripts/validate_prompts.py  # lint prompts for injection risk
+
+  build-and-push:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.ACR_REGISTRY }}/rag-service:${{ github.sha }} .
+      - name: Push to ACR
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
+          docker push ${{ secrets.ACR_REGISTRY }}/rag-service:${{ github.sha }}
+
+  deploy-staging:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy to AKS (staging)
+        run: |
+          kubectl set image deployment/rag-service \
+            rag-service=${{ secrets.ACR_REGISTRY }}/rag-service:${{ github.sha }} \
+            --namespace staging
+          kubectl rollout status deployment/rag-service --namespace staging --timeout=5m
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production   # requires manual approval
+    steps:
+      - name: Blue-Green switch to production
+        run: |
+          kubectl apply -f k8s/rag-deployment-green.yaml
+          kubectl patch service rag-service -p '{"spec":{"selector":{"version":"green"}}}'
+```
+
+---
+
+## Q110. Full Enterprise GenAI Architecture (Senior Architect Question)
+
+### Question
+Design a production-grade enterprise GenAI platform supporting 50k users with document Q&A, multi-tenancy, security, and observability.
+
+### Architecture
+
+```mermaid
+graph TB
+    subgraph Clients["Client Layer"]
+        Web["⚛️ React App"]
+        Mobile["📱 Mobile App"]
+        Teams["💬 MS Teams Bot"]
+    end
+
+    subgraph Gateway["API Gateway Layer"]
+        APIM["🚪 Azure API Management\n(Auth, Rate Limiting, Routing)"]
+    end
+
+    subgraph Services["Microservices (AKS)"]
+        ChatSvc["💬 Chat Service\n(FastAPI)"]
+        RAGSvc["🎯 RAG Service\n(FastAPI + LangChain)"]
+        IngestSvc["📥 Ingestion Service\n(Celery Workers)"]
+        AuthSvc["🔐 Auth Service\n(AAD B2C + RBAC)"]
+    end
+
+    subgraph AI["AI Layer"]
+        AOAI["🤖 Azure OpenAI\n(GPT-4o + Ada-002)"]
+        Guard["🛡️ Guardrails\n(Presidio + Custom)"]
+    end
+
+    subgraph Data["Data Layer"]
+        AISearch["🔍 Azure AI Search\n(Tenant-isolated indexes)"]
+        CosmosDB["🗄️ Cosmos DB\n(Chat history, metadata)"]
+        BlobStorage["📦 Azure Blob\n(Source documents)"]
+        Redis["⚡ Redis Cache\n(Semantic cache, sessions)"]
+    end
+
+    subgraph Observability["Observability"]
+        AppInsights["📊 App Insights\n(Traces + Metrics)"]
+        Grafana["📈 Grafana\n(LLM dashboards)"]
+        KeyVault["🔑 Key Vault\n(Secrets)"]
+    end
+
+    Web & Mobile & Teams --> APIM
+    APIM --> ChatSvc --> Guard --> RAGSvc
+    RAGSvc --> AOAI
+    RAGSvc --> AISearch
+    ChatSvc --> Redis
+    ChatSvc --> CosmosDB
+    IngestSvc --> BlobStorage
+    IngestSvc --> AOAI
+    IngestSvc --> AISearch
+    Services --> AppInsights
+    AppInsights --> Grafana
+    Services --> KeyVault
+```
+
+### Key Architectural Decisions
+
+| Decision | Choice | Rationale |
+|---|---|---|
+| LLM | Azure OpenAI GPT-4o | Data residency in EU, enterprise SLA |
+| Vector DB | Azure AI Search | Hybrid search, native Azure integration |
+| Multi-tenancy | Separate search indexes per tenant | Data isolation, no cross-tenant leak risk |
+| Caching | Redis semantic cache | 40% cost reduction, <10ms repeat queries |
+| Auth | AAD B2C + JWT | Enterprise SSO, RBAC, MFA |
+| Orchestration | LangGraph | Complex multi-step agents with loops |
+| Guardrails | Presidio + custom patterns | GDPR compliance, PII masking |
+| Observability | App Insights + custom LLM metrics | Hallucination rate, token cost per tenant |
+
+### Non-Functional Requirements Met
+
+```
+Availability:     99.9% SLA (multi-region AKS + geo-redundant storage)
+Latency:          P95 < 2s (Redis semantic cache + streaming)
+Throughput:       5,000 concurrent users (HPA: 5–50 pods)
+Security:         Zero Trust, RBAC, PII masking, audit logs
+Cost:             $0.018 per query avg (caching reduces GPT-4o calls by 40%)
+Compliance:       GDPR, ISO 27001 (data residency, encryption at rest/transit)
+```
