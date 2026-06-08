@@ -6,19 +6,19 @@ A Load Balancer is a traffic manager that sits between clients and servers and d
 
 Instead of all users hitting a single server:
 
-```
-Users --> Server 1
+```mermaid
+graph LR
+    Users((👥 Users)) --> Server1["🖥️ Server 1"]
 ```
 
 We use:
 
-```
-             +----------------+
-Users -----> | Load Balancer  |
-             +----------------+
-                /     |      \
-               /      |       \
-        Server1   Server2   Server3
+```mermaid
+graph LR
+    Users((👥 Users)) --> LB["⚖️ Load Balancer"]
+    LB --> Server1["🖥️ Server 1"]
+    LB --> Server2["🖥️ Server 2"]
+    LB --> Server3["🖥️ Server 3"]
 ```
 
 The Load Balancer decides which server should process each request.
@@ -31,11 +31,9 @@ Imagine Amazon's Great Indian Festival Sale.
 
 ### Without Load Balancer:
 
-```
-100,000 Users
-      |
-      |
-   Server 1
+```mermaid
+graph LR
+    Users((100K Users)) --> Server1["🖥️ Server 1<br/>CPU:100%"]
 ```
 
 Result:
@@ -50,14 +48,12 @@ Result:
 
 ### With Load Balancer:
 
-```
-                    +----------------+
-100,000 Users ----> | Load Balancer  |
-                    +----------------+
-                     /      |       \
-                    /       |        \
-                   /        |         \
-              Web-1     Web-2      Web-3
+```mermaid
+graph LR
+    Users((100K Users)) --> LB["⚖️ Load Balancer"]
+    LB --> Web1["🖥️ Web-1<br/>CPU:33%"]
+    LB --> Web2["🖥️ Web-2<br/>CPU:33%"]
+    LB --> Web3["🖥️ Web-3<br/>CPU:33%"]
 ```
 
 Result:
@@ -140,20 +136,16 @@ Failed servers are removed automatically using Health Checks.
 
 ## Load Balancer Architecture
 
-```
-                 Internet
-                     |
-                     |
-              +--------------+
-              | Load Balancer|
-              +--------------+
-                /    |    \
-               /     |     \
-              /      |      \
-         App-1    App-2   App-3
-            \       |       /
-             \      |      /
-                Database
+```mermaid
+graph TB
+    Internet["🌐 Internet"]
+    Internet --> LB["⚖️ Load Balancer"]
+    LB --> App1["🖥️ App-1"]
+    LB --> App2["🖥️ App-2"]
+    LB --> App3["🖥️ App-3"]
+    App1 --> DB["💾 Database"]
+    App2 --> DB
+    App3 --> DB
 ```
 
 Flow:
@@ -182,8 +174,10 @@ Looks at:
 
 #### Example
 
-```
-Client --> LB --> Server
+```mermaid
+graph LR
+    Client["👤 Client"] --> LB["⚖️ LB<br/>Layer 4"]
+    LB --> Server["🖥️ Server"]
 ```
 
 LB only checks:
@@ -220,10 +214,12 @@ Understands:
 
 #### Example
 
-```
-/api/*     -> API Servers
-/images/*  -> Image Servers
-/admin/*   -> Admin Servers
+```mermaid
+graph LR
+    LB["⚖️ LB<br/>Layer 7"]
+    LB -->|/api/*| API["🔌 API Servers"]
+    LB -->|/images/*| IMG["🖼️ Image Servers"]
+    LB -->|/admin/*| ADMIN["👮 Admin Servers"]
 ```
 
 #### Advantages
@@ -365,15 +361,14 @@ Server removed from rotation.
 
 ## Load Balancer in Microservices
 
-```
-                 Internet
-                     |
-                 API Gateway
-                     |
-              Load Balancer
-            /      |      \
-           /       |       \
-      User MS  Order MS  Payment MS
+```mermaid
+graph TB
+    Internet["🌐 Internet"]
+    Internet --> Gateway["🚪 API Gateway"]
+    Gateway --> LB["⚖️ Load Balancer"]
+    LB --> User["👤 User MS"]
+    LB --> Order["📦 Order MS"]
+    LB --> Payment["💳 Payment MS"]
 ```
 
 **Benefits:**
@@ -405,21 +400,16 @@ Server removed from rotation.
 
 ## Interview Diagram You Can Draw
 
-```
-                 Users
-                    |
-                    |
-            +---------------+
-            | Load Balancer |
-            +---------------+
-             /      |      \
-            /       |       \
-           /        |        \
-      Server1   Server2   Server3
-          |         |         |
-          +---------+---------+
-                    |
-                 Database
+```mermaid
+graph TB
+    Users((👥 Users))
+    Users --> LB["⚖️ Load Balancer"]
+    LB --> Server1["🖥️ Server 1"]
+    LB --> Server2["🖥️ Server 2"]
+    LB --> Server3["🖥️ Server 3"]
+    Server1 --> DB["💾 Database"]
+    Server2 --> DB
+    Server3 --> DB
 ```
 
 This diagram alone can help explain:
