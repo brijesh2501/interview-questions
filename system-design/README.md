@@ -640,12 +640,12 @@ graph LR
 
 ## Cache Eviction Policies
 
-| Policy | Description | Use Case |
-|---|---|---|
-| **LRU** | Evict Least Recently Used | General purpose |
-| **LFU** | Evict Least Frequently Used | Trending content |
-| **TTL** | Expire after fixed time | Session data |
-| **FIFO** | Evict oldest entry | Event logs |
+| Policy   | Description                 | Use Case         |
+| -------- | --------------------------- | ---------------- |
+| **LRU**  | Evict Least Recently Used   | General purpose  |
+| **LFU**  | Evict Least Frequently Used | Trending content |
+| **TTL**  | Expire after fixed time     | Session data     |
+| **FIFO** | Evict oldest entry          | Event logs       |
 
 ---
 
@@ -671,6 +671,7 @@ graph TB
 ```
 
 **Layers:**
+
 1. **Browser cache** – static files (CSS/JS/images)
 2. **CDN** – geographically distributed static content
 3. **Redis** – application-level hot data (sessions, product catalog)
@@ -713,14 +714,14 @@ async def get_with_stampede_protection(key: str, ttl: int):
 
 ### Q1. What is the difference between Redis and Memcached?
 
-| Feature | Redis | Memcached |
-|---|---|---|
-| Data Structures | Strings, Lists, Sets, Hashes, Sorted Sets | Strings only |
-| Persistence | Yes (RDB/AOF) | No |
-| Cluster Support | Yes | Yes |
-| Pub/Sub | Yes | No |
-| Replication | Yes | No |
-| Use Case | Rich data, sessions, leaderboards | Simple key-value caching |
+| Feature         | Redis                                     | Memcached                |
+| --------------- | ----------------------------------------- | ------------------------ |
+| Data Structures | Strings, Lists, Sets, Hashes, Sorted Sets | Strings only             |
+| Persistence     | Yes (RDB/AOF)                             | No                       |
+| Cluster Support | Yes                                       | Yes                      |
+| Pub/Sub         | Yes                                       | No                       |
+| Replication     | Yes                                       | No                       |
+| Use Case        | Rich data, sessions, leaderboards         | Simple key-value caching |
 
 ### Q2. How would you design a Leaderboard using Redis?
 
@@ -757,12 +758,12 @@ graph LR
     end
 ```
 
-| | Vertical | Horizontal |
-|---|---|---|
-| Cost | Expensive hardware | Commodity servers |
-| Limit | Hardware ceiling | Nearly unlimited |
-| Downtime | Yes (resize) | No |
-| Complexity | Low | High (distributed) |
+|            | Vertical           | Horizontal         |
+| ---------- | ------------------ | ------------------ |
+| Cost       | Expensive hardware | Commodity servers  |
+| Limit      | Hardware ceiling   | Nearly unlimited   |
+| Downtime   | Yes (resize)       | No                 |
+| Complexity | Low                | High (distributed) |
 
 ---
 
@@ -810,11 +811,11 @@ graph TD
 
 **Sharding Strategies:**
 
-| Strategy | How | Pros | Cons |
-|---|---|---|---|
-| Range | user_id 0–999 → Shard 1 | Simple | Hotspots |
-| Hash | hash(user_id) % N | Even distribution | Cross-shard queries hard |
-| Directory | Lookup table | Flexible | Extra hop |
+| Strategy  | How                     | Pros              | Cons                     |
+| --------- | ----------------------- | ----------------- | ------------------------ |
+| Range     | user_id 0–999 → Shard 1 | Simple            | Hotspots                 |
+| Hash      | hash(user_id) % N       | Even distribution | Cross-shard queries hard |
+| Directory | Lookup table            | Flexible          | Extra hop                |
 
 **Real Example:** WhatsApp shards message storage by phone number hash across 100+ MySQL shards.
 
@@ -844,7 +845,9 @@ graph TD
 ```
 
 **Interview Answer:**
+
 > In practice, network partitions (P) always happen, so you choose between **Consistency (CP)** or **Availability (AP)**.
+>
 > - Banking → CP (never show stale balance)
 > - Social Media → AP (slightly stale like count is fine)
 
@@ -861,14 +864,14 @@ graph LR
     gRPC["⚡ gRPC\nHTTP/2 + Protobuf\nContract-based"]
 ```
 
-| Feature | REST | GraphQL | gRPC |
-|---|---|---|---|
-| Protocol | HTTP/1.1 | HTTP/1.1 | HTTP/2 |
-| Format | JSON | JSON | Protobuf (binary) |
-| Over-fetching | Yes | No | No |
-| Type Safety | Manual | Schema | Proto contract |
-| Browser Support | Native | Native | Needs proxy |
-| Best For | Public APIs | Flexible queries | Microservice RPC |
+| Feature         | REST        | GraphQL          | gRPC              |
+| --------------- | ----------- | ---------------- | ----------------- |
+| Protocol        | HTTP/1.1    | HTTP/1.1         | HTTP/2            |
+| Format          | JSON        | JSON             | Protobuf (binary) |
+| Over-fetching   | Yes         | No               | No                |
+| Type Safety     | Manual      | Schema           | Proto contract    |
+| Browser Support | Native      | Native           | Needs proxy       |
+| Best For        | Public APIs | Flexible queries | Microservice RPC  |
 
 ---
 
@@ -897,18 +900,18 @@ GET /api/v2/users   (current)
 
 **HTTP Status Codes:**
 
-| Code | Meaning | Use |
-|---|---|---|
-| 200 | OK | GET success |
-| 201 | Created | POST success |
-| 204 | No Content | DELETE success |
-| 400 | Bad Request | Validation error |
-| 401 | Unauthorized | No/invalid token |
-| 403 | Forbidden | Valid token, no permission |
-| 404 | Not Found | Resource missing |
-| 409 | Conflict | Duplicate resource |
-| 429 | Too Many Requests | Rate limited |
-| 500 | Internal Server Error | Bug |
+| Code | Meaning               | Use                        |
+| ---- | --------------------- | -------------------------- |
+| 200  | OK                    | GET success                |
+| 201  | Created               | POST success               |
+| 204  | No Content            | DELETE success             |
+| 400  | Bad Request           | Validation error           |
+| 401  | Unauthorized          | No/invalid token           |
+| 403  | Forbidden             | Valid token, no permission |
+| 404  | Not Found             | Resource missing           |
+| 409  | Conflict              | Duplicate resource         |
+| 429  | Too Many Requests     | Rate limited               |
+| 500  | Internal Server Error | Bug                        |
 
 ---
 
@@ -993,11 +996,791 @@ graph TD
 
 **Key Concepts:**
 
-| Concept | Meaning |
-|---|---|
-| Topic | Category/feed name |
-| Partition | Parallelism unit within a topic |
-| Offset | Position of a message in a partition |
+| Concept   | Meaning                              |
+| --------- | ------------------------------------ |
+| Topic     | Category/feed name                   |
+| Partition | Parallelism unit within a topic      |
+| Offset    | Position of a message in a partition |
+
+---
+
+# 6. Interview Questions & Answers on REST & RESTful API Design Principles
+
+## 1️⃣ Basic Questions
+
+### Q1. What is REST, and how does it differ from SOAP?
+
+**Answer:** REST (Representational State Transfer) is an architectural style that defines a set of constraints for designing web services. It primarily uses standard HTTP methods and focuses on resources rather than operations.
+
+**Differences between REST and SOAP:**
+
+| Aspect        | REST                           | SOAP                                       |
+| ------------- | ------------------------------ | ------------------------------------------ |
+| Protocol Type | Architectural style            | Strict protocol                            |
+| Data Format   | JSON, XML, HTML, etc.          | XML only                                   |
+| Performance   | Lightweight and faster         | Higher overhead due to XML and WS-Security |
+| Flexibility   | Supports multiple data formats | XML-based only                             |
+| Statefulness  | Stateless                      | Can be stateful                            |
+| Use Case      | Public APIs, microservices     | Enterprise services                        |
+
+---
+
+### Q2. What are the six constraints of REST architecture?
+
+**Answer:** The six constraints that define REST are:
+
+1. **Client-Server Architecture** – The client and server are independent of each other, allowing for better scalability and separation of concerns.
+
+2. **Statelessness** – Each request from the client contains all the necessary information; the server does not store session data between requests.
+
+3. **Cacheability** – Responses can be cached to improve performance and reduce server load.
+
+4. **Layered System** – An API can be designed in layers (e.g., authentication, load balancing, security) without affecting clients.
+
+5. **Uniform Interface** – Standardized communication methods using HTTP verbs (GET, POST, PUT, DELETE, PATCH).
+
+6. **Code on Demand (Optional)** – The server can send executable code (e.g., JavaScript) to the client.
+
+---
+
+### Q3. What is the difference between a REST API and a RESTful API?
+
+**Answer:**
+
+- **REST API** – Any API that follows some REST principles but may not strictly adhere to all six constraints.
+- **RESTful API** – An API that fully follows all REST constraints and principles rigorously.
+
+---
+
+### Q4. What is a resource in REST, and how is it represented?
+
+**Answer:**
+
+- A **resource** is any object or entity that can be accessed via the API (e.g., users, orders, products, comments).
+- Resources are represented using **URIs (Uniform Resource Identifiers)**.
+
+**Examples:**
+
+```
+GET /users/123            – Retrieve specific user
+GET /products/456         – Retrieve specific product
+POST /orders              – Create new order
+DELETE /comments/789      – Delete specific comment
+```
+
+---
+
+### Q5. What are endpoints in a REST API?
+
+**Answer:** An endpoint is a specific URL where a client interacts with a resource.
+
+**Examples:**
+
+```
+GET /users/{id}          – Retrieve user details
+POST /orders             – Create an order
+PUT /users/{id}          – Update entire user
+PATCH /users/{id}        – Partially update user
+DELETE /users/{id}       – Delete user
+```
+
+---
+
+## 2️⃣ HTTP Methods & Status Codes
+
+### Q6. Explain the difference between GET, POST, PUT, PATCH, and DELETE.
+
+**Answer:**
+
+| Method     | Purpose                   | Idempotent | Safe | Use Case               |
+| ---------- | ------------------------- | ---------- | ---- | ---------------------- |
+| **GET**    | Retrieve resource data    | Yes        | Yes  | Fetch user profile     |
+| **POST**   | Create a new resource     | No         | No   | Create new order       |
+| **PUT**    | Replace entire resource   | Yes        | No   | Update user all fields |
+| **PATCH**  | Partially update resource | No\*       | No   | Change user email only |
+| **DELETE** | Remove a resource         | Yes        | No   | Delete user account    |
+
+\*PATCH can be idempotent if designed carefully
+
+---
+
+### Q7. When would you use PUT vs. PATCH?
+
+**Answer:**
+
+- **Use PUT** when replacing an **entire resource** (all fields must be sent).
+
+  ```
+  PUT /users/1
+  {
+    "name": "John",
+    "email": "john@example.com",
+    "age": 30,
+    "country": "USA"
+  }
+  ```
+
+- **Use PATCH** when making **partial updates** (only changed fields).
+  ```
+  PATCH /users/1
+  {
+    "email": "newemail@example.com"
+  }
+  ```
+
+**Key Difference:** PUT replaces the entire resource; PATCH updates specific fields.
+
+---
+
+### Q8. What are the commonly used HTTP status codes in REST APIs?
+
+**Answer:**
+
+| Code    | Status                | Use Case                              |
+| ------- | --------------------- | ------------------------------------- |
+| **200** | OK                    | Successful GET/PUT request            |
+| **201** | Created               | Resource successfully created (POST)  |
+| **204** | No Content            | Successful DELETE, no response body   |
+| **400** | Bad Request           | Client-side error (malformed request) |
+| **401** | Unauthorized          | Authentication required/failed        |
+| **403** | Forbidden             | Client lacks permission for resource  |
+| **404** | Not Found             | Resource does not exist               |
+| **409** | Conflict              | Duplicate resource or state conflict  |
+| **429** | Too Many Requests     | Rate limit exceeded                   |
+| **500** | Internal Server Error | Unexpected server-side issue          |
+| **503** | Service Unavailable   | Server overloaded or maintenance      |
+
+---
+
+## 3️⃣ RESTful API Design & Best Practices
+
+### Q9. What are the best practices for designing RESTful APIs?
+
+**Answer:**
+
+1. **Use plural nouns for resource names**
+
+   ```
+   ✅ GET /users          (not /user)
+   ✅ GET /products       (not /product)
+   ✅ POST /orders        (not /order)
+   ```
+
+2. **Implement proper HTTP status codes** – Don't return 200 for all responses.
+
+3. **Support versioning** to avoid breaking existing clients
+
+   ```
+   /v1/users     (deprecated)
+   /v2/users     (current)
+   /v3/users     (future)
+   ```
+
+4. **Use pagination for large datasets**
+
+   ```
+   GET /products?page=2&limit=20&sort=price
+   ```
+
+5. **Implement rate limiting** to prevent abuse
+
+   ```
+   X-RateLimit-Limit: 1000
+   X-RateLimit-Remaining: 999
+   X-RateLimit-Reset: 1234567890
+   ```
+
+6. **Use OAuth 2.0 or JWT** for authentication
+
+   ```
+   Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   ```
+
+7. **Support filtering and sorting**
+
+   ```
+   GET /products?category=electronics&minPrice=100&sort=-price
+   ```
+
+8. **Use hypermedia links (HATEOAS)** for discoverability
+
+   ```json
+   {
+     "id": 1,
+     "name": "John",
+     "links": {
+       "self": "/users/1",
+       "all_users": "/users",
+       "orders": "/users/1/orders"
+     }
+   }
+   ```
+
+9. **Provide meaningful error messages**
+
+   ```json
+   {
+     "error": "Validation Error",
+     "message": "Email field is required",
+     "code": "MISSING_FIELD",
+     "details": [
+       {
+         "field": "email",
+         "message": "Email is required"
+       }
+     ]
+   }
+   ```
+
+10. **Document API thoroughly** (use Swagger/OpenAPI)
+
+---
+
+### Q10. How do you design a RESTful API for a blogging platform?
+
+**Answer:**
+
+**Endpoints structure:**
+
+```
+# Posts
+GET    /api/v1/posts              – Get all posts (with pagination)
+POST   /api/v1/posts              – Create new post
+GET    /api/v1/posts/{id}         – Get specific post
+PUT    /api/v1/posts/{id}         – Update entire post
+PATCH  /api/v1/posts/{id}         – Partially update post
+DELETE /api/v1/posts/{id}         – Delete post
+
+# Comments (nested resource)
+GET    /api/v1/posts/{postId}/comments           – Get post comments
+POST   /api/v1/posts/{postId}/comments           – Add comment to post
+GET    /api/v1/posts/{postId}/comments/{id}      – Get specific comment
+PATCH  /api/v1/posts/{postId}/comments/{id}      – Update comment
+DELETE /api/v1/posts/{postId}/comments/{id}      – Delete comment
+
+# Authors (users)
+GET    /api/v1/users              – Get all users
+POST   /api/v1/users              – Register user
+GET    /api/v1/users/{id}         – Get user profile
+PUT    /api/v1/users/{id}         – Update user profile
+GET    /api/v1/users/{id}/posts   – Get user's posts
+
+# Query parameters
+GET /api/v1/posts?page=2&limit=10&sort=-createdAt&category=tech
+GET /api/v1/posts/{id}/comments?sort=createdAt
+```
+
+**Response Examples:**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "title": "REST API Best Practices",
+    "content": "...",
+    "author": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T14:22:00Z",
+    "commentCount": 12,
+    "links": {
+      "self": "/api/v1/posts/1",
+      "comments": "/api/v1/posts/1/comments",
+      "author": "/api/v1/users/5"
+    }
+  },
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 156,
+    "totalPages": 16
+  }
+}
+```
+
+---
+
+### Q11. What is HATEOAS in REST?
+
+**Answer:** HATEOAS (Hypermedia As The Engine Of Application State) is a principle where API responses include links to relevant actions, making the API self-discoverable.
+
+**Without HATEOAS (Client must know URLs):**
+
+```json
+{
+  "id": 1,
+  "name": "John",
+  "email": "john@example.com"
+}
+```
+
+**With HATEOAS (Self-descriptive):**
+
+```json
+{
+  "id": 1,
+  "name": "John",
+  "email": "john@example.com",
+  "links": {
+    "self": { "href": "/users/1", "method": "GET" },
+    "update": { "href": "/users/1", "method": "PUT" },
+    "delete": { "href": "/users/1", "method": "DELETE" },
+    "all_users": { "href": "/users", "method": "GET" },
+    "orders": { "href": "/users/1/orders", "method": "GET" }
+  }
+}
+```
+
+**Benefit:** Client can discover available actions without prior knowledge of API structure.
+
+---
+
+### Q12. How do you handle authentication and authorization in REST APIs?
+
+**Answer:**
+
+1. **OAuth 2.0 for user authentication**
+
+   ```
+   Client → Authorization Server → Request Token → Use Token for API calls
+   ```
+
+2. **JWT (JSON Web Token) for session management**
+
+   ```
+   POST /api/v1/auth/login
+   {
+     "email": "user@example.com",
+     "password": "secure123"
+   }
+
+   Response:
+   {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+     "expiresIn": 3600
+   }
+
+   Usage:
+   GET /api/v1/users
+   Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   ```
+
+3. **API Keys for third-party access**
+
+   ```
+   GET /api/v1/data?api_key=abc123xyz789
+   ```
+
+4. **Role-Based Access Control (RBAC)**
+
+   ```
+   Admin Role   → Can create, update, delete all resources
+   Editor Role  → Can create and edit own posts
+   Viewer Role  → Can only view posts
+   ```
+
+5. **Implement refresh tokens**
+
+   ```
+   Access Token: Expires in 15 minutes (short-lived)
+   Refresh Token: Expires in 7 days (long-lived)
+
+   POST /api/v1/auth/refresh
+   {
+     "refreshToken": "refresh_token_value"
+   }
+   ```
+
+---
+
+## 4️⃣ Advanced & Real-World Questions
+
+### Q13. How does caching work in REST APIs?
+
+**Answer:** Use HTTP headers to implement caching strategies:
+
+```
+Response Headers:
+Cache-Control: max-age=3600             (Cache for 1 hour)
+Cache-Control: public, max-age=86400    (Public, cache 24 hours)
+Cache-Control: private, max-age=3600    (Private cache only)
+Cache-Control: no-cache, no-store       (Never cache)
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"  (Version for validation)
+Last-Modified: Wed, 21 Oct 2024 07:28:00 GMT
+```
+
+**Caching Strategies:**
+
+1. **Cache-Aside** – Application fetches from cache, misses fetch from DB
+2. **Write-Through** – Write to cache and DB simultaneously
+3. **Write-Behind** – Write to cache, async write to DB
+
+**Real Example:**
+
+```python
+@app.get("/api/v1/products/{id}")
+async def get_product(id: int):
+    return {
+        "data": product,
+        "headers": {
+            "Cache-Control": "public, max-age=3600",
+            "ETag": f'"{hash(product)}"'
+        }
+    }
+```
+
+---
+
+### Q14. How do you implement pagination in REST APIs?
+
+**Answer:**
+
+```
+GET /api/v1/users?page=2&limit=10&sort=-createdAt
+```
+
+**Response:**
+
+```json
+{
+  "data": [
+    { "id": 11, "name": "User 11" },
+    { "id": 12, "name": "User 12" },
+    ...
+    { "id": 20, "name": "User 20" }
+  ],
+  "pagination": {
+    "page": 2,
+    "limit": 10,
+    "total": 1500,
+    "totalPages": 150,
+    "hasNextPage": true,
+    "hasPrevPage": true,
+    "nextPage": "/api/v1/users?page=3&limit=10",
+    "prevPage": "/api/v1/users?page=1&limit=10"
+  }
+}
+```
+
+**Implementation Tips:**
+
+- Validate page and limit parameters
+- Set maximum limit (e.g., max 100 per page)
+- Use database query optimization (LIMIT, OFFSET)
+- Include next/prev links for navigation
+
+---
+
+### Q15. How does versioning work in REST APIs?
+
+**Answer:** Three common versioning strategies:
+
+1. **URI-based versioning** (Most common)
+
+   ```
+   GET /api/v1/users
+   GET /api/v2/users
+   GET /api/v3/users
+   ```
+
+2. **Header-based versioning**
+
+   ```
+   GET /api/users
+   Accept-Version: v2
+   ```
+
+3. **Query parameter versioning**
+   ```
+   GET /api/users?version=2
+   GET /api/users?apiVersion=2.0
+   ```
+
+**Best Practice:** Use URI versioning as it's explicit and clear.
+
+**Deprecation Strategy:**
+
+```
+v1 → Deprecated (sunset date: 2025-01-01)
+v2 → Current (active)
+v3 → Beta (testing)
+```
+
+---
+
+### Q16. Explain the differences between REST, GraphQL, and gRPC.
+
+**Answer:**
+
+| Feature             | REST                 | GraphQL             | gRPC                      |
+| ------------------- | -------------------- | ------------------- | ------------------------- |
+| **Protocol**        | HTTP/1.1             | HTTP/1.1            | HTTP/2                    |
+| **Data Format**     | JSON, XML            | JSON                | Protocol Buffers (Binary) |
+| **Query Model**     | Fixed endpoints      | Custom queries      | RPC methods               |
+| **Over-fetching**   | Common issue         | Eliminated          | N/A                       |
+| **Under-fetching**  | Common issue         | Eliminated          | N/A                       |
+| **Type System**     | Manual documentation | Strong schema       | Proto contracts           |
+| **Performance**     | Medium               | Better (exact data) | Very fast                 |
+| **Browser Support** | Native               | Needs proxy         | Needs proxy               |
+| **Learning Curve**  | Easy                 | Medium              | Hard                      |
+| **Use Case**        | Public APIs          | Complex data        | Microservices             |
+
+**Example Comparison:**
+
+REST Endpoint:
+
+```
+GET /users/1
+Response includes all user fields (over-fetch)
+```
+
+GraphQL Query:
+
+```graphql
+{
+  user(id: 1) {
+    name
+    email
+  }
+}
+Response includes only requested fields (exact fetch)
+```
+
+gRPC Call:
+
+```protobuf
+service UserService {
+  rpc GetUser(UserId) returns (User);
+}
+```
+
+---
+
+### Q17. How would you improve the performance of a REST API?
+
+**Answer:**
+
+1. **Enable caching**
+
+   ```
+   Cache-Control: public, max-age=3600
+   Redis for frequently accessed data
+   ```
+
+2. **Use gzip compression**
+
+   ```
+   Accept-Encoding: gzip
+   Reduces payload size by 70-80%
+   ```
+
+3. **Implement asynchronous processing**
+
+   ```
+   POST /api/v1/reports
+   Response: 202 Accepted (Job queued)
+   GET /api/v1/reports/{id}/status (Check status)
+   ```
+
+4. **Use database indexing**
+
+   ```sql
+   CREATE INDEX idx_users_email ON users(email);
+   ```
+
+5. **Pagination for large datasets**
+
+   ```
+   GET /products?page=1&limit=20
+   ```
+
+6. **Connection pooling**
+
+   ```python
+   pool = ConnectionPool(max_connections=10)
+   ```
+
+7. **CDN for static content**
+
+   ```
+   CSS, JS, images served from edge servers
+   ```
+
+8. **Rate limiting** (prevent abuse)
+
+   ```
+   100 requests per minute per user
+   ```
+
+9. **Database query optimization**
+
+   ```sql
+   SELECT user.name, COUNT(orders.id)
+   FROM users
+   LEFT JOIN orders ON users.id = orders.user_id
+   GROUP BY users.id
+   (Use JOINs, not N+1 queries)
+   ```
+
+10. **API Gateway** (aggregation, logging, authentication)
+    ```
+    Client → API Gateway → Microservices
+    ```
+
+---
+
+### Q18. Can a REST API be stateful?
+
+**Answer:** Theoretically **no**, REST APIs should be stateless. However, in practice:
+
+- **Pure REST:** Stateless (each request is independent)
+
+  ```
+  Every request contains all necessary information
+  Server doesn't store user session state
+  ```
+
+- **In Practice:** Some services use session-based authentication
+
+  ```
+  POST /login → Server creates session
+  GET /data → Include sessionId in request
+  This is NOT fully RESTful but pragmatic
+  ```
+
+- **Modern Approach:** Use stateless tokens (JWT)
+  ```
+  POST /login → Returns JWT token
+  GET /data Authorization: Bearer {token}
+  Server validates token without storing session
+  ```
+
+---
+
+### Q19. How does REST handle security vulnerabilities?
+
+**Answer:**
+
+1. **Prevent SQL Injection**
+
+   ```python
+   # ❌ Vulnerable
+   query = f"SELECT * FROM users WHERE id = {user_id}"
+
+   # ✅ Safe - Parameterized queries
+   query = "SELECT * FROM users WHERE id = ?"
+   db.execute(query, [user_id])
+   ```
+
+2. **Prevent CSRF (Cross-Site Request Forgery)**
+
+   ```
+   Include CSRF token in requests
+   POST /api/users
+   X-CSRF-Token: abcd1234xyz
+   ```
+
+3. **Use HTTPS/TLS** for secure communication
+
+   ```
+   https://api.example.com/users
+   All data encrypted in transit
+   ```
+
+4. **Implement OAuth 2.0** for secure authentication
+
+   ```
+   Authorization: Bearer {access_token}
+   ```
+
+5. **Use JWT with proper expiration**
+
+   ```
+   Token expires in 15 minutes (short-lived)
+   Refresh token used to get new access token
+   ```
+
+6. **Validate and sanitize input**
+
+   ```python
+   from pydantic import BaseModel, EmailStr
+
+   class User(BaseModel):
+       email: EmailStr  # Validates email format
+       name: str = Field(min_length=1, max_length=100)
+   ```
+
+7. **Implement rate limiting**
+
+   ```
+   Prevent brute force attacks
+   Max 5 failed login attempts → lock account
+   ```
+
+8. **Add Content Security Policy (CSP) headers**
+
+   ```
+   Content-Security-Policy: default-src 'self'
+   ```
+
+9. **Use API Keys securely**
+
+   ```
+   Don't expose in client-side code
+   Rotate keys regularly
+   ```
+
+10. **Enable CORS properly**
+    ```
+    Access-Control-Allow-Origin: https://trusted-domain.com
+    NOT * (overly permissive)
+    ```
+
+---
+
+## 5️⃣ Summary & Key Takeaways
+
+### ✅ REST Fundamentals
+
+- REST follows **six constraints**: stateless, cacheable, client-server, uniform interface, layered system, code-on-demand (optional)
+- Uses **standard HTTP methods** (GET, POST, PUT, PATCH, DELETE)
+- **Resource-oriented** architecture (not operation-oriented)
+
+### ✅ API Design
+
+- Use **proper HTTP status codes** (200, 201, 400, 401, 404, 500)
+- Implement **versioning** (/v1, /v2)
+- Support **pagination** and **filtering**
+- Use **plural nouns** for resources (/users, not /user)
+
+### ✅ Performance & Scalability
+
+- Enable **caching** with appropriate TTL
+- Use **compression** (gzip)
+- Implement **rate limiting** and **pagination**
+- Optimize **database queries**
+
+### ✅ Security & Authentication
+
+- Use **OAuth 2.0** or **JWT** for authentication
+- Always use **HTTPS/TLS**
+- Prevent **SQL injection**, **CSRF**, **XSS**
+- Validate and **sanitize input**
+
+### ✅ Best Practices
+
+- Document API thoroughly (Swagger/OpenAPI)
+- Include **HATEOAS links** for discoverability
+- Provide **meaningful error messages**
+- Use **API Gateway** for centralized management
+- Implement **monitoring** and **logging**
+
+---
+
 | Consumer Group | Set of consumers sharing partition load |
 | Retention | How long messages are kept (default 7 days) |
 
@@ -1017,14 +1800,14 @@ All happen in parallel, independently, with retry on failure.
 
 ## Kafka vs RabbitMQ
 
-| Feature | Kafka | RabbitMQ |
-|---|---|---|
-| Model | Log / Stream | Queue |
-| Throughput | Millions/sec | Thousands/sec |
-| Retention | Days/weeks | Until consumed |
-| Replay | Yes (by offset) | No |
-| Ordering | Per partition | Per queue |
-| Use Case | Event streaming, audit log | Task queues, RPC |
+| Feature    | Kafka                      | RabbitMQ         |
+| ---------- | -------------------------- | ---------------- |
+| Model      | Log / Stream               | Queue            |
+| Throughput | Millions/sec               | Thousands/sec    |
+| Retention  | Days/weeks                 | Until consumed   |
+| Replay     | Yes (by offset)            | No               |
+| Ordering   | Per partition              | Per queue        |
+| Use Case   | Event streaming, audit log | Task queues, RPC |
 
 ---
 
@@ -1046,14 +1829,14 @@ graph TD
     end
 ```
 
-| | Monolith | Microservices |
-|---|---|---|
-| Deployment | All-or-nothing | Independent |
-| Scaling | Scale everything | Scale specific services |
-| Technology | Single stack | Polyglot |
-| Fault isolation | None | Yes |
-| Complexity | Simple | High (distributed) |
-| Team size | Small team | Multiple teams |
+|                 | Monolith         | Microservices           |
+| --------------- | ---------------- | ----------------------- |
+| Deployment      | All-or-nothing   | Independent             |
+| Scaling         | Scale everything | Scale specific services |
+| Technology      | Single stack     | Polyglot                |
+| Fault isolation | None             | Yes                     |
+| Complexity      | Simple           | High (distributed)      |
+| Team size       | Small team       | Multiple teams          |
 
 ---
 
@@ -1091,6 +1874,7 @@ stateDiagram-v2
 ```
 
 **States:**
+
 - **Closed** – requests pass through normally
 - **Open** – requests fail fast (no calls to broken service)
 - **Half-Open** – probe with one request; if ok, reset to Closed
@@ -1153,6 +1937,7 @@ graph TD
 ## Design a URL Shortener (bit.ly)
 
 ### Requirements
+
 - Shorten long URLs
 - Redirect short → long
 - 100M URLs/day created, 10B redirects/day
@@ -1193,6 +1978,7 @@ def generate_short_code(long_url: str, length: int = 7) -> str:
 ```
 
 **Key decisions:**
+
 - Short code: 7 chars of base62 = 62^7 = 3.5 trillion combinations
 - Cache TTL: popular URLs cached in Redis for 24h
 - Redirect HTTP 301 (cacheable) vs 302 (analytics tracked)
@@ -1202,6 +1988,7 @@ def generate_short_code(long_url: str, length: int = 7) -> str:
 ## Design Twitter/Instagram Feed (News Feed)
 
 ### Requirements
+
 - User posts tweet/photo
 - Followers see it in their feed
 - 300M daily active users
@@ -1223,6 +2010,7 @@ graph TD
 ```
 
 **Hybrid approach (Twitter's actual model):**
+
 - Regular users (<1000 followers) → Push (pre-compute feed)
 - Celebrity users (millions followers) → Pull at read time (too expensive to push)
 
@@ -1252,6 +2040,7 @@ graph TD
 ```
 
 **Key decisions:**
+
 - WebSocket for real-time bidirectional communication
 - Cassandra for message storage (time-series, high write throughput)
 - Message delivery ACK: sent → delivered → read (double tick system)
@@ -1291,6 +2080,7 @@ graph TD
 ```
 
 **Driver location updates:**
+
 - Drivers send GPS every 5 seconds
 - Stored in Redis Geo (geospatial index): `GEOADD drivers 72.8 18.9 "driver:123"`
 - Nearest driver query: `GEORADIUS drivers 72.8 18.9 5 km` (< 1ms)
@@ -1350,12 +2140,14 @@ graph LR
 ```
 
 **CDN Benefits:**
+
 - Reduced latency (user served from nearest PoP)
 - Reduced origin server load
 - Protection against DDoS (traffic absorbed at edge)
 - Auto-scaling at edge
 
 **What to cache on CDN:**
+
 - Static assets: images, CSS, JS bundles
 - Videos, fonts
 - API responses with `Cache-Control: public, max-age=300`
@@ -1442,6 +2234,7 @@ graph TD
 ```
 
 **Estimation Template:**
+
 ```
 QPS (Queries per second) = Daily Active Users × Actions/day ÷ 86400
 Storage/day = QPS × avg message size × 86400
@@ -1476,6 +2269,7 @@ graph TD
 ```
 
 **Key points:**
+
 - Decouple via Kafka (retry on failure)
 - User preferences stored in DB (which channels to use)
 - Idempotency key prevents duplicate notifications
@@ -1501,14 +2295,14 @@ Alternative: Redis + Sliding Window (ZADD + ZCOUNT)
 
 ### Q: Explain the differences between SQL and NoSQL databases.
 
-| | SQL (PostgreSQL, MySQL) | NoSQL (MongoDB, Cassandra, DynamoDB) |
-|---|---|---|
-| Schema | Fixed (migrations) | Flexible / schemaless |
-| Relationships | JOINs | Denormalized / embedded |
-| ACID | Full | Eventual (most) |
-| Scale | Vertical + limited horizontal | Horizontal by design |
-| Query | Powerful (SQL) | Limited (key-access) |
-| Use Case | Financial, ERP, OLTP | Catalogs, IoT, Time-series |
+|               | SQL (PostgreSQL, MySQL)       | NoSQL (MongoDB, Cassandra, DynamoDB) |
+| ------------- | ----------------------------- | ------------------------------------ |
+| Schema        | Fixed (migrations)            | Flexible / schemaless                |
+| Relationships | JOINs                         | Denormalized / embedded              |
+| ACID          | Full                          | Eventual (most)                      |
+| Scale         | Vertical + limited horizontal | Horizontal by design                 |
+| Query         | Powerful (SQL)                | Limited (key-access)                 |
+| Use Case      | Financial, ERP, OLTP          | Catalogs, IoT, Time-series           |
 
 **Choose SQL when:** strong consistency, complex queries, relationships matter.  
 **Choose NoSQL when:** massive scale, flexible schema, simple access patterns.
