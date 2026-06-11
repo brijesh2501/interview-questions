@@ -2307,53 +2307,81 @@ Alternative: Redis + Sliding Window (ZADD + ZCOUNT)
 **Choose SQL when:** strong consistency, complex queries, relationships matter.  
 **Choose NoSQL when:** massive scale, flexible schema, simple access patterns.
 
-System Design Challenges for Real-Time Applications
-Real-Time Chat Application
+---
+
+## System Design Challenges for Real-Time Applications
+
+### Real-Time Chat Application
+
 Major Challenges:
-• Message Delivery Guarantee
-• Online/Offline User Handling
-• Message Ordering
-• Real-Time Communication via WebSockets
-• Group Chat Scaling
+
+- Message Delivery Guarantee
+- Online/Offline User Handling
+- Message Ordering
+- Real-Time Communication via WebSockets
+- Group Chat Scaling
+
 Reference Architecture:
-User → WebSocket Gateway → Chat Service → Kafka → Message Store → Notification Service
-Collaborative Editing Application (Google Docs Style)
+
+User -> WebSocket Gateway -> Chat Service -> Kafka -> Message Store -> Notification Service
+
+### Collaborative Editing Application (Google Docs Style)
+
 Major Challenges:
-• Concurrent Editing Conflicts
-• Data Synchronization
-• Version Management
-• Offline Editing Support
-• Conflict Resolution using OT/CRDT
+
+- Concurrent Editing Conflicts
+- Data Synchronization
+- Version Management
+- Offline Editing Support
+- Conflict Resolution using OT/CRDT
+
 Reference Architecture:
-Client → Collaboration Server → CRDT/OT Engine → Document Store
-Uber Driver-Rider Application
+
+Client -> Collaboration Server -> CRDT/OT Engine -> Document Store
+
+### Uber Driver-Rider Application
+
 Major Challenges:
-• Real-Time Location Tracking
-• Nearest Driver Matching
-• Surge Pricing
-• Trip State Consistency
-• Live Ride Tracking
+
+- Real-Time Location Tracking
+- Nearest Driver Matching
+- Surge Pricing
+- Trip State Consistency
+- Live Ride Tracking
+
 Reference Architecture:
-Rider App → Ride Gateway → Matching Service → Location Service → Driver Service
-Video Streaming Application (Netflix/YouTube Style)
+
+Rider App -> Ride Gateway -> Matching Service -> Location Service -> Driver Service
+
+### Video Streaming Application (Netflix/YouTube Style)
+
 Major Challenges:
-• Massive Bandwidth Requirements
-• Video Storage at Scale
-• Adaptive Streaming
-• Video Encoding & Transcoding
-• Recommendation Engine
+
+- Massive Bandwidth Requirements
+- Video Storage at Scale
+- Adaptive Streaming
+- Video Encoding & Transcoding
+- Recommendation Engine
+
 Reference Architecture:
-Video Upload → Encoding Service → Object Storage → CDN → Viewer
-eBay-like Bidding Application
+
+Video Upload -> Encoding Service -> Object Storage -> CDN -> Viewer
+
+### eBay-like Bidding Application
+
 Major Challenges:
-• Simultaneous Bid Processing
-• Atomic Transactions
-• Bid Ordering
-• Auction Closing Logic
-• Fraud Detection & Notifications
+
+- Simultaneous Bid Processing
+- Atomic Transactions
+- Bid Ordering
+- Auction Closing Logic
+- Fraud Detection & Notifications
+
 Reference Architecture:
-Buyer → Bid Service → Auction Engine → Redis → Database → Notification Service
-Technology Architect Interview Framework
+
+Buyer -> Bid Service -> Auction Engine -> Redis -> Database -> Notification Service
+
+## Technology Architect Interview Framework
 
 For every system design interview:
 
@@ -2368,3 +2396,4 @@ For every system design interview:
 9. Monitoring & Observability
 10. Failure Handling
 11. Scalability Improvements
+
