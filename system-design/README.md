@@ -2306,3 +2306,65 @@ Alternative: Redis + Sliding Window (ZADD + ZCOUNT)
 
 **Choose SQL when:** strong consistency, complex queries, relationships matter.  
 **Choose NoSQL when:** massive scale, flexible schema, simple access patterns.
+
+System Design Challenges for Real-Time Applications
+Real-Time Chat Application
+Major Challenges:
+• Message Delivery Guarantee
+• Online/Offline User Handling
+• Message Ordering
+• Real-Time Communication via WebSockets
+• Group Chat Scaling
+Reference Architecture:
+User → WebSocket Gateway → Chat Service → Kafka → Message Store → Notification Service
+Collaborative Editing Application (Google Docs Style)
+Major Challenges:
+• Concurrent Editing Conflicts
+• Data Synchronization
+• Version Management
+• Offline Editing Support
+• Conflict Resolution using OT/CRDT
+Reference Architecture:
+Client → Collaboration Server → CRDT/OT Engine → Document Store
+Uber Driver-Rider Application
+Major Challenges:
+• Real-Time Location Tracking
+• Nearest Driver Matching
+• Surge Pricing
+• Trip State Consistency
+• Live Ride Tracking
+Reference Architecture:
+Rider App → Ride Gateway → Matching Service → Location Service → Driver Service
+Video Streaming Application (Netflix/YouTube Style)
+Major Challenges:
+• Massive Bandwidth Requirements
+• Video Storage at Scale
+• Adaptive Streaming
+• Video Encoding & Transcoding
+• Recommendation Engine
+Reference Architecture:
+Video Upload → Encoding Service → Object Storage → CDN → Viewer
+eBay-like Bidding Application
+Major Challenges:
+• Simultaneous Bid Processing
+• Atomic Transactions
+• Bid Ordering
+• Auction Closing Logic
+• Fraud Detection & Notifications
+Reference Architecture:
+Buyer → Bid Service → Auction Engine → Redis → Database → Notification Service
+Technology Architect Interview Framework
+
+For every system design interview:
+
+1. Functional Requirements
+2. Non-Functional Requirements
+3. Scale Estimation
+4. High-Level Design
+5. Database Design
+6. Caching Strategy
+7. Messaging Architecture
+8. Security Design
+9. Monitoring & Observability
+10. Failure Handling
+11. Scalability Improvements
