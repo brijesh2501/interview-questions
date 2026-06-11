@@ -57,14 +57,14 @@ Build a multi-tenant Pharma Research Platform that aggregates research data from
 
 ### Potential Bottlenecks
 
-| Bottleneck | Impact | Solution |
-|-----------|--------|----------|
-| **Provider API Rate Limits** | Slow data ingestion | Queue management, retry logic, provider switching |
-| **Database Performance** | Slow queries and searches | Indexing, sharding, read replicas, caching |
-| **Message Queue Throughput** | Delayed data processing | Topic partitioning, multiple consumers |
-| **AI Model Latency** | Slow summarization and queries | Model caching, batching, async processing |
-| **Vector Search Operations** | Slow semantic search | Distributed vector DB, index optimization |
-| **Network Bandwidth** | Slow data transfer | Compression, CDN, edge caching |
+| Bottleneck                   | Impact                         | Solution                                          |
+| ---------------------------- | ------------------------------ | ------------------------------------------------- |
+| **Provider API Rate Limits** | Slow data ingestion            | Queue management, retry logic, provider switching |
+| **Database Performance**     | Slow queries and searches      | Indexing, sharding, read replicas, caching        |
+| **Message Queue Throughput** | Delayed data processing        | Topic partitioning, multiple consumers            |
+| **AI Model Latency**         | Slow summarization and queries | Model caching, batching, async processing         |
+| **Vector Search Operations** | Slow semantic search           | Distributed vector DB, index optimization         |
+| **Network Bandwidth**        | Slow data transfer             | Compression, CDN, edge caching                    |
 
 ### Capacity Planning
 
@@ -93,7 +93,7 @@ graph TB
     Cache["Redis Cache<br/>Session & Data"]
     API["API Gateway<br/>Rate Limiting"]
     Frontend["React Frontend<br/>User Portal"]
-    
+
     Providers --> Ingestion
     Ingestion --> Airflow
     Airflow --> ServiceBus
@@ -136,20 +136,20 @@ graph TB
 
 ### Technology Choices
 
-| Component | Technology | Rationale |
-|-----------|-----------|-----------|
-| **Data Ingestion** | Python (FastAPI) | High performance, easy integration, data processing libraries |
-| **Orchestration** | Apache Airflow | Workflow management, DAG-based scheduling, monitoring |
-| **Messaging** | Azure Service Bus | Scalable, reliable, built-in partitioning, dead-letter queues |
-| **Consumer Services** | Python (FastAPI/Celery) | Async task processing, distributed workers |
-| **Frontend** | React + TypeScript | Component reusability, type safety, rich UI |
-| **Primary Database** | Azure SQL | ACID compliance, scalability, compliance certifications |
-| **NoSQL Database** | MongoDB | Flexible schema for varying data formats |
-| **Vector Database** | Azure Cosmos DB + Vector Search | Semantic search, embeddings storage |
-| **AI Models** | OpenAI API | State-of-the-art models, managed service |
-| **Container Orchestration** | Kubernetes | Autoscaling, self-healing, declarative management |
-| **Authentication** | Azure AD + OAuth2 | Enterprise SSO, security, multi-tenancy |
-| **Monitoring** | Application Insights | Comprehensive telemetry, alerts, dashboards |
+| Component                   | Technology                      | Rationale                                                     |
+| --------------------------- | ------------------------------- | ------------------------------------------------------------- |
+| **Data Ingestion**          | Python (FastAPI)                | High performance, easy integration, data processing libraries |
+| **Orchestration**           | Apache Airflow                  | Workflow management, DAG-based scheduling, monitoring         |
+| **Messaging**               | Azure Service Bus               | Scalable, reliable, built-in partitioning, dead-letter queues |
+| **Consumer Services**       | Python (FastAPI/Celery)         | Async task processing, distributed workers                    |
+| **Frontend**                | React + TypeScript              | Component reusability, type safety, rich UI                   |
+| **Primary Database**        | Azure SQL                       | ACID compliance, scalability, compliance certifications       |
+| **NoSQL Database**          | MongoDB                         | Flexible schema for varying data formats                      |
+| **Vector Database**         | Azure Cosmos DB + Vector Search | Semantic search, embeddings storage                           |
+| **AI Models**               | OpenAI API                      | State-of-the-art models, managed service                      |
+| **Container Orchestration** | Kubernetes                      | Autoscaling, self-healing, declarative management             |
+| **Authentication**          | Azure AD + OAuth2               | Enterprise SSO, security, multi-tenancy                       |
+| **Monitoring**              | Application Insights            | Comprehensive telemetry, alerts, dashboards                   |
 
 ### Scalability Strategy
 
@@ -183,20 +183,40 @@ graph TB
 
 ## One-Line Architecture Summary
 
-```
-Multi-Provider Data Sources
-        ↓
-Python Ingestion + Airflow
-        ↓
-Azure Service Bus
-        ↓
-Consumer Services
-        ↓
-Azure SQL + MongoDB + Vector DB
-        ↓
-AI Summarization + RAG Assistant
-        ↓
-React Portal + APIM
+```mermaid
+graph TD
+    Providers["🌐 Multi-Provider<br/>Data Sources<br/>(PubMed, FDA, etc.)"]
+
+    Ingestion["🐍 Python Ingestion<br/>+ Apache Airflow<br/>(Data Collection & Orchestration)"]
+
+    ServiceBus["📨 Azure Service Bus<br/>(Message Queue & Event Hub)"]
+
+    Consumer["⚙️ Consumer Services<br/>(Data Transformation & Processing)"]
+
+    Database["💾 Azure SQL<br/>+ MongoDB<br/>+ Vector DB<br/>(Structured & Unstructured Data)"]
+
+    AI["🤖 AI Summarization<br/>+ RAG Assistant<br/>(OpenAI & Embeddings)"]
+
+    Portal["🌐 React Portal<br/>+ APIM<br/>(User Interface & API Gateway)"]
+
+    Users["👥 Pharma<br/>Researchers"]
+
+    Providers --> Ingestion
+    Ingestion --> ServiceBus
+    ServiceBus --> Consumer
+    Consumer --> Database
+    Database --> AI
+    AI --> Portal
+    Portal --> Users
+
+    style Providers fill:#e1f5ff
+    style Ingestion fill:#f3e5f5
+    style ServiceBus fill:#fce4ec
+    style Consumer fill:#fff3e0
+    style Database fill:#e8f5e9
+    style AI fill:#f1f8e9
+    style Portal fill:#ede7f6
+    style Users fill:#e0f2f1
 ```
 
 ---
@@ -204,18 +224,23 @@ React Portal + APIM
 ## Key Design Decisions
 
 ### 1. Multi-Tenancy
+
 Use customer ID as partition key in databases and Service Bus topics to ensure data isolation and security.
 
 ### 2. Asynchronous Processing
+
 Decouple ingestion from processing using message queues for better scalability and resilience.
 
 ### 3. Hybrid Database Approach
+
 Use SQL for structured data (subscriptions, users) and MongoDB for flexible article metadata.
 
 ### 4. AI as a Service
+
 Leverage OpenAI API instead of self-hosted models to reduce infrastructure complexity.
 
 ### 5. Event-Driven Architecture
+
 Use events to trigger workflows, enabling loose coupling between services.
 
 ---
